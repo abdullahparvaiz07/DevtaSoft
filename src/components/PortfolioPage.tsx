@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   ArrowRight,
   ArrowUpRight,
+  ExternalLink,
   Layout,
   Smartphone,
   Bot,
@@ -30,6 +31,7 @@ interface ProjectCardData {
   badgeBg: string;
   badgeTextColor: string;
   mockupType: 'sarastore' | 'boxwala' | 'hafiztalha' | 'trendfits' | 'nexcojapan' | 'coursepro' | 'shortconverter' | 'possw' | 'lfm' | 'coffeesp' | 'lga' | 'evf' | 'of' | 'mirrorm' | 'hm';
+  websiteUrl: string;
 }
 
 const portfolioProjects: ProjectCardData[] = [
@@ -44,6 +46,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'sarastore',
+    websiteUrl: 'https://sarastore.pk',
   },
   {
     id: 'boxwala-pk',
@@ -56,6 +59,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'boxwala',
+    websiteUrl: 'https://boxwala.pk',
   },
   {
     id: 'hafiztalha-com',
@@ -68,6 +72,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'hafiztalha',
+    websiteUrl: 'https://hafiztalha.com',
   },
   {
     id: 'trendfits-net',
@@ -80,6 +85,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'trendfits',
+    websiteUrl: 'https://trendfits.net',
   },
   {
     id: 'shortconverter-com',
@@ -92,6 +98,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'shortconverter',
+    websiteUrl: 'https://shortconverter.com',
   },
   {
     id: 'nexcojapan-com',
@@ -104,6 +111,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'nexcojapan',
+    websiteUrl: 'https://nexcojapan.com',
   },
   {
     id: 'coursepro-today',
@@ -116,6 +124,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'coursepro',
+    websiteUrl: 'https://coursepro.today',
   },
   {
     id: 'lookingglassacademy-net',
@@ -128,6 +137,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'lga',
+    websiteUrl: 'https://lookingglassacademy.net',
   },
   {
     id: 'pos-software',
@@ -140,6 +150,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'possw',
+    websiteUrl: 'https://pos-software.devtasoft.com',
   },
   {
     id: 'logistics-fleet-management',
@@ -152,6 +163,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'lfm',
+    websiteUrl: 'https://fleet-management.devtasoft.com',
   },
   {
     id: 'coffee-shop-pos',
@@ -164,6 +176,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'coffeesp',
+    websiteUrl: 'https://coffeeshop-pos.devtasoft.com',
   },
   {
     id: 'essence-vault-fragrances',
@@ -176,6 +189,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'evf',
+    websiteUrl: 'https://theessencevault.com',
   },
   {
     id: 'oakcha-fragrances',
@@ -188,6 +202,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'of',
+    websiteUrl: 'https://oakcha.com',
   },
   {
     id: 'mirrormate-com',
@@ -200,6 +215,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'mirrorm',
+    websiteUrl: 'https://mirrormate.com',
   },
   {
     id: 'herman-miller',
@@ -212,6 +228,7 @@ const portfolioProjects: ProjectCardData[] = [
     badgeBg: 'bg-orange-50',
     badgeTextColor: 'text-[#FF8706]',
     mockupType: 'hm',
+    websiteUrl: 'https://hermanmiller.com',
   },
 ];
 
@@ -832,15 +849,20 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
                       </div>
 
                       {/* Circular Arrow Button in Accent Color */}
-                      <div
-                        className="w-10 h-10 rounded-full border flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-xs"
+                      <a
+                        href={project.websiteUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        title={`Visit ${project.title}`}
+                        className="w-10 h-10 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 hover:bg-[#FF8706] hover:text-white hover:border-[#FF8706] shadow-xs cursor-pointer"
                         style={{
                           borderColor: `${project.accentColor}50`,
                           color: project.accentColor,
                         }}
                       >
                         <ArrowUpRight className="w-5 h-5 stroke-[2.5]" />
-                      </div>
+                      </a>
                     </div>
                   </div>
                 </motion.div>
@@ -944,7 +966,7 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
 
                 {/* Header */}
                 <div className="p-8 sm:p-10 pb-4">
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3 mb-4 flex-wrap">
                     <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-[#E6F8F9] text-[#14B8B0] border border-[#14B8B0]/30">
                       {selectedProject.category}
                     </span>
@@ -1017,8 +1039,17 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
                 </div>
 
                 {/* Footer CTA */}
-                <div className="px-8 sm:px-10 pb-8 pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <p className="text-[#6B7280] font-medium text-sm">Want a similar solution for your business?</p>
+                <div className="px-8 sm:px-10 pb-8 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                  <a
+                    href={selectedProject.websiteUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 bg-[#E6F8F9] hover:bg-[#14B8B0] text-[#14B8B0] hover:text-white font-bold text-sm px-5 py-3 rounded-2xl border border-[#14B8B0]/30 transition-all duration-300 cursor-pointer shadow-xs"
+                  >
+                    <span>Visit Live Website</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+
                   <button
                     onClick={() => {
                       setSelectedProject(null);
