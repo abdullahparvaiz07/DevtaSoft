@@ -26,21 +26,23 @@ export const Preloader: React.FC = () => {
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-gradient-to-tr from-[#FF8706]/8 via-[#53E5E7]/8 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col items-center gap-10">
-            {/* DevtaSoft Logo (Dark version for white background) */}
+          <div className="relative z-10 flex flex-col items-center gap-14">
+            {/* DevtaSoft Logo (Large version on white background) */}
             <motion.div
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
+              className="scale-[1.5] sm:scale-[1.75] transform origin-center my-2"
             >
               <Logo isLight={false} />
             </motion.div>
 
-            {/* Custom Dual-Block Animated Spinner */}
+            {/* Custom Dual-Block Animated Spinner (Enlarged) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
+              className="mt-2"
             >
               <div className="spinner" />
             </motion.div>
