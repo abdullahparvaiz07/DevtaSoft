@@ -193,12 +193,7 @@ const servicesData = [
     icon: SeoIcon,
     bgClass: 'bg-[#E3FAF6] text-[#00C2C7]',
   },
-  {
-    title: 'Content Writing',
-    desc: 'Engaging, SEO-friendly content that informs, engages and converts.',
-    icon: PencilIcon,
-    bgClass: 'bg-[#FFF0E5] text-[#FF6B00]',
-  },
+  
   {
     title: 'WordPress Development',
     desc: 'Fast, secure and responsive WordPress websites built to perform.',
