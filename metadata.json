@@ -1,0 +1,6 @@
+{
+  "name": "DevtaSoft Hero Section",
+  "description": "Production-ready, responsive hero section matching DevtaSoft reference design with interactive elements, contact modal, showcase preview, and stats.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
