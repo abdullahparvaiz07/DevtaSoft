@@ -384,9 +384,16 @@ export const PortfolioSection: React.FC<{
               onClick={() => setActiveProject(project)}
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.215, 0.61, 0.355, 1] } } }}
               whileHover={{ y: -8, scale: 1.02 }}>
-              <div className="relative aspect-[4/3] w-full bg-[#F8FAFC] overflow-hidden p-3.5 flex items-center justify-center border-b border-slate-100">
-                <div className={`absolute top-4 left-4 z-20 ${project.badgeBg} ${project.badgeTextColor} font-black text-xs px-3.5 py-1.5 rounded-full shadow-xs transition-transform duration-300 group-hover:scale-105`}>{project.badgeText}</div>
-                <img src={project.image} alt={project.title} className="w-full h-full object-contain object-top rounded-xl shadow-xs transition-transform duration-700 ease-out group-hover:scale-105" referrerPolicy="no-referrer" />
+              <div className="w-full h-[250px] sm:h-[270px] relative bg-[#F8FAFC] p-3 sm:p-4 overflow-hidden shrink-0 rounded-t-[32px] border-b border-slate-100 flex items-center justify-center">
+                <div className={`absolute top-4 left-4 z-20 ${project.badgeBg} ${project.badgeTextColor} font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-xs border border-slate-200/60`}>
+                  {project.badgeText}
+                </div>
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-contain object-top rounded-xl shadow-xs transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  referrerPolicy="no-referrer"
+                />
               </div>
               <div className="p-8 sm:p-10 flex flex-col flex-grow">
                 <h3 className="font-display font-extrabold text-[#0D152A] text-2xl mb-1.5 tracking-tight group-hover:text-[#FF6B00] transition-colors duration-300">{project.title}</h3>
