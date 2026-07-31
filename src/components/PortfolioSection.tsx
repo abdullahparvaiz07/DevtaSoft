@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, ArrowUpRight, Cpu, Users, Rocket, X, CheckCircle2, Clock, BarChart3 } from 'lucide-react';
 import { DotGrid } from './DotGrid';
+import { dataService, PortfolioItem } from '../services/dataService';
 
 interface Project {
   id: string;
@@ -283,6 +284,34 @@ export const PortfolioSection: React.FC<{
   const navigate = useNavigate();
   const location = useLocation();
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [dynamicProjects, setDynamicProjects] = useState<PortfolioItem[]>([]);
+
+  useEffect(() => {
+    const updatePortfolio = () => {
+      setDynamicProjects(dataService.getPortfolio());
+    };
+    updatePortfolio();
+    return dataService.subscribe(updatePortfolio);
+  }, []);
+
+  const mappedDynamicProjects: Project[] = dynamicProjects.map((p) => ({
+    id: p.id,
+    title: p.name,
+    subtitle: p.category ? `${p.category} Platform` : 'Custom Digital Product',
+    description: p.description || `Custom project built by DevtaSoft for ${p.name}.`,
+    category: p.category || 'Web Development',
+    badgeText: p.category || 'Web Development',
+    badgeBg: 'bg-[#E6F8F9]',
+    badgeTextColor: 'text-[#14B8B0]',
+    subtitleColor: 'text-[#14B8B0]',
+    image: p.image,
+    websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
+  }));
+
+  const allProjectsCombined = [
+    ...mappedDynamicProjects,
+    ...projectsData.filter((p) => !mappedDynamicProjects.some((d) => d.id === p.id)),
+  ];
 
   return (
     <section id="portfolio" className="w-full bg-[#FCFDFE] py-20 sm:py-28 px-2 sm:px-4 lg:px-6 font-sans overflow-hidden">
@@ -379,7 +408,7 @@ export const PortfolioSection: React.FC<{
         {/* 3 Project Cards Grid (1 WordPress, 1 Web Dev, 1 Custom Software) */}
         <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-14" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}
           variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15 } } }}>
-          {projectsData.map((project) => (
+          {allProjectsCombined.map((project) => (
             <motion.div key={project.id} className="bg-white rounded-[32px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-[#0D152A]/10 hover:-translate-y-2 transition-all duration-500 flex flex-col h-full group cursor-pointer"
               onClick={() => setActiveProject(project)}
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.215, 0.61, 0.355, 1] } } }}

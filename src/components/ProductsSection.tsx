@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, X, CheckCircle2, ExternalLink, Zap, Users, ShieldCheck, Sparkles, Star, Globe } from 'lucide-react';
+import { dataService, ProductItem } from '../services/dataService';
 
 interface Product {
   id: string;
@@ -11,6 +12,8 @@ interface Product {
   logo: React.ReactNode;
   textColor: string;
   ctaColor: string;
+  websiteUrl?: string;
+  customImage?: string;
 }
 
 const productsData: Product[] = [
@@ -526,17 +529,18 @@ const ProductDetailModal: React.FC<{
 };
 
 // ─── Main ProductsSection Component ─────────────────────────────────────
-interface ProductsSectionProps {
-  onExploreAllClick?: () => void;
-  onLearnMoreClick?: (productId: string) => void;
-}
-
-export const ProductsSection: React.FC<ProductsSectionProps> = ({
-  onExploreAllClick,
-  onLearnMoreClick,
-}) => {
+export const ProductsSection: React.FC<{ onContactClick: () => void }> = ({ onContactClick }) => {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
+  const [dynamicProducts, setDynamicProducts] = useState<ProductItem[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const updateProducts = () => {
+      setDynamicProducts(dataService.getProducts());
+    };
+    updateProducts();
+    return dataService.subscribe(updateProducts);
+  }, []);
 
   useEffect(() => {
     if (activeProduct) {
@@ -548,6 +552,29 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
       document.body.style.overflow = '';
     };
   }, [activeProduct]);
+
+  // Map dynamic products from dataService to Product format matching 2nd reference image
+  const mappedDynamicProducts: Product[] = dynamicProducts.map((p) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description || 'Intelligent software product created by DevtaSoft.',
+    bgClass: 'bg-white border-[#E7EAF0]',
+    textColor: 'text-[#FF8706]',
+    ctaColor: 'text-[#FF8706] hover:text-[#E07200]',
+    websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
+    customImage: p.image,
+    logo: (
+      <div className="flex items-center gap-3">
+        <img src={p.image} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs" />
+        <span className="font-sans font-extrabold text-lg text-[#0D152A] tracking-tight">{p.name}</span>
+      </div>
+    ),
+  }));
+
+  const allProductsCombined = [
+    ...mappedDynamicProducts,
+    ...productsData.filter((p) => !mappedDynamicProducts.some((d) => d.id === p.id)),
+  ];
 
   return (
     <section id="products" className="w-full bg-[#FCFDFE] py-20 sm:py-28 px-2 sm:px-4 lg:px-6 font-sans overflow-hidden border-t border-slate-50">
@@ -716,11 +743,15 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
             },
           }}
         >
-          {productsData.map((product) => (
+          {allProductsCombined.map((product) => (
             <motion.div 
               key={product.id}
               onClick={() => {
-                setActiveProduct(product);
+                if (product.websiteUrl) {
+                  window.open(product.websiteUrl, '_blank', 'noopener,noreferrer');
+                } else {
+                  setActiveProduct(product);
+                }
               }}
               className={`rounded-[24px] p-8 border ${product.bgClass} shadow-sm hover:shadow-xl hover:shadow-[#0D152A]/5 hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between h-full group cursor-pointer`}
               variants={{
@@ -738,16 +769,24 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-100/50 flex items-center">
+              <div className="pt-4 border-t border-slate-100/50 flex items-center justify-between">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setActiveProduct(product);
+                    if (product.websiteUrl) {
+                      window.open(product.websiteUrl, '_blank', 'noopener,noreferrer');
+                    } else {
+                      setActiveProduct(product);
+                    }
                   }}
                   className={`inline-flex items-center gap-2 font-bold text-sm ${product.ctaColor} transition-all duration-300 group/btn cursor-pointer`}
                 >
-                  <span>Learn More</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5" />
+                  <span>{product.websiteUrl ? 'Visit Product' : 'Learn More'}</span>
+                  {product.websiteUrl ? (
+                    <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  ) : (
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5" />
+                  )}
                 </button>
               </div>
             </motion.div>
@@ -771,7 +810,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
       <ProductDetailModal
         product={activeProduct}
         onClose={() => setActiveProduct(null)}
-        onExploreAll={onExploreAllClick}
+        onExploreAll={() => navigate('/products')}
       />
     </section>
   );
