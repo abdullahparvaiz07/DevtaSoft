@@ -554,22 +554,33 @@ export const ProductsSection: React.FC<{ onContactClick: () => void }> = ({ onCo
   }, [activeProduct]);
 
   // Map dynamic products from dataService to Product format matching 2nd reference image
-  const mappedDynamicProducts: Product[] = dynamicProducts.map((p) => ({
-    id: p.id,
-    name: p.name,
-    description: p.description || 'Intelligent software product created by DevtaSoft.',
-    bgClass: 'bg-white border-[#E7EAF0]',
-    textColor: 'text-[#FF8706]',
-    ctaColor: 'text-[#FF8706] hover:text-[#E07200]',
-    websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
-    customImage: p.image,
-    logo: (
-      <div className="flex items-center gap-3">
-        <img src={p.image} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs" />
-        <span className="font-sans font-extrabold text-lg text-[#0D152A] tracking-tight">{p.name}</span>
-      </div>
-    ),
-  }));
+  const mappedDynamicProducts: Product[] = dynamicProducts.map((p) => {
+    const existing = productsData.find((item) => item.id === p.id || item.name.toLowerCase() === p.name.toLowerCase());
+    if (existing) {
+      return {
+        ...existing,
+        description: p.description || existing.description,
+        websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
+      };
+    }
+
+    return {
+      id: p.id,
+      name: p.name,
+      description: p.description || 'Intelligent software product created by DevtaSoft.',
+      bgClass: 'bg-white border-[#E7EAF0]',
+      textColor: 'text-[#FF8706]',
+      ctaColor: 'text-[#FF8706] hover:text-[#E07200]',
+      websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
+      customImage: p.image,
+      logo: (
+        <div className="flex items-center gap-3">
+          <img src={p.image} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs" />
+          <span className="font-sans font-extrabold text-lg text-[#0D152A] tracking-tight">{p.name}</span>
+        </div>
+      ),
+    };
+  });
 
   const allProductsCombined = mappedDynamicProducts;
 

@@ -729,35 +729,31 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
   }, [selectedProject]);
 
   // Convert dynamic dataService items to ProjectCardData format
-  const mappedDynamicProjects: ProjectCardData[] = dynamicItems.map((item) => ({
-    id: item.id,
-    title: item.name,
-    category: item.category || 'Web Development',
-    categoryLabel: (item.category || 'WEB DEVELOPMENT').toUpperCase(),
-    accentColor: '#00C2CC',
-    badgeBg: 'bg-[#E3FAF6]',
-    badgeTextColor: 'text-[#00C2CC]',
-    mockupType: 'custom',
-    customImage: item.image,
-    description: item.description || `Custom project built by DevtaSoft for ${item.name}.`,
-    websiteUrl: item.domain.startsWith('http') ? item.domain : `https://${item.domain}`,
-    client: item.name,
-    year: '2025',
-    timeline: '3 Weeks',
-    role: 'Full-Stack Engineering & System Architecture',
-    overview: item.description || `${item.name} is an enterprise digital product created to streamline operations and enhance user experiences.`,
-    stats: [
-      { label: 'Uptime', value: '99.9%' },
-      { label: 'Speed Score', value: '98/100' },
-      { label: 'User Satisfaction', value: '100%' },
-    ],
-    techStackTags: ['React', 'Laravel', 'REST API', 'MySQL'],
-    keyFeatures: [
-      { title: 'High Performance Architecture', desc: 'Engineered for sub-second page loads and seamless scaling.' },
-      { title: 'Responsive Design', desc: 'Pixel-perfect layout across mobile, tablet, and desktop devices.' },
-      { title: 'Secure Integration', desc: 'Built with enterprise-grade encryption and API security protocols.' },
-    ],
-  }));
+  const mappedDynamicProjects: ProjectCardData[] = dynamicItems.map((item) => {
+    const existing = portfolioProjects.find((p) => p.id === item.id || p.title.toLowerCase() === item.name.toLowerCase());
+    if (existing) {
+      return {
+        ...existing,
+        description: item.description || existing.description,
+        websiteUrl: item.domain.startsWith('http') ? item.domain : `https://${item.domain}`,
+      };
+    }
+
+    return {
+      id: item.id,
+      title: item.name,
+      category: (item.category as any) || 'Web Development',
+      categoryLabel: (item.category || 'WEB DEVELOPMENT').toUpperCase(),
+      accentColor: '#FF8706',
+      badgeBg: 'bg-orange-50',
+      badgeTextColor: 'text-[#FF8706]',
+      mockupType: 'custom',
+      customImage: item.image,
+      description: item.description || `Custom project built by DevtaSoft for ${item.name}.`,
+      websiteUrl: item.domain.startsWith('http') ? item.domain : `https://${item.domain}`,
+      techStackTags: ['React', 'Laravel', 'REST API', 'MySQL'],
+    };
+  });
 
   const combinedProjects = mappedDynamicProjects;
 
