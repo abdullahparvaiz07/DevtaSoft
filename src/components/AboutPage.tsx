@@ -7,6 +7,10 @@ import {
   Code,
   Rocket,
   Play,
+  Award,
+  ShieldCheck,
+  CheckCircle2,
+  Terminal,
 } from 'lucide-react';
 import { DotGrid } from './DotGrid';
 
@@ -372,6 +376,188 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
         </div>
       </section>
 
+      {/* ═══════════════════════════════════════════
+          SECTION 1.5 — CEO & TECHNICAL LEADERSHIP PROFILE
+      ═══════════════════════════════════════════ */}
+      <section className="relative w-full py-20 sm:py-28 bg-[#0D152A] text-white overflow-hidden">
+        {/* Ambient Radial Blur Orbs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF6B00]/15 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#14B8B0]/15 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
+          
+          {/* Section Eyebrow Header */}
+          <motion.div
+            className="flex items-center gap-3 mb-10"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            variants={heroFadeUp}
+          >
+            <span className="text-[#14B8B0] font-extrabold text-xs sm:text-sm uppercase tracking-[0.25em]">
+              EXECUTIVE LEADERSHIP
+            </span>
+            <span className="h-[2px] w-10 bg-[#14B8B0] rounded-full inline-block" />
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-start">
+            
+            {/* LEFT COLUMN: CEO Profile Main Card */}
+            <motion.div
+              className="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-[32px] p-8 sm:p-10 shadow-2xl relative overflow-hidden backdrop-blur-xl"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              variants={heroFadeUp}
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#FF6B00]/20 to-transparent rounded-bl-full pointer-events-none" />
+
+              {/* Avatar Initials & Title */}
+              <div className="flex items-center gap-5 mb-6">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#FF6B00] via-[#FF8706] to-[#14B8B0] p-1 shadow-lg shadow-[#FF6B00]/20 shrink-0">
+                  <div className="w-full h-full bg-[#0D152A] rounded-xl flex items-center justify-center font-display font-extrabold text-2xl text-white">
+                    AQ
+                  </div>
+                </div>
+                <div>
+                  <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-white">
+                    Awais Qarni
+                  </h2>
+                  <p className="text-[#14B8B0] font-bold text-sm sm:text-base mt-0.5">
+                    Chief Executive Officer & Lead Architect
+                  </p>
+                </div>
+              </div>
+
+              {/* Role & Specialties Tagline */}
+              <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 mb-6">
+                <p className="text-slate-300 font-semibold text-xs sm:text-sm leading-relaxed">
+                  Full Stack Developer &nbsp;|&nbsp; PHP &nbsp;|&nbsp; Laravel &nbsp;|&nbsp; React &nbsp;|&nbsp; AI Automation
+                </p>
+              </div>
+
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-6">
+                Spearheading technical innovation at DevtaSoft, Awais leads engineering teams to craft high-concurrency web architectures, enterprise API solutions, and AI-driven workflow systems designed for maximum scale and resilience.
+              </p>
+
+              {/* Core Skill Chips */}
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-800">
+                {['PHP', 'Laravel', 'React.js', 'AI Automation', 'MySQL', 'REST APIs', 'System Architecture'].map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1 rounded-full bg-[#14B8B0]/10 border border-[#14B8B0]/30 text-[#14B8B0] text-xs font-bold"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* RIGHT COLUMN: Certifications, Credentials & Professional Focus Areas */}
+            <motion.div
+              className="lg:col-span-7 flex flex-col gap-6"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              variants={cardStagger}
+            >
+              
+              {/* Cards Grid: Certificate & IEEE Member */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
+                {/* 1. Web Developer Certificate */}
+                <motion.div
+                  className="bg-slate-900/80 border border-slate-800 hover:border-[#FF6B00]/50 rounded-[24px] p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-xl group"
+                  variants={cardFadeUp}
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-[#FF6B00]/15 border border-[#FF6B00]/30 text-[#FF6B00] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <Award className="w-6 h-6 stroke-[2.2]" />
+                  </div>
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF6B00]">
+                    01. Certification
+                  </span>
+                  <h3 className="font-display font-bold text-lg text-white mt-1 mb-1">
+                    Web Developer Certificate
+                  </h3>
+                  <p className="text-slate-300 font-semibold text-xs mb-2">
+                    Cybex IT Group (2023)
+                  </p>
+                  <p className="text-slate-400 text-xs leading-relaxed">
+                    Advanced Web Development Certification specializing in modern web frameworks and full-stack software architecture.
+                  </p>
+                </motion.div>
+
+                {/* 2. IEEE Member */}
+                <motion.div
+                  className="bg-slate-900/80 border border-slate-800 hover:border-[#14B8B0]/50 rounded-[24px] p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-xl group"
+                  variants={cardFadeUp}
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-[#14B8B0]/15 border border-[#14B8B0]/30 text-[#14B8B0] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
+                  </div>
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#14B8B0]">
+                    02. Credential
+                  </span>
+                  <h3 className="font-display font-bold text-lg text-white mt-1 mb-1">
+                    IEEE Member
+                  </h3>
+                  <p className="text-slate-300 font-semibold text-xs mb-2">
+                    IEEE Membership & Event Org (2025)
+                  </p>
+                  <p className="text-slate-400 text-xs leading-relaxed">
+                    Active IEEE member promoting innovation, technical engineering standards, and collaborative digital solutions.
+                  </p>
+                </motion.div>
+
+              </div>
+
+              {/* 3. Professional Focus Areas Card */}
+              <motion.div
+                className="bg-slate-900/80 border border-slate-800 rounded-[28px] p-7 sm:p-8 backdrop-blur-xl"
+                variants={cardFadeUp}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-[#00C2CC]/15 border border-[#00C2CC]/30 text-[#00C2CC] flex items-center justify-center shrink-0">
+                    <Terminal className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#00C2CC]">
+                      03. Core Engineering Focus
+                    </span>
+                    <h3 className="font-display font-extrabold text-xl text-white">
+                      Professional Focus Areas
+                    </h3>
+                  </div>
+                </div>
+
+                <p className="text-slate-300 text-xs sm:text-sm font-semibold mb-4">
+                  My development priorities include:
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {[
+                    'Laravel ecosystem structures and API engineering.',
+                    'Optimizing SQL database structures & relational schemas.',
+                    'Clean architecture & secure input validations.',
+                    'Third-party platform integrations (Stripe, external REST services).',
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-start gap-3 text-xs sm:text-sm text-slate-300 font-medium hover:border-[#14B8B0]/40 transition-colors"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-[#14B8B0] shrink-0 mt-0.5" />
+                      <span className="leading-snug">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+            </motion.div>
+
+          </div>
+
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════
           SECTION 2 — WHAT CAN WE DO?
