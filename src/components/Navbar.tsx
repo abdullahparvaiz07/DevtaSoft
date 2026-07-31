@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Logo } from './Logo';
-import { ArrowRight, Menu, X, LogIn, ShieldAlert } from 'lucide-react';
+import { ArrowRight, Menu, X, LogIn } from 'lucide-react';
 
 interface NavbarProps {
   onContactClick: () => void;
@@ -19,68 +19,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLoginClick,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showLoginButton, setShowLoginButton] = useState<boolean>(() => {
-    return localStorage.getItem('devtasoft_admin_unlocked') === 'true';
-  });
-
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Mobile & Tablet Secret Gesture Handlers (Triple Tap or 1.5s Long Press on Logo)
-  const [tapCount, setTapCount] = useState(0);
-  const [tapTimer, setTapTimer] = useState<NodeJS.Timeout | null>(null);
-  const [holdTimer, setHoldTimer] = useState<NodeJS.Timeout | null>(null);
-
-  const toggleAdminAccess = () => {
-    setShowLoginButton((prev) => {
-      const next = !prev;
-      if (next) {
-        localStorage.setItem('devtasoft_admin_unlocked', 'true');
-      } else {
-        localStorage.removeItem('devtasoft_admin_unlocked');
-      }
-      return next;
-    });
-  };
-
-  // Secret Desktop Keyboard Shortcut: Ctrl + Alt + A (or Cmd + Alt + A)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.altKey && (e.key === 'a' || e.key === 'A')) {
-        e.preventDefault();
-        toggleAdminAccess();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const handleLogoTouchStart = () => {
-    const timer = setTimeout(() => {
-      toggleAdminAccess();
-    }, 1500);
-    setHoldTimer(timer);
-  };
-
-  const handleLogoTouchEnd = () => {
-    if (holdTimer) clearTimeout(holdTimer);
-
-    const newCount = tapCount + 1;
-    setTapCount(newCount);
-
-    if (tapTimer) clearTimeout(tapTimer);
-
-    if (newCount >= 3) {
-      toggleAdminAccess();
-      setTapCount(0);
-    } else {
-      const timer = setTimeout(() => {
-        setTapCount(0);
-      }, 1200);
-      setTapTimer(timer);
-    }
-  };
 
   const navItems = [
     { label: 'Home', id: 'Home', path: '/' },
@@ -127,11 +67,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="relative z-50 w-full h-[76px] px-4 sm:px-6 lg:px-8 bg-transparent outline-none border-none transition-all duration-300">
       <div className="w-full flex items-center justify-between h-full relative">
-        {/* Left Logo (Supports Keyboard Shortcut & Mobile Touch Gestures) */}
+        {/* Left Logo */}
         <button
           onClick={onHomeClick}
-          onTouchStart={handleLogoTouchStart}
-          onTouchEnd={handleLogoTouchEnd}
           className="text-left focus:outline-none rounded-lg p-0 transition-opacity hover:opacity-90 cursor-pointer flex items-center shrink-0 -ml-4 sm:-ml-2 select-none"
         >
           <Logo />
@@ -170,15 +108,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </button>
 
-          {/* Secret Admin Login Button (Appears only on Ctrl + Alt + A) */}
-          {showLoginButton && (
-            <button
-              onClick={onLoginClick}
-              className="button animate-in fade-in zoom-in-95 duration-300"
-            >
-              Login
-            </button>
-          )}
+          {/* Login Button (Always Visible) */}
+          <button
+            onClick={onLoginClick}
+            className="button"
+          >
+            Login
+          </button>
         </div>
 
         {/* Mobile Hamburger Toggle (Persistent DOM Element for Smooth CSS Animation) */}
@@ -216,8 +152,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onHomeClick();
                     setMobileMenuOpen(false);
                   }}
-                  onTouchStart={handleLogoTouchStart}
-                  onTouchEnd={handleLogoTouchEnd}
                   className="text-left focus:outline-none cursor-pointer select-none"
                 >
                   <Logo />
@@ -263,18 +197,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <ArrowRight className="w-4 h-4 text-white stroke-[2.5]" />
               </button>
 
-              {/* Secret Admin Login Button (Appears only on Ctrl + Alt + A) */}
-              {showLoginButton && (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onLoginClick?.();
-                  }}
-                  className="button !w-full animate-in fade-in duration-300"
-                >
-                  Login
-                </button>
-              )}
+              {/* Full Width Login Button in Mobile Sidebar */}
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onLoginClick?.();
+                }}
+                className="button !w-full"
+              >
+                Login
+              </button>
 
               <div className="text-center text-xs text-slate-400 font-medium pt-1">
                 © DevtaSoft. All rights reserved.
