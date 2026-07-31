@@ -7,11 +7,12 @@ export const Logo: React.FC<{ className?: string; isLight?: boolean }> = ({ clas
       <img
         src="/logo.png"
         alt="DevtaSoft Logo"
-        className="h-50 sm:h-45 w-auto max-h-45 object-contain transition-transform duration-300 hover:scale-105"
+        className="h-15 sm:h-20 w-auto max-h-20 object-contain transition-transform duration-300 hover:scale-105"
         referrerPolicy="no-referrer"
       />
     </div>
   );
 };
+
 
 

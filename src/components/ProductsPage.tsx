@@ -423,17 +423,11 @@ export const ProductsPage: React.FC<{ onContactClick: () => void }> = ({ onConta
     <div className="w-full bg-[#FFFFFF] min-h-screen font-sans text-[#0D152A] pt-6 pb-24 overflow-x-hidden">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
         
-        {/* ─── SECTION HEADER ────────────────────────────────────────────── */}
-        <div className="relative pt-8 pb-14 text-center max-w-4xl mx-auto">
+        {/* ─── SECTION HEADER LEFT ALIGNED (Matching Hero Section Alignment) ────────────────── */}
+        <div className="relative pt-8 pb-14 flex flex-col items-start text-left max-w-4xl">
           
-          {/* Left Decorative Dot Grid + Blob */}
-          <div className="absolute left-[-60px] top-4 pointer-events-none hidden lg:block opacity-75">
-            <div className="w-32 h-32 rounded-full bg-[#FFEFE5] absolute -top-4 -left-4 blur-xl opacity-60" />
-            <DotGrid rows={4} cols={6} dotColor="#FF8706" />
-          </div>
-
           {/* Right Decorative Dot Grid + Blob */}
-          <div className="absolute right-[-60px] top-4 pointer-events-none hidden lg:block opacity-75">
+          <div className="absolute right-[0px] top-4 pointer-events-none hidden lg:block opacity-75">
             <div className="w-32 h-32 rounded-full bg-[#E6F8F9] absolute -top-4 -right-4 blur-xl opacity-60" />
             <DotGrid rows={4} cols={6} dotColor="#14B8B0" />
           </div>
@@ -443,7 +437,7 @@ export const ProductsPage: React.FC<{ onContactClick: () => void }> = ({ onConta
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col items-center gap-1.5 mb-4"
+            className="flex flex-col items-start gap-1.5 mb-4"
           >
             <span className="text-[#14B8B0] font-extrabold text-xs sm:text-sm uppercase tracking-[0.2em]">
               OUR PRODUCTS
@@ -463,12 +457,12 @@ export const ProductsPage: React.FC<{ onContactClick: () => void }> = ({ onConta
 
           {/* Short Description */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-[#6B7280] font-medium text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+            className="text-[#667085] font-medium text-base sm:text-lg leading-relaxed max-w-2xl"
           >
-            Explore our collection of easy-to-use, high-performance web tools designed to simplify your daily tasks.
+            We design and engineer intelligent SaaS platforms, AI productivity tools, and modern software applications built for speed, scale, and seamless user experiences.
           </motion.p>
         </div>
 

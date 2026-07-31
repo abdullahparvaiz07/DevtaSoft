@@ -394,17 +394,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
           
-          {/* Section Header Centered */}
+          {/* Section Header Left Aligned (Matching Hero Section Alignment) */}
           <motion.div
-            className="text-center max-w-3xl mx-auto mb-16"
+            className="flex flex-col items-start text-left max-w-3xl mb-16"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
             variants={heroContainer}
           >
             {/* Eyebrow Label */}
-            <motion.div className="flex items-center justify-center gap-3 mb-4" variants={heroFadeUp}>
-              <span className="h-[2px] w-8 bg-[#FF6B00] rounded-full inline-block" />
+            <motion.div className="flex items-center gap-3 mb-4" variants={heroFadeUp}>
               <span className="text-[#FF6B00] font-extrabold text-xs sm:text-sm uppercase tracking-[0.25em]">
                 EXECUTIVE LEADERSHIP
               </span>
@@ -421,7 +420,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
 
             {/* Subtitle */}
             <motion.p
-              className="text-slate-500 font-medium text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+              className="text-slate-500 font-medium text-base sm:text-lg leading-relaxed max-w-2xl"
               variants={heroFadeUp}
             >
               Guided by vision, powered by expertise. Our leadership drives innovation, delivers results, and builds the future at{' '}
@@ -628,16 +627,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
       <section id="what-can-we-do" className="relative w-full py-24 sm:py-32 bg-white border-t border-slate-100">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
           
-          {/* Section Header */}
+          {/* Section Header Left Aligned (Matching Hero Section Alignment) */}
           <motion.div
-            className="text-center max-w-3xl mx-auto mb-16 sm:mb-20"
+            className="flex flex-col items-start text-left max-w-3xl mb-16 sm:mb-20"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
             variants={heroContainer}
           >
             {/* Eyebrow Label */}
-            <motion.div className="flex items-center justify-center gap-2.5 mb-4" variants={heroFadeUp}>
+            <motion.div className="flex items-center gap-2.5 mb-4" variants={heroFadeUp}>
               <span className="text-[#14B8B0] font-extrabold text-sm sm:text-base uppercase tracking-[0.2em]">
                 WHAT CAN WE DO?
               </span>

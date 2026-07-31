@@ -246,17 +246,16 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onReadMoreClick }) =
         ═══════════════════════════════════════════════════════════════ */}
         <div className="pt-8 sm:pt-12">
           
-          {/* Section Header */}
+          {/* Section Header Left Aligned (Matching Hero Section Alignment) */}
           <motion.div
-            className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16"
+            className="flex flex-col items-start text-left max-w-3xl mb-16"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-60px' }}
             variants={containerVariants}
           >
             {/* Eyebrow Label */}
-            <motion.div className="flex items-center justify-center gap-2.5 mb-3" variants={itemVariants}>
-              <span className="h-[2px] w-7 bg-[#53E5E7] rounded-full inline-block" />
+            <motion.div className="flex items-center gap-2.5 mb-3" variants={itemVariants}>
               <span className="text-[#53E5E7] font-extrabold text-sm uppercase tracking-[0.2em]">
                 WHAT DRIVES US
               </span>

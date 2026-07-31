@@ -612,16 +612,16 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     <section id="services" className="w-full bg-white py-24 sm:py-32 px-4 sm:px-6 lg:px-10 font-sans overflow-hidden border-t border-slate-100">
       <div className="max-w-[1400px] mx-auto">
         
-        {/* SECTION HEADER */}
+        {/* SECTION HEADER LEFT ALIGNED (Matching Hero Section Alignment) */}
         <motion.div
-          className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16 sm:mb-20"
+          className="flex flex-col items-start text-left max-w-3xl mb-16 sm:mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1] }}
         >
-          {/* Top Center Label */}
-          <div className="flex flex-col items-center gap-1.5 mb-4">
+          {/* Top Label */}
+          <div className="flex flex-col items-start gap-1.5 mb-4">
             <span className="text-[#14B8B0] font-extrabold text-xs sm:text-sm uppercase tracking-[0.2em]">
               OUR SERVICES
             </span>
@@ -634,7 +634,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             to move your business <span className="text-[#FF8706]">forward.</span>
           </h2>
 
-          {/* Short Centered Description */}
+          {/* Description */}
           <p className="text-[#667085] font-medium text-base sm:text-lg leading-relaxed max-w-2xl">
             We combine technology, creativity, and strategy to build scalable digital solutions that create real business impact.
           </p>
