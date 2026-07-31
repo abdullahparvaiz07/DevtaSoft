@@ -75,6 +75,42 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     return () => clearInterval(timer);
   }, [blockedUntil]);
 
+  // Reset Lockout Helper
+  const resetBlockout = () => {
+    localStorage.removeItem('devtasoft_ip_blocked_until');
+    localStorage.removeItem('devtasoft_failed_attempts');
+    setBlockedUntil(null);
+    setFailedCount(0);
+    setErrorMessage(null);
+    setTimeLeftStr('');
+  };
+
+  // Expose global window reset command for Admin console
+  useEffect(() => {
+    (window as any).resetAdminBlock = () => {
+      resetBlockout();
+      console.log('%c[DevtaSoft Admin] Security block reset successfully.', 'color: #00C2CC; font-weight: bold;');
+    };
+  }, []);
+
+  // Keyboard shortcut: Ctrl + Shift + U (or Ctrl + Alt + U)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.ctrlKey && e.shiftKey && (e.key === 'U' || e.key === 'u')) ||
+        (e.ctrlKey && e.altKey && (e.key === 'U' || e.key === 'u'))
+      ) {
+        e.preventDefault();
+        resetBlockout();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -148,7 +184,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
         {/* VIEW 1: 24-Hour IP Blocked Lockout Screen */}
         {blockedUntil ? (
           <div className="text-center py-6 flex flex-col items-center justify-center space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 bg-red-100 border border-red-200 text-red-600 rounded-full flex items-center justify-center mb-1 shadow-md shadow-red-500/10">
+            <div
+              onClick={resetBlockout}
+              className="w-16 h-16 bg-red-100 border border-red-200 text-red-600 rounded-full flex items-center justify-center mb-1 shadow-md shadow-red-500/10 cursor-pointer"
+              title="DevtaSoft Admin Reset"
+            >
               <ShieldAlert className="w-9 h-9 stroke-[2.2]" />
             </div>
             
