@@ -30,19 +30,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [tapCount, setTapCount] = useState(0);
   const [tapTimer, setTapTimer] = useState<NodeJS.Timeout | null>(null);
   const [holdTimer, setHoldTimer] = useState<NodeJS.Timeout | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const toggleAdminAccess = () => {
     setShowLoginButton((prev) => {
       const next = !prev;
       if (next) {
         localStorage.setItem('devtasoft_admin_unlocked', 'true');
-        setToastMessage('Admin Mode Unlocked');
       } else {
         localStorage.removeItem('devtasoft_admin_unlocked');
-        setToastMessage('Admin Mode Locked');
       }
-      setTimeout(() => setToastMessage(null), 2500);
       return next;
     });
   };
@@ -130,15 +126,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="relative z-50 w-full h-[76px] px-4 sm:px-6 lg:px-8 bg-transparent outline-none border-none transition-all duration-300">
-      
-      {/* Mobile/Tablet Admin Mode Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-20 right-4 sm:right-8 z-[100] flex items-center gap-2 px-4 py-2.5 bg-[#0D152A] border border-[#00C2CC]/60 text-white rounded-2xl shadow-xl text-xs font-bold animate-in slide-in-from-top-4 duration-300">
-          <div className="w-2 h-2 rounded-full bg-[#00C2CC] animate-ping" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
       <div className="w-full flex items-center justify-between h-full relative">
         {/* Left Logo (Supports Keyboard Shortcut & Mobile Touch Gestures) */}
         <button
@@ -283,7 +270,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setMobileMenuOpen(false);
                     onLoginClick?.();
                   }}
-                  className="button w-full animate-in fade-in duration-300"
+                  className="button !w-full animate-in fade-in duration-300"
                 >
                   Login
                 </button>
