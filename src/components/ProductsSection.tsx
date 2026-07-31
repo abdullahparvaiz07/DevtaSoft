@@ -571,10 +571,7 @@ export const ProductsSection: React.FC<{ onContactClick: () => void }> = ({ onCo
     ),
   }));
 
-  const allProductsCombined = [
-    ...mappedDynamicProducts,
-    ...productsData.filter((p) => !mappedDynamicProducts.some((d) => d.id === p.id)),
-  ];
+  const allProductsCombined = mappedDynamicProducts;
 
   return (
     <section id="products" className="w-full bg-[#FCFDFE] py-20 sm:py-28 px-2 sm:px-4 lg:px-6 font-sans overflow-hidden border-t border-slate-50">

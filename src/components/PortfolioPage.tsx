@@ -759,11 +759,7 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
     ],
   }));
 
-  // Combine dynamic items with default portfolio items avoiding duplicate IDs
-  const combinedProjects = [
-    ...mappedDynamicProjects,
-    ...portfolioProjects.filter((p) => !mappedDynamicProjects.some((d) => d.id === p.id)),
-  ];
+  const combinedProjects = mappedDynamicProjects;
 
   const filteredProjects = combinedProjects.filter((p) => {
     if (activeCategory === 'All Projects') return true;

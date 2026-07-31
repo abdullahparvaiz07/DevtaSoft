@@ -308,10 +308,7 @@ export const PortfolioSection: React.FC<{
     websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
   }));
 
-  const allProjectsCombined = [
-    ...mappedDynamicProjects,
-    ...projectsData.filter((p) => !mappedDynamicProjects.some((d) => d.id === p.id)),
-  ];
+  const allProjectsCombined = mappedDynamicProjects;
 
   return (
     <section id="portfolio" className="w-full bg-[#FCFDFE] py-20 sm:py-28 px-2 sm:px-4 lg:px-6 font-sans overflow-hidden">

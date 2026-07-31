@@ -20,6 +20,7 @@ import {
   Search,
 } from 'lucide-react';
 import { DotGrid } from './DotGrid';
+import { dataService, ProductItem as DataProductItem } from '../services/dataService';
 
 interface ProductItem {
   id: string;
@@ -408,6 +409,16 @@ export const ProductsPage: React.FC<{ onContactClick: () => void }> = ({ onConta
     window.scrollTo(0, 0);
   }, []);
 
+  const [dynamicProducts, setDynamicProducts] = useState<DataProductItem[]>([]);
+
+  useEffect(() => {
+    const update = () => {
+      setDynamicProducts(dataService.getProducts());
+    };
+    update();
+    return dataService.subscribe(update);
+  }, []);
+
   useEffect(() => {
     if (selectedProduct) {
       document.body.style.overflow = 'hidden';
@@ -418,6 +429,40 @@ export const ProductsPage: React.FC<{ onContactClick: () => void }> = ({ onConta
       document.body.style.overflow = '';
     };
   }, [selectedProduct]);
+
+  // Map dynamic products from dataService to ProductItem format
+  const mappedProducts: ProductItem[] = dynamicProducts.map((p) => {
+    // Check if matches default item in allProductsList
+    const existing = allProductsList.find((item) => item.name.toLowerCase() === p.name.toLowerCase() || item.id === p.id);
+    if (existing) {
+      return {
+        ...existing,
+        description: p.description || existing.description,
+      };
+    }
+
+    return {
+      id: p.id,
+      name: p.name,
+      description: p.description || 'Intelligent product built by DevtaSoft.',
+      arrowColor: 'text-[#FF8706]',
+      tagline: p.name,
+      longDesc: p.description || `${p.name} is an advanced software solution engineered for maximum efficiency.`,
+      stats: [{ value: '99.9%', label: 'Uptime' }, { value: '< 1s', label: 'Response' }, { value: '24/7', label: 'Support' }],
+      features: [
+        { title: 'High Speed Processing', desc: 'Fast client-side rendering and API integration.' },
+        { title: 'Secure & Reliable', desc: 'Enterprise security standards and data encryption.' },
+      ],
+      badges: ['DevtaSoft Suite', 'Verified'],
+      themeColor: '#FF8706',
+      themeBg: '#FFF0E5',
+      icon: (
+        <div className="flex items-center gap-2">
+          <img src={p.image} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs" />
+        </div>
+      ),
+    };
+  });
 
   return (
     <div className="w-full bg-[#FFFFFF] min-h-screen font-sans text-[#0D152A] pt-6 pb-24 overflow-x-hidden">
@@ -479,7 +524,7 @@ export const ProductsPage: React.FC<{ onContactClick: () => void }> = ({ onConta
             },
           }}
         >
-          {allProductsList.map((product) => (
+          {mappedProducts.map((product) => (
             <motion.div
               key={product.id}
               onClick={() => setSelectedProduct(product)}
