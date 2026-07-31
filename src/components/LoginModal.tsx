@@ -5,12 +5,13 @@ import { Logo } from './Logo';
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess?: () => void;
 }
 
 const MAX_ATTEMPTS = 3;
 const BLOCK_DURATION_MS = 24 * 60 * 60 * 1000; // 24 Hours in milliseconds
 
-export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -88,14 +89,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     setStatus('loading');
 
     setTimeout(() => {
-      // Simulate credential check (Valid demo account: admin@devtasoft.com / admin123)
-      const isValid = email.trim().toLowerCase() === 'admin@devtasoft.com' && password === 'admin123';
+      // Simulate credential check (Valid admin account: admin@devtasoft.com / adminawais026)
+      const isValid = email.trim().toLowerCase() === 'admin@devtasoft.com' && password === 'adminawais026';
 
       if (isValid) {
-        // Success: Reset failed count
+        // Success: Reset failed count & mark admin logged in
+        localStorage.setItem('devtasoft_admin_logged_in', 'true');
         localStorage.removeItem('devtasoft_failed_attempts');
         setFailedCount(0);
         setStatus('success');
+        setTimeout(() => {
+          onLoginSuccess?.();
+          onClose();
+        }, 600);
       } else {
         // Failed attempt: Increment failed count
         const newCount = failedCount + 1;

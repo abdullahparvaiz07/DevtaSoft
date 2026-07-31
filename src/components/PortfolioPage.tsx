@@ -19,6 +19,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { DotGrid } from './DotGrid';
+import { dataService, PortfolioItem } from '../services/dataService';
 
 interface ProjectCardData {
   id: string;
@@ -30,7 +31,8 @@ interface ProjectCardData {
   accentColor: string;
   badgeBg: string;
   badgeTextColor: string;
-  mockupType: 'sarastore' | 'boxwala' | 'hafiztalha' | 'trendfits' | 'nexcojapan' | 'coursepro' | 'shortconverter' | 'possw' | 'lfm' | 'coffeesp' | 'lga' | 'evf' | 'of' | 'mirrorm' | 'hm';
+  mockupType: string;
+  customImage?: string;
   websiteUrl: string;
 }
 
@@ -505,8 +507,19 @@ const caseStudyModalData: Record<string, {
   },
 };
 
-// ─── Component: Simulated Visual Mockups ─────────────────────────────────
-const MockupPreview: React.FC<{ type: ProjectCardData['mockupType'] }> = ({ type }) => {
+const MockupPreview: React.FC<{ type: string; customImage?: string }> = ({ type, customImage }) => {
+  if (customImage) {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src={customImage}
+          alt="Project Mockup"
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
   if (type === 'sarastore') {
     return (
       <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
@@ -690,9 +703,18 @@ const MockupPreview: React.FC<{ type: ProjectCardData['mockupType'] }> = ({ type
 export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onContactClick }) => {
   const [activeCategory, setActiveCategory] = useState<string>('All Projects');
   const [selectedProject, setSelectedProject] = useState<ProjectCardData | null>(null);
+  const [dynamicItems, setDynamicItems] = useState<PortfolioItem[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const updateItems = () => {
+      setDynamicItems(dataService.getPortfolio());
+    };
+    updateItems();
+    return dataService.subscribe(updateItems);
   }, []);
 
   useEffect(() => {
@@ -706,7 +728,44 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
     };
   }, [selectedProject]);
 
-  const filteredProjects = portfolioProjects.filter((p) => {
+  // Convert dynamic dataService items to ProjectCardData format
+  const mappedDynamicProjects: ProjectCardData[] = dynamicItems.map((item) => ({
+    id: item.id,
+    title: item.name,
+    category: item.category || 'Web Development',
+    categoryLabel: (item.category || 'WEB DEVELOPMENT').toUpperCase(),
+    accentColor: '#00C2CC',
+    badgeBg: 'bg-[#E3FAF6]',
+    badgeTextColor: 'text-[#00C2CC]',
+    mockupType: 'custom',
+    customImage: item.image,
+    description: item.description || `Custom project built by DevtaSoft for ${item.name}.`,
+    websiteUrl: item.domain.startsWith('http') ? item.domain : `https://${item.domain}`,
+    client: item.name,
+    year: '2025',
+    timeline: '3 Weeks',
+    role: 'Full-Stack Engineering & System Architecture',
+    overview: item.description || `${item.name} is an enterprise digital product created to streamline operations and enhance user experiences.`,
+    stats: [
+      { label: 'Uptime', value: '99.9%' },
+      { label: 'Speed Score', value: '98/100' },
+      { label: 'User Satisfaction', value: '100%' },
+    ],
+    techStackTags: ['React', 'Laravel', 'REST API', 'MySQL'],
+    keyFeatures: [
+      { title: 'High Performance Architecture', desc: 'Engineered for sub-second page loads and seamless scaling.' },
+      { title: 'Responsive Design', desc: 'Pixel-perfect layout across mobile, tablet, and desktop devices.' },
+      { title: 'Secure Integration', desc: 'Built with enterprise-grade encryption and API security protocols.' },
+    ],
+  }));
+
+  // Combine dynamic items with default portfolio items avoiding duplicate IDs
+  const combinedProjects = [
+    ...mappedDynamicProjects,
+    ...portfolioProjects.filter((p) => !mappedDynamicProjects.some((d) => d.id === p.id)),
+  ];
+
+  const filteredProjects = combinedProjects.filter((p) => {
     if (activeCategory === 'All Projects') return true;
     return p.category === activeCategory;
   });
@@ -804,7 +863,7 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
                 >
                   {/* Top Graphic Mockup Area */}
                   <div className="w-full h-[260px] sm:h-[280px] relative overflow-hidden shrink-0 rounded-t-[28px]">
-                    <MockupPreview type={project.mockupType} />
+                    <MockupPreview type={project.mockupType} customImage={project.customImage} />
                   </div>
 
                   {/* Bottom White Content Box */}

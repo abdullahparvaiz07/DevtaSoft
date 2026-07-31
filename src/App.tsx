@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Navbar } from './components/Navbar';
@@ -21,6 +21,7 @@ import { ContactSection } from './components/ContactSection';
 import { IntersectingStrips } from './components/IntersectingStrips';
 import { Footer } from './components/Footer';
 import { Preloader } from './components/Preloader';
+import { AdminDashboard } from './components/AdminDashboard';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -193,6 +194,17 @@ export default function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isAdminLoggedIn = localStorage.getItem('devtasoft_admin_logged_in') === 'true';
+  const isAdminRoute = location.pathname === '/admin';
+
+  // If user accesses /admin directly while not logged in, prompt LoginModal
+  useEffect(() => {
+    if (isAdminRoute && !isAdminLoggedIn) {
+      setIsLoginOpen(true);
+    }
+  }, [isAdminRoute, isAdminLoggedIn]);
 
   const handleContactClick = () => {
     if (window.location.pathname !== '/') {
@@ -213,6 +225,19 @@ export default function App() {
     }
   };
 
+  // If on Admin Route and authenticated, render full-screen Admin Dashboard
+  if (isAdminRoute && isAdminLoggedIn) {
+    return (
+      <AdminDashboard
+        onViewWebsite={() => navigate('/')}
+        onLogout={() => {
+          localStorage.removeItem('devtasoft_admin_logged_in');
+          navigate('/');
+        }}
+      />
+    );
+  }
+
   return (
     <div className="relative min-h-screen bg-[#F5F6FA] text-[#0D152A] font-sans overflow-x-hidden flex flex-col justify-between selection:bg-[#FF6B00]/20 selection:text-[#FF6B00]">
       {/* Preloader overlay with Uiverse Dual-Block Spinner */}
@@ -220,7 +245,13 @@ export default function App() {
 
       {/* Main Header / Navigation */}
       <Navbar
-        onLoginClick={() => setIsLoginOpen(true)}
+        onLoginClick={() => {
+          if (isAdminLoggedIn) {
+            navigate('/admin');
+          } else {
+            setIsLoginOpen(true);
+          }
+        }}
         onContactClick={handleContactClick}
         onServiceClick={(service) => {
           if (service === 'About') {
@@ -289,6 +320,25 @@ export default function App() {
             <ServicesPage onContactClick={handleContactClick} />
           }
         />
+        <Route
+          path="/admin"
+          element={
+            isAdminLoggedIn ? (
+              <AdminDashboard
+                onViewWebsite={() => navigate('/')}
+                onLogout={() => {
+                  localStorage.removeItem('devtasoft_admin_logged_in');
+                  navigate('/');
+                }}
+              />
+            ) : (
+              <HomePage
+                onContactClick={handleContactClick}
+                onProjectsClick={() => setIsProjectsOpen(true)}
+              />
+            )
+          }
+        />
       </Routes>
 
       {/* Deep Footer Section */}
@@ -325,6 +375,9 @@ export default function App() {
       <LoginModal
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
+        onLoginSuccess={() => {
+          navigate('/admin');
+        }}
       />
 
       <ContactModal
