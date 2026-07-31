@@ -8,6 +8,7 @@ import { StatsBar } from './components/StatsBar';
 import { ContactModal } from './components/ContactModal';
 import { ProjectsModal } from './components/ProjectsModal';
 import { ServicesModal } from './components/ServicesModal';
+import { LoginModal } from './components/LoginModal';
 import { AboutSection } from './components/AboutSection';
 import { ServicesSection } from './components/ServicesSection';
 import { AboutPage } from './components/AboutPage';
@@ -189,8 +190,28 @@ function HomePage({
 export default function App() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const handleContactClick = () => {
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const contactElem = document.getElementById('contact');
+        if (contactElem) {
+          contactElem.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const contactElem = document.getElementById('contact');
+      if (contactElem) {
+        contactElem.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        setIsContactOpen(true);
+      }
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-[#F5F6FA] text-[#0D152A] font-sans overflow-x-hidden flex flex-col justify-between selection:bg-[#FF6B00]/20 selection:text-[#FF6B00]">
@@ -199,14 +220,8 @@ export default function App() {
 
       {/* Main Header / Navigation */}
       <Navbar
-        onContactClick={() => {
-          const contactElem = document.getElementById('contact');
-          if (contactElem) {
-            contactElem.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            setIsContactOpen(true);
-          }
-        }}
+        onLoginClick={() => setIsLoginOpen(true)}
+        onContactClick={handleContactClick}
         onServiceClick={(service) => {
           if (service === 'About') {
             navigate('/about');
@@ -242,7 +257,7 @@ export default function App() {
           path="/"
           element={
             <HomePage
-              onContactClick={() => setIsContactOpen(true)}
+              onContactClick={handleContactClick}
               onProjectsClick={() => setIsProjectsOpen(true)}
             />
           }
@@ -250,25 +265,28 @@ export default function App() {
         <Route
           path="/about"
           element={
-            <AboutPage onContactClick={() => setIsContactOpen(true)} />
+            <AboutPage
+              onContactClick={handleContactClick}
+              onStartProjectClick={() => setIsContactOpen(true)}
+            />
           }
         />
         <Route
           path="/portfolio"
           element={
-            <PortfolioPage onContactClick={() => setIsContactOpen(true)} />
+            <PortfolioPage onContactClick={handleContactClick} />
           }
         />
         <Route
           path="/products"
           element={
-            <ProductsPage onContactClick={() => setIsContactOpen(true)} />
+            <ProductsPage onContactClick={handleContactClick} />
           }
         />
         <Route
           path="/services"
           element={
-            <ServicesPage onContactClick={() => setIsContactOpen(true)} />
+            <ServicesPage onContactClick={handleContactClick} />
           }
         />
       </Routes>
@@ -299,11 +317,16 @@ export default function App() {
             }
           }
         }}
-        onContactClick={() => setIsContactOpen(true)}
+        onContactClick={handleContactClick}
         onProjectsClick={() => setIsProjectsOpen(true)}
       />
 
       {/* Interactive Modals */}
+      <LoginModal
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+      />
+
       <ContactModal
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}

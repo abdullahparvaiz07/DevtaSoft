@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Logo } from './Logo';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X, LogIn, ShieldAlert } from 'lucide-react';
 
 interface NavbarProps {
   onContactClick: () => void;
   onServiceClick: (service: string) => void;
   onProjectsClick: () => void;
   onHomeClick: () => void;
+  onLoginClick?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -15,10 +16,75 @@ export const Navbar: React.FC<NavbarProps> = ({
   onServiceClick,
   onProjectsClick,
   onHomeClick,
+  onLoginClick,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLoginButton, setShowLoginButton] = useState<boolean>(() => {
+    return localStorage.getItem('devtasoft_admin_unlocked') === 'true';
+  });
+
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Mobile & Tablet Secret Gesture Handlers (Triple Tap or 1.5s Long Press on Logo)
+  const [tapCount, setTapCount] = useState(0);
+  const [tapTimer, setTapTimer] = useState<NodeJS.Timeout | null>(null);
+  const [holdTimer, setHoldTimer] = useState<NodeJS.Timeout | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const toggleAdminAccess = () => {
+    setShowLoginButton((prev) => {
+      const next = !prev;
+      if (next) {
+        localStorage.setItem('devtasoft_admin_unlocked', 'true');
+        setToastMessage('Admin Mode Unlocked');
+      } else {
+        localStorage.removeItem('devtasoft_admin_unlocked');
+        setToastMessage('Admin Mode Locked');
+      }
+      setTimeout(() => setToastMessage(null), 2500);
+      return next;
+    });
+  };
+
+  // Secret Desktop Keyboard Shortcut: Ctrl + Alt + A (or Cmd + Alt + A)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.altKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        toggleAdminAccess();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleLogoTouchStart = () => {
+    const timer = setTimeout(() => {
+      toggleAdminAccess();
+    }, 1500);
+    setHoldTimer(timer);
+  };
+
+  const handleLogoTouchEnd = () => {
+    if (holdTimer) clearTimeout(holdTimer);
+
+    const newCount = tapCount + 1;
+    setTapCount(newCount);
+
+    if (tapTimer) clearTimeout(tapTimer);
+
+    if (newCount >= 3) {
+      toggleAdminAccess();
+      setTapCount(0);
+    } else {
+      const timer = setTimeout(() => {
+        setTapCount(0);
+      }, 1200);
+      setTapTimer(timer);
+    }
+  };
 
   const navItems = [
     { label: 'Home', id: 'Home', path: '/' },
@@ -63,12 +129,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="relative z-50 w-full h-[76px] px-3 sm:px-6 lg:px-8 bg-transparent outline-none border-none transition-all duration-300">
+    <header className="relative z-50 w-full h-[76px] px-4 sm:px-6 lg:px-8 bg-transparent outline-none border-none transition-all duration-300">
+      
+      {/* Mobile/Tablet Admin Mode Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-20 right-4 sm:right-8 z-[100] flex items-center gap-2 px-4 py-2.5 bg-[#0D152A] border border-[#00C2CC]/60 text-white rounded-2xl shadow-xl text-xs font-bold animate-in slide-in-from-top-4 duration-300">
+          <div className="w-2 h-2 rounded-full bg-[#00C2CC] animate-ping" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="w-full flex items-center justify-between h-full relative">
-        {/* Left Logo */}
+        {/* Left Logo (Supports Keyboard Shortcut & Mobile Touch Gestures) */}
         <button
           onClick={onHomeClick}
-          className="text-left focus:outline-none rounded-lg p-1 transition-opacity hover:opacity-90 cursor-pointer flex items-center shrink-0"
+          onTouchStart={handleLogoTouchStart}
+          onTouchEnd={handleLogoTouchEnd}
+          className="text-left focus:outline-none rounded-lg p-0 transition-opacity hover:opacity-90 cursor-pointer flex items-center shrink-0 -ml-4 sm:-ml-2 select-none"
         >
           <Logo />
         </button>
@@ -93,46 +170,130 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Right Action Button */}
-        <div className="hidden md:flex items-center shrink-0">
+        {/* Right Action Buttons */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
+          {/* Let's Talk Button */}
           <button
             onClick={onContactClick}
-            className="group h-12 px-[28px] rounded-[16px] bg-gradient-to-r from-[#FF6B00] to-[#FA6400] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-lg shadow-[#FF6B00]/25 transition-all duration-300 hover:-translate-y-[2px] hover:shadow-xl hover:shadow-[#FF6B00]/35 active:translate-y-0 cursor-pointer"
+            className="group h-11 sm:h-12 px-5 sm:px-[26px] rounded-[16px] bg-gradient-to-r from-[#FF6B00] to-[#FA6400] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-lg shadow-[#FF6B00]/25 transition-all duration-300 hover:-translate-y-[2px] hover:shadow-xl hover:shadow-[#FF6B00]/35 active:translate-y-0 cursor-pointer"
           >
             <span>Let's Talk</span>
             <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1">
               <ArrowRight className="w-3.5 h-3.5 text-white stroke-[3]" />
             </div>
           </button>
+
+          {/* Secret Admin Login Button (Appears only on Ctrl + Alt + A) */}
+          {showLoginButton && (
+            <button
+              onClick={onLoginClick}
+              className="button animate-in fade-in zoom-in-95 duration-300"
+            >
+              Login
+            </button>
+          )}
         </div>
 
-        {/* Mobile Hamburger Toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-[#0D152A] hover:text-[#FF6B00] rounded-xl focus:outline-none cursor-pointer"
-          aria-label="Toggle Navigation Menu"
-        >
-          {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-        </button>
+        {/* Mobile Hamburger Toggle (Persistent DOM Element for Smooth CSS Animation) */}
+        <div id="menuToggle" className="md:hidden flex items-center p-2 relative z-[60]">
+          <input
+            id="checkbox"
+            type="checkbox"
+            checked={mobileMenuOpen}
+            onChange={(e) => setMobileMenuOpen(e.target.checked)}
+          />
+          <label className="toggle" htmlFor="checkbox" aria-label="Toggle Navigation Menu">
+            <div className="bar bar--top"></div>
+            <div className="bar bar--middle"></div>
+            <div className="bar bar--bottom"></div>
+          </label>
+        </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Right Sidebar Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-20 left-4 right-4 bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-2xl flex flex-col gap-3 z-40 animate-in fade-in slide-in-from-top-4 duration-200">
-          {navItems.map((item) => {
-            const active = isItemActive(item.id, item.path);
-            return (
+        <div className="md:hidden fixed inset-0 z-50 flex justify-end">
+          {/* Backdrop Blur Overlay */}
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Right Sidebar Container */}
+          <div className="relative z-50 w-[290px] sm:w-[320px] max-w-[85vw] h-full bg-white shadow-2xl flex flex-col justify-between px-6 pt-5 pb-6 overflow-y-auto animate-in slide-in-from-right duration-300 ml-auto">
+            <div>
+              {/* Sidebar Header with Logo */}
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+                <button
+                  onClick={() => {
+                    onHomeClick();
+                    setMobileMenuOpen(false);
+                  }}
+                  onTouchStart={handleLogoTouchStart}
+                  onTouchEnd={handleLogoTouchEnd}
+                  className="text-left focus:outline-none cursor-pointer select-none"
+                >
+                  <Logo />
+                </button>
+                {/* Spacer box reserving space for persistent top toggle */}
+                <div className="w-10 h-10 shrink-0" />
+              </div>
+
+              {/* Navigation Links */}
+              <nav className="flex flex-col gap-2">
+                {navItems.map((item) => {
+                  const active = isItemActive(item.id, item.path);
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleNavClick(item.id)}
+                      className={`w-full text-left font-bold text-base px-4 py-3.5 rounded-2xl flex items-center justify-between transition-all duration-200 cursor-pointer ${
+                        active
+                          ? 'bg-[#FF6B00] text-white shadow-lg shadow-[#FF6B00]/25'
+                          : 'text-[#0D152A] hover:bg-slate-100 hover:text-[#FF6B00]'
+                      }`}
+                    >
+                      <span>{item.label}</span>
+                      {active && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-white" />
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Bottom Actions inside Sidebar */}
+            <div className="pt-6 border-t border-slate-100 flex flex-col gap-3">
               <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`text-left font-semibold text-lg py-2 transition-colors ${
-                  active ? 'text-[#FF6B00]' : 'text-[#0D152A] hover:text-[#FF6B00]'
-                }`}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onContactClick();
+                }}
+                className="w-full h-12 rounded-2xl bg-gradient-to-r from-[#FF6B00] to-[#FA6400] text-white font-bold text-base flex items-center justify-center gap-2.5 shadow-lg shadow-[#FF6B00]/25 active:scale-[0.98] transition-all cursor-pointer"
               >
-                {item.label}
+                <span>Let's Talk</span>
+                <ArrowRight className="w-4 h-4 text-white stroke-[2.5]" />
               </button>
-            );
-          })}
+
+              {/* Secret Admin Login Button (Appears only on Ctrl + Alt + A) */}
+              {showLoginButton && (
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onLoginClick?.();
+                  }}
+                  className="button w-full animate-in fade-in duration-300"
+                >
+                  Login
+                </button>
+              )}
+
+              <div className="text-center text-xs text-slate-400 font-medium pt-1">
+                © DevtaSoft. All rights reserved.
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </header>

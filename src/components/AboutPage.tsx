@@ -12,6 +12,7 @@ import { DotGrid } from './DotGrid';
 
 interface AboutPageProps {
   onContactClick: () => void;
+  onStartProjectClick?: () => void;
 }
 
 /* ── Custom Pixel-Accurate Service Logos matching Reference Image ── */
@@ -252,7 +253,7 @@ const timelineSteps = [
   },
 ];
 
-export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick }) => {
+export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartProjectClick }) => {
   /* Scroll to top on mount */
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
@@ -591,7 +592,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick }) => {
 
                 {/* Button */}
                 <button
-                  onClick={onContactClick}
+                  onClick={onStartProjectClick || onContactClick}
                   className="group bg-[#FF8706] hover:bg-[#E07200] text-white font-semibold text-base sm:text-lg px-8 py-4 rounded-2xl shadow-lg shadow-[#FF8706]/25 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-xl hover:shadow-[#FF8706]/35 active:scale-[0.98] cursor-pointer"
                 >
                   <span>Start Your Project</span>

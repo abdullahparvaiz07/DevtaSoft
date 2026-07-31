@@ -1,16 +1,14 @@
 import React from 'react';
-import { motion } from 'motion/react';
 
 const brands = [
-  'Web Developement',
-  'App Developement',
+  'Web Development',
+  'App Development',
   'AI Agents',
   'SEO',
   'UI/UX Design',
-  'Cloud and DevOps',
-  'Graphic deisgning',
+  'Cloud & DevOps',
+  'Graphic Design',
   'Content Writing',
-
 ];
 
 export const IntersectingStrips: React.FC = () => {
@@ -18,20 +16,12 @@ export const IntersectingStrips: React.FC = () => {
   const marqueeItems = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
 
   return (
-    <section className="w-full overflow-hidden py-4 sm:py-8 relative z-20 select-none pointer-events-none">
-      <div className="relative w-full flex items-center justify-center min-h-[90px] sm:min-h-[110px]">
+    <section className="w-full overflow-hidden py-6 sm:py-10 relative z-20 select-none pointer-events-none">
+      <div className="relative w-full flex items-center justify-center min-h-[110px] sm:min-h-[130px]">
         
-        {/* Teal Strip (#14B8B0) - Slanted Downwards (-2.5deg) */}
-        <div className="absolute w-[130vw] -left-[15vw] sm:w-[115vw] sm:-left-[7vw] bg-[#14B8B0] py-1.5 sm:py-2 shadow-lg border-y border-white/20 transform -rotate-2 sm:-rotate-[2.5deg] z-10 overflow-hidden flex items-center">
-          <motion.div
-            className="flex items-center gap-6 sm:gap-9 whitespace-nowrap"
-            animate={{ x: ['0%', '-50%'] }}
-            transition={{
-              repeat: Infinity,
-              ease: 'linear',
-              duration: 30,
-            }}
-          >
+        {/* Teal/Cyan Strip (#14B8B0) - Slanted Downwards */}
+        <div className="absolute w-[160vw] -left-[30vw] sm:w-[120vw] sm:-left-[10vw] bg-[#14B8B0] py-2 sm:py-2.5 shadow-lg border-y border-white/20 transform -rotate-3 sm:-rotate-[2.5deg] z-10 overflow-hidden flex items-center">
+          <div className="animate-marquee-left flex items-center gap-6 sm:gap-9 whitespace-nowrap">
             {marqueeItems.map((brand, idx) => (
               <div key={`teal-${idx}`} className="flex items-center gap-6 sm:gap-9">
                 <span className="text-white font-extrabold text-xs sm:text-sm md:text-base tracking-wider uppercase font-display">
@@ -42,20 +32,12 @@ export const IntersectingStrips: React.FC = () => {
                 </svg>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
-        {/* Orange Strip (#FF6B00) - Slanted Upwards (+2.5deg) */}
-        <div className="absolute w-[130vw] -left-[15vw] sm:w-[115vw] sm:-left-[7vw] bg-[#FF6B00] py-1.5 sm:py-2 shadow-xl border-y border-white/20 transform rotate-2 sm:rotate-[2.5deg] z-20 overflow-hidden flex items-center">
-          <motion.div
-            className="flex items-center gap-6 sm:gap-9 whitespace-nowrap"
-            animate={{ x: ['-50%', '0%'] }}
-            transition={{
-              repeat: Infinity,
-              ease: 'linear',
-              duration: 30,
-            }}
-          >
+        {/* Orange Strip (#FF6B00) - Slanted Upwards */}
+        <div className="absolute w-[160vw] -left-[30vw] sm:w-[120vw] sm:-left-[10vw] bg-[#FF6B00] py-2 sm:py-2.5 shadow-xl border-y border-white/20 transform rotate-3 sm:rotate-[2.5deg] z-20 overflow-hidden flex items-center opacity-[0.97]">
+          <div className="animate-marquee-right flex items-center gap-6 sm:gap-9 whitespace-nowrap">
             {marqueeItems.map((brand, idx) => (
               <div key={`orange-${idx}`} className="flex items-center gap-6 sm:gap-9">
                 <span className="text-white font-extrabold text-xs sm:text-sm md:text-base tracking-wider uppercase font-display">
@@ -66,7 +48,7 @@ export const IntersectingStrips: React.FC = () => {
                 </svg>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
       </div>

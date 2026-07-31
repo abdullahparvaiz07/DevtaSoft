@@ -12,8 +12,8 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
     fullName: '',
     email: '',
     company: '',
-    serviceType: 'Web Apps',
-    budget: '$10k - $25k',
+    serviceType: 'Web Development',
+    budget: '',
     message: '',
   });
 
@@ -124,32 +124,34 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                   <select
                     value={formData.serviceType}
                     onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 text-sm text-[#0D152A] bg-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 text-sm text-[#0D152A] bg-white cursor-pointer"
                   >
+                    <option value="Web Development">Web Development</option>
+                    <option value="Mobile App Development">Mobile App Development (iOS & Android)</option>
                     <option value="UI/UX Design">UI/UX Design</option>
-                    <option value="Mobile Apps">Mobile Apps (iOS & Android)</option>
-                    <option value="Web Apps">Full-Stack Web Apps</option>
-                    <option value="Enterprise Solution">Custom Enterprise Solution</option>
+                    <option value="Custom Software Development">Custom Software Development</option>
+                    <option value="AI & Automation">AI & Automation</option>
+                    <option value="Cloud & DevOps">Cloud & DevOps</option>
+                    <option value="SEO & Digital Marketing">SEO & Digital Marketing</option>
+                    <option value="Enterprise Solutions">Custom Enterprise Solutions</option>
+                    <option value="Other / Custom Project">Other / Custom Project</option>
                   </select>
                 </div>
 
-                {/* Budget */}
+                {/* Budget (Optional) */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                    Estimated Budget
+                    Estimated Budget <span className="text-slate-400 font-normal lowercase">(optional)</span>
                   </label>
                   <div className="relative">
                     <DollarSign className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                    <select
+                    <input
+                      type="text"
+                      placeholder="e.g. $5,000 or Flexible"
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 text-sm text-[#0D152A] bg-white"
-                    >
-                      <option value="<$10k">Less than $10,000</option>
-                      <option value="$10k - $25k">$10,000 - $25,000</option>
-                      <option value="$25k - $50k">$25,000 - $50,000</option>
-                      <option value="$50k+">$50,000+</option>
-                    </select>
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#FF6B00] focus:ring-2 focus:ring-[#FF6B00]/20 text-sm text-[#0D152A]"
+                    />
                   </div>
                 </div>
               </div>
