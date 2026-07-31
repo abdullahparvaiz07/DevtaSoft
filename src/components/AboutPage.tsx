@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Terminal,
+  Sparkles,
 } from 'lucide-react';
 import { DotGrid } from './DotGrid';
 
@@ -377,109 +378,171 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
       </section>
 
       {/* ═══════════════════════════════════════════
-          SECTION 1.5 — CEO & TECHNICAL LEADERSHIP PROFILE
+          SECTION 1.5 — EXECUTIVE LEADERSHIP PROFILE (EXACT MATCH TO REFERENCE IMAGE)
       ═══════════════════════════════════════════ */}
-      <section className="relative w-full py-20 sm:py-28 bg-[#0D152A] text-white overflow-hidden">
-        {/* Ambient Radial Blur Orbs */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF6B00]/15 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#14B8B0]/15 rounded-full blur-[120px] pointer-events-none" />
+      <section className="relative w-full py-20 sm:py-28 bg-[#FAFCFF] text-[#0D152A] overflow-hidden border-t border-slate-100">
+        
+        {/* Left Cyan DotGrid Background Asset */}
+        <div className="absolute top-12 left-6 opacity-30 pointer-events-none hidden lg:block">
+          <DotGrid width={160} height={160} dotColor="#00C2CC" />
+        </div>
+
+        {/* Right Circular Concentric Ring Outlines */}
+        <div className="absolute top-8 right-0 w-[450px] h-[450px] border border-orange-200/40 rounded-full pointer-events-none translate-x-1/3 -translate-y-1/4">
+          <div className="w-full h-full border border-orange-200/30 rounded-full m-8" />
+        </div>
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
           
-          {/* Section Eyebrow Header */}
+          {/* Section Header Centered */}
           <motion.div
-            className="flex items-center gap-3 mb-10"
+            className="text-center max-w-3xl mx-auto mb-16"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
-            variants={heroFadeUp}
+            variants={heroContainer}
           >
-            <span className="text-[#14B8B0] font-extrabold text-xs sm:text-sm uppercase tracking-[0.25em]">
-              EXECUTIVE LEADERSHIP
-            </span>
-            <span className="h-[2px] w-10 bg-[#14B8B0] rounded-full inline-block" />
+            {/* Eyebrow Label */}
+            <motion.div className="flex items-center justify-center gap-3 mb-4" variants={heroFadeUp}>
+              <span className="h-[2px] w-8 bg-[#FF6B00] rounded-full inline-block" />
+              <span className="text-[#FF6B00] font-extrabold text-xs sm:text-sm uppercase tracking-[0.25em]">
+                EXECUTIVE LEADERSHIP
+              </span>
+              <span className="h-[2px] w-8 bg-[#FF6B00] rounded-full inline-block" />
+            </motion.div>
+
+            {/* Main Headline */}
+            <motion.h2
+              className="font-display font-extrabold text-4xl sm:text-5xl lg:text-[46px] text-[#0D152A] leading-tight tracking-tight mb-4"
+              variants={heroFadeUp}
+            >
+              Leadership Driving Innovation
+            </motion.h2>
+
+            {/* Subtitle */}
+            <motion.p
+              className="text-slate-500 font-medium text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+              variants={heroFadeUp}
+            >
+              Guided by vision, powered by expertise. Our leadership drives innovation, delivers results, and builds the future at{' '}
+              <span className="text-[#FF6B00] font-extrabold">DevtaSoft</span>.
+            </motion.p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
             
-            {/* LEFT COLUMN: CEO Profile Main Card */}
+            {/* LEFT COLUMN: CEO Main Profile Card */}
             <motion.div
-              className="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-[32px] p-8 sm:p-10 shadow-2xl relative overflow-hidden backdrop-blur-xl"
+              className="lg:col-span-6 bg-white border border-slate-200/80 rounded-[32px] p-8 sm:p-10 shadow-[0_10px_40px_rgba(0,0,0,0.04)] flex flex-col justify-between"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
               variants={heroFadeUp}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#FF6B00]/20 to-transparent rounded-bl-full pointer-events-none" />
-
-              {/* Avatar Initials & Title */}
-              <div className="flex items-center gap-5 mb-6">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#FF6B00] via-[#FF8706] to-[#14B8B0] p-1 shadow-lg shadow-[#FF6B00]/20 shrink-0">
-                  <div className="w-full h-full bg-[#0D152A] rounded-xl flex items-center justify-center font-display font-extrabold text-2xl text-white">
+              <div>
+                {/* Header: Dark Avatar Box + Name & Role */}
+                <div className="flex items-center gap-6 mb-7">
+                  <div className="w-24 h-24 rounded-2xl bg-[#070B19] shadow-xl shadow-[#070B19]/20 flex items-center justify-center text-white text-3xl font-extrabold font-display shrink-0 border border-slate-800">
                     AQ
                   </div>
+                  <div>
+                    <h3 className="font-display font-extrabold text-3xl text-[#0D152A] tracking-tight">
+                      Awais Qarni
+                    </h3>
+                    <p className="text-[#00C2CC] font-bold text-base sm:text-lg mt-1">
+                      Chief Executive Officer & Lead Architect
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-white">
-                    Awais Qarni
-                  </h2>
-                  <p className="text-[#14B8B0] font-bold text-sm sm:text-base mt-0.5">
-                    Chief Executive Officer & Lead Architect
-                  </p>
-                </div>
-              </div>
 
-              {/* Role & Specialties Tagline */}
-              <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 mb-6">
-                <p className="text-slate-300 font-semibold text-xs sm:text-sm leading-relaxed">
-                  Full Stack Developer &nbsp;|&nbsp; PHP &nbsp;|&nbsp; Laravel &nbsp;|&nbsp; React &nbsp;|&nbsp; AI Automation
+                {/* Tagline Container */}
+                <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/60 mb-6 flex flex-wrap items-center gap-3 text-xs sm:text-sm font-bold text-slate-700">
+                  <div className="flex items-center gap-1.5 text-[#FF6B00]">
+                    <Code className="w-4 h-4" />
+                    <span>Full Stack Developer</span>
+                  </div>
+                  <span className="text-slate-300">|</span>
+                  <div className="flex items-center gap-1 text-[#0D152A]">
+                    <span className="font-mono text-[#00C2CC]">P</span>
+                    <span>PHP</span>
+                  </div>
+                  <span className="text-slate-300">|</span>
+                  <div className="flex items-center gap-1 text-[#FF6B00]">
+                    <Rocket className="w-3.5 h-3.5" />
+                    <span>Laravel</span>
+                  </div>
+                  <span className="text-slate-300">|</span>
+                  <div className="flex items-center gap-1 text-[#00C2CC]">
+                    <span className="animate-spin text-[11px]">⚛</span>
+                    <span>React</span>
+                  </div>
+                  <span className="text-slate-300">|</span>
+                  <div className="flex items-center gap-1 text-[#7C5CFF]">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>AI Automation</span>
+                  </div>
+                </div>
+
+                {/* Bio Paragraph matching reference image */}
+                <p className="text-slate-500 text-sm sm:text-base leading-relaxed mb-8">
+                  Awais leads engineering teams to craft high-concurrency web architectures, enterprise API solutions, and AI-driven workflow systems designed for maximum scale and resilience. At DevtaSoft, he spearheads technical innovation and ensures excellence across every solution we build.
                 </p>
               </div>
 
-              <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-6">
-                Spearheading technical innovation at DevtaSoft, Awais leads engineering teams to craft high-concurrency web architectures, enterprise API solutions, and AI-driven workflow systems designed for maximum scale and resilience.
-              </p>
+              {/* Core Expertise Section */}
+              <div className="pt-6 border-t border-slate-100">
+                <h4 className="font-display font-extrabold text-base text-[#0D152A] mb-4">
+                  Core Expertise
+                </h4>
 
-              {/* Core Skill Chips */}
-              <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-800">
-                {['PHP', 'Laravel', 'React.js', 'AI Automation', 'MySQL', 'REST APIs', 'System Architecture'].map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 rounded-full bg-[#14B8B0]/10 border border-[#14B8B0]/30 text-[#14B8B0] text-xs font-bold"
-                  >
-                    {tech}
-                  </span>
-                ))}
+                <div className="flex flex-wrap gap-2.5">
+                  {[
+                    { name: 'PHP', color: 'bg-slate-100 text-slate-800' },
+                    { name: 'Laravel', color: 'bg-[#FFF0E5] text-[#FF6B00]' },
+                    { name: 'React.js', color: 'bg-[#E3FAF6] text-[#00C2CC]' },
+                    { name: 'AI Automation', color: 'bg-[#EDE7FE] text-[#7C5CFF]' },
+                    { name: 'MySQL', color: 'bg-[#E6F9EC] text-[#5E8E3E]' },
+                    { name: 'REST APIs', color: 'bg-[#E3FAF6] text-[#00C2CC]' },
+                    { name: 'System Architecture', color: 'bg-slate-100 text-slate-800' },
+                  ].map((chip) => (
+                    <span
+                      key={chip.name}
+                      className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 border border-slate-200/50 shadow-2xs ${chip.color}`}
+                    >
+                      <span>{chip.name}</span>
+                    </span>
+                  ))}
+                </div>
               </div>
             </motion.div>
 
-            {/* RIGHT COLUMN: Certifications, Credentials & Professional Focus Areas */}
+            {/* RIGHT COLUMN: 3 Cards matching Reference Image */}
             <motion.div
-              className="lg:col-span-7 flex flex-col gap-6"
+              className="lg:col-span-6 flex flex-col justify-between gap-6"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
               variants={cardStagger}
             >
               
-              {/* Cards Grid: Certificate & IEEE Member */}
+              {/* Top Row Grid: 01. Certification & 02. Credential */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 
-                {/* 1. Web Developer Certificate */}
+                {/* 01. CERTIFICATION */}
                 <motion.div
-                  className="bg-slate-900/80 border border-slate-800 hover:border-[#FF6B00]/50 rounded-[24px] p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-xl group"
+                  className="bg-white border border-slate-200/80 border-l-4 border-l-[#FF6B00] rounded-[24px] p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-1 group"
                   variants={cardFadeUp}
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-[#FF6B00]/15 border border-[#FF6B00]/30 text-[#FF6B00] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Award className="w-6 h-6 stroke-[2.2]" />
+                  <div className="w-11 h-11 rounded-2xl bg-[#FFF0E5] text-[#FF6B00] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <Award className="w-5 h-5 stroke-[2.2]" />
                   </div>
                   <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF6B00]">
-                    01. Certification
+                    01. CERTIFICATION
                   </span>
-                  <h3 className="font-display font-bold text-lg text-white mt-1 mb-1">
+                  <h4 className="font-display font-extrabold text-lg text-[#0D152A] mt-1 mb-1 leading-snug">
                     Web Developer Certificate
-                  </h3>
-                  <p className="text-slate-300 font-semibold text-xs mb-2">
+                  </h4>
+                  <p className="text-slate-600 font-bold text-xs mb-3">
                     Cybex IT Group (2023)
                   </p>
                   <p className="text-slate-400 text-xs leading-relaxed">
@@ -487,21 +550,21 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
                   </p>
                 </motion.div>
 
-                {/* 2. IEEE Member */}
+                {/* 02. CREDENTIAL */}
                 <motion.div
-                  className="bg-slate-900/80 border border-slate-800 hover:border-[#14B8B0]/50 rounded-[24px] p-6 transition-all duration-300 hover:-translate-y-1 backdrop-blur-xl group"
+                  className="bg-white border border-slate-200/80 border-l-4 border-l-[#00C2CC] rounded-[24px] p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-1 group"
                   variants={cardFadeUp}
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-[#14B8B0]/15 border border-[#14B8B0]/30 text-[#14B8B0] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
+                  <div className="w-11 h-11 rounded-2xl bg-[#E3FAF6] text-[#00C2CC] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
                   </div>
-                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#14B8B0]">
-                    02. Credential
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#00C2CC]">
+                    02. CREDENTIAL
                   </span>
-                  <h3 className="font-display font-bold text-lg text-white mt-1 mb-1">
+                  <h4 className="font-display font-extrabold text-lg text-[#0D152A] mt-1 mb-1 leading-snug">
                     IEEE Member
-                  </h3>
-                  <p className="text-slate-300 font-semibold text-xs mb-2">
+                  </h4>
+                  <p className="text-slate-600 font-bold text-xs mb-3">
                     IEEE Membership & Event Org (2025)
                   </p>
                   <p className="text-slate-400 text-xs leading-relaxed">
@@ -511,26 +574,26 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
 
               </div>
 
-              {/* 3. Professional Focus Areas Card */}
+              {/* Bottom Card: 03. CORE ENGINEERING FOCUS / Professional Focus Areas */}
               <motion.div
-                className="bg-slate-900/80 border border-slate-800 rounded-[28px] p-7 sm:p-8 backdrop-blur-xl"
+                className="bg-white border border-slate-200/80 border-l-4 border-l-[#00C2CC] rounded-[28px] p-7 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.03)]"
                 variants={cardFadeUp}
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#00C2CC]/15 border border-[#00C2CC]/30 text-[#00C2CC] flex items-center justify-center shrink-0">
-                    <Terminal className="w-5 h-5" />
+                <div className="flex items-center gap-3.5 mb-4">
+                  <div className="w-10 h-10 rounded-2xl bg-[#00C2CC] text-white flex items-center justify-center font-mono font-bold text-base shrink-0 shadow-md shadow-[#00C2CC]/25">
+                    &gt;_
                   </div>
                   <div>
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#00C2CC]">
-                      03. Core Engineering Focus
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#00C2CC]">
+                      03. CORE ENGINEERING FOCUS
                     </span>
-                    <h3 className="font-display font-extrabold text-xl text-white">
+                    <h4 className="font-display font-extrabold text-xl text-[#0D152A]">
                       Professional Focus Areas
-                    </h3>
+                    </h4>
                   </div>
                 </div>
 
-                <p className="text-slate-300 text-xs sm:text-sm font-semibold mb-4">
+                <p className="text-slate-500 text-xs sm:text-sm font-semibold mb-5">
                   My development priorities include:
                 </p>
 
@@ -543,9 +606,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
                   ].map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-start gap-3 text-xs sm:text-sm text-slate-300 font-medium hover:border-[#14B8B0]/40 transition-colors"
+                      className="p-4 rounded-2xl bg-white border border-slate-200/70 flex items-start gap-3 text-xs sm:text-sm text-slate-700 font-medium shadow-2xs hover:border-[#00C2CC]/50 transition-colors"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-[#14B8B0] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-[#00C2CC] shrink-0 mt-0.5" />
                       <span className="leading-snug">{item}</span>
                     </div>
                   ))}
