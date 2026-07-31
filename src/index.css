@@ -188,13 +188,13 @@ body {
 .animate-marquee-left {
   display: flex;
   width: max-content;
-  animation: marquee-left 25s linear infinite;
+  animation: marquee-left 55s linear infinite;
 }
 
 .animate-marquee-right {
   display: flex;
   width: max-content;
-  animation: marquee-right 25s linear infinite;
+  animation: marquee-right 55s linear infinite;
 }
 
 /* From Uiverse.io by vikiWayne */ 
