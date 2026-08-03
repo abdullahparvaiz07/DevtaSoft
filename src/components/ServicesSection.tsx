@@ -738,40 +738,42 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       </div>
 
       {/* BOTTOM VALUE STRIP (Extra Wide Container Stretching Left & Right) */}
-      <div className="max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-10">
+      <div className="max-w-[1560px] mx-auto px-3 sm:px-6 lg:px-10">
         <motion.div
-          className="w-full bg-white rounded-[28px] border border-[#ECECEC] shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:shadow-[0_25px_65px_rgba(0,0,0,0.07)] transition-all duration-400 p-8 sm:p-12 lg:p-16"
+          className="w-full bg-white rounded-[24px] sm:rounded-[28px] border border-[#ECECEC] shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:shadow-[0_25px_65px_rgba(0,0,0,0.07)] transition-all duration-400 p-4 sm:p-12 lg:p-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 lg:gap-10">
             {valueItems.map((item, idx) => {
               const ValueIcon = item.icon;
               return (
                 <div
                   key={item.title}
-                  className={`flex flex-col items-start pt-6 sm:pt-0 ${
-                    idx > 0 ? 'lg:pl-10' : ''
+                  className={`flex flex-col items-start p-1.5 sm:p-0 ${
+                    idx > 0 && idx % 2 === 0 ? 'border-t border-slate-100 pt-4 sm:pt-0 sm:border-t-0' : ''
+                  } ${
+                    idx % 2 === 1 ? 'border-l border-slate-100 pl-3 sm:pl-6 lg:pl-10' : ''
                   }`}
                 >
-                  <div className="flex items-center gap-3.5 mb-4">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 mb-2.5 sm:mb-4">
                     <div
-                      className="w-13 h-13 rounded-2xl flex items-center justify-center shadow-sm"
+                      className="w-10 h-10 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xs shrink-0"
                       style={{ backgroundColor: item.bgColor }}
                     >
-                      <ValueIcon className="w-6 h-6 stroke-[2.5]" style={{ color: item.iconColor }} />
+                      <ValueIcon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" style={{ color: item.iconColor }} />
                     </div>
-                    <span className="font-display font-extrabold text-xs tracking-wider text-[#FF8706]">
+                    <span className="font-display font-extrabold text-[11px] sm:text-xs tracking-wider text-[#FF8706]">
                       {item.num}
                     </span>
                   </div>
 
-                  <h4 className="font-display font-extrabold text-xl text-[#2A285F] mb-2">
+                  <h4 className="font-display font-extrabold text-sm sm:text-xl text-[#2A285F] mb-1 sm:mb-2">
                     {item.title}
                   </h4>
-                  <p className="text-[#667085] font-medium text-sm sm:text-base leading-relaxed">
+                  <p className="text-[#667085] font-medium text-xs sm:text-base leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
