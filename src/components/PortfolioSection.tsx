@@ -615,7 +615,7 @@ export const PortfolioSection: React.FC<{
             <h2 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-[52px] text-[#0D152A] leading-[1.1] tracking-tight mb-6">
               Digital products <br />we're <span className="text-[#FF6B00]">proud of.</span>
             </h2>
-            <p className="text-[#6B7280] text-base sm:text-lg leading-relaxed max-w-lg mb-8">
+            <p className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal mb-8">
               Explore a selection of our work where design, technology, and strategy come together to create real impact.
             </p>
             <div className="flex items-center gap-4">

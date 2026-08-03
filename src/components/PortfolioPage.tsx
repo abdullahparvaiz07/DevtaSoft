@@ -804,7 +804,7 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-[#6B7280] font-medium text-base sm:text-lg leading-relaxed max-w-2xl"
+            className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal"
           >
             Explore a selection of projects we've designed, developed and delivered for clients across different industries.
           </motion.p>

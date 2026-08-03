@@ -52,7 +52,7 @@ export const ContactSection: React.FC = () => {
             </h2>
 
             {/* Description */}
-            <p className="text-[#6B7280] text-base leading-relaxed max-w-md mb-8">
+            <p className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal mb-8">
               Have a project in mind or just want to say hello? We’d love to hear from you. Drop us a message and we’ll get back to you as soon as possible.
             </p>
 

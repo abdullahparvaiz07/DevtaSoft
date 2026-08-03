@@ -365,7 +365,7 @@ export const ServicesPage: React.FC<{ onContactClick: () => void }> = ({ onConta
             </h1>
 
             {/* Subtitle Description */}
-            <p className="text-[#6B7280] font-medium text-base sm:text-lg leading-relaxed max-w-lg mb-10">
+            <p className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal mb-10">
               We combine technology, creativity, and strategy to deliver powerful digital solutions that help your business grow, automate and scale.
             </p>
 

@@ -505,7 +505,7 @@ export const ProductsPage: React.FC<{ onContactClick: () => void }> = ({ onConta
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-[#667085] font-medium text-base sm:text-lg leading-relaxed max-w-2xl"
+            className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal"
           >
             We design and engineer intelligent SaaS platforms, AI productivity tools, and modern software applications built for speed, scale, and seamless user experiences.
           </motion.p>

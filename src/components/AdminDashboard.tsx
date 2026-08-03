@@ -429,22 +429,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
       {/* ═══════════════════════════════════════════
           MAIN CONTENT AREA
       ═══════════════════════════════════════════ */}
-      <div className="flex-1 lg:ml-[260px] xl:ml-[280px] min-h-screen flex flex-col">
+      <div className="flex-1 lg:ml-[260px] xl:ml-[280px] min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
         
         {/* Top Sticky Header */}
-        <header className="w-full h-20 bg-white border-b border-[#E7EAF0] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+        <header className="w-full h-16 sm:h-20 bg-white border-b border-[#E7EAF0] px-3 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
           <div className="flex items-center gap-3">
             {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer shrink-0"
+              className="lg:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer shrink-0"
               aria-label="Toggle Sidebar Menu"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             <div>
-              <h1 className="font-display font-extrabold text-xl sm:text-2xl text-[#1E2340]">
+              <h1 className="font-display font-extrabold text-lg sm:text-2xl text-[#1E2340]">
                 {activeTab === 'dashboard' && 'Dashboard'}
                 {activeTab === 'visibility' && 'Page & Section Controls'}
                 {activeTab === 'products' && 'Products'}
@@ -459,27 +459,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button className="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer relative">
-              <Bell className="w-5 h-5" />
-              <span className="w-2 h-2 rounded-full bg-[#FF8706] absolute top-2.5 right-2.5" />
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer relative">
+              <Bell className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+              <span className="w-2 h-2 rounded-full bg-[#FF8706] absolute top-2 right-2 sm:top-2.5 sm:right-2.5" />
             </button>
 
-            <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200">
-              <div className="w-9 h-9 rounded-xl bg-[#0D152A] text-white flex items-center justify-center font-bold text-xs">
+            <div className="flex items-center gap-2 sm:gap-2.5 pl-2 sm:pl-3 border-l border-slate-200">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#0D152A] text-white flex items-center justify-center font-bold text-xs">
                 AD
               </div>
               <div className="hidden sm:block text-left">
                 <p className="text-xs font-bold text-[#1E2340]">Admin User</p>
                 <p className="text-[10px] text-slate-400">Authorized</p>
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-400" />
+              <ChevronDown className="w-4 h-4 text-slate-400 hidden sm:block" />
             </div>
           </div>
         </header>
 
         {/* Main Body Content */}
-        <main className="p-4 sm:p-8 flex-1 max-w-7xl w-full mx-auto space-y-8">
+        <main className="p-3 sm:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6 sm:space-y-8 max-w-full overflow-x-hidden">
           
           {/* TAB 1: DASHBOARD OVERVIEW */}
           {activeTab === 'dashboard' && (
@@ -606,37 +606,64 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Scroll Indicator */}
-                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
-                      <span className="text-[11px] text-[#FF8706] font-bold">Swipe →</span>
+                    {/* Mobile Native Card View (sm:hidden) */}
+                    <div className="space-y-3 sm:hidden">
+                      {products.slice(0, 5).map((prod) => (
+                        <div key={prod.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-3 overflow-hidden">
+                              <img src={prod.image} alt={prod.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
+                              <div className="overflow-hidden">
+                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{prod.name}</h4>
+                                <a href={normalizeUrl(prod.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                                  <span className="truncate">{getCleanDomain(prod.domain)}</span>
+                                  <ExternalLink className="w-3 h-3 shrink-0" />
+                                </a>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button onClick={() => openProductModal(prod)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button onClick={() => setDeleteProductConfirmId(prod.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          {prod.description && (
+                            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed pt-2 border-t border-slate-200/60">{prod.description}</p>
+                          )}
+                        </div>
+                      ))}
                     </div>
 
-                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
-                      <table className="min-w-[680px] w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden sm:block) */}
+                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                            <th className="py-3 px-3 sm:px-4 w-16">IMAGE</th>
-                            <th className="py-3 px-3 sm:px-4 min-w-[140px]">NAME</th>
-                            <th className="py-3 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
-                            <th className="py-3 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
-                            <th className="py-3 px-3 sm:px-4 text-right w-24">ACTIONS</th>
+                            <th className="py-3 px-4 w-16">IMAGE</th>
+                            <th className="py-3 px-4">NAME</th>
+                            <th className="py-3 px-4">DOMAIN</th>
+                            <th className="py-3 px-4">DESCRIPTION</th>
+                            <th className="py-3 px-4 text-right w-24">ACTIONS</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
                           {products.slice(0, 5).map((prod) => (
                             <tr key={prod.id} className="hover:bg-slate-50/80 transition-colors">
-                              <td className="py-3.5 px-3 sm:px-4">
+                              <td className="py-3.5 px-4">
                                 <img
                                   src={prod.image}
                                   alt={prod.name}
                                   className="w-12 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs"
                                 />
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                              <td className="py-3.5 px-4 font-extrabold text-[#1E2340]">
                                 {prod.name}
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4">
+                              <td className="py-3.5 px-4">
                                 <a
                                   href={normalizeUrl(prod.domain)}
                                   target="_blank"
@@ -647,10 +674,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                                   <ExternalLink className="w-3 h-3" />
                                 </a>
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4 text-slate-500 max-w-xs truncate">
+                              <td className="py-3.5 px-4 text-slate-500 max-w-xs truncate">
                                 {prod.description || '—'}
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4 text-right">
+                              <td className="py-3.5 px-4 text-right">
                                 <div className="inline-flex items-center gap-2">
                                   <button
                                     onClick={() => openProductModal(prod)}
@@ -712,37 +739,64 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Scroll Indicator */}
-                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
-                      <span className="text-[11px] text-[#00C2CC] font-bold">Swipe →</span>
+                    {/* Mobile Native Card View (sm:hidden) */}
+                    <div className="space-y-3 sm:hidden">
+                      {portfolio.slice(0, 5).map((port) => (
+                        <div key={port.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-3 overflow-hidden">
+                              <img src={port.image} alt={port.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
+                              <div className="overflow-hidden">
+                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{port.name}</h4>
+                                <a href={normalizeUrl(port.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                                  <span className="truncate">{getCleanDomain(port.domain)}</span>
+                                  <ExternalLink className="w-3 h-3 shrink-0" />
+                                </a>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button onClick={() => openPortfolioModal(port)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button onClick={() => setDeletePortfolioConfirmId(port.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          {port.description && (
+                            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed pt-2 border-t border-slate-200/60">{port.description}</p>
+                          )}
+                        </div>
+                      ))}
                     </div>
 
-                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
-                      <table className="min-w-[680px] w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden sm:block) */}
+                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                            <th className="py-3 px-3 sm:px-4 w-16">IMAGE</th>
-                            <th className="py-3 px-3 sm:px-4 min-w-[140px]">NAME</th>
-                            <th className="py-3 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
-                            <th className="py-3 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
-                            <th className="py-3 px-3 sm:px-4 text-right w-24">ACTIONS</th>
+                            <th className="py-3 px-4 w-16">IMAGE</th>
+                            <th className="py-3 px-4">NAME</th>
+                            <th className="py-3 px-4">DOMAIN</th>
+                            <th className="py-3 px-4">DESCRIPTION</th>
+                            <th className="py-3 px-4 text-right w-24">ACTIONS</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
                           {portfolio.slice(0, 5).map((port) => (
                             <tr key={port.id} className="hover:bg-slate-50/80 transition-colors">
-                              <td className="py-3.5 px-3 sm:px-4">
+                              <td className="py-3.5 px-4">
                                 <img
                                   src={port.image}
                                   alt={port.name}
                                   className="w-14 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs"
                                 />
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                              <td className="py-3.5 px-4 font-extrabold text-[#1E2340]">
                                 {port.name}
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4">
+                              <td className="py-3.5 px-4">
                                 <a
                                   href={normalizeUrl(port.domain)}
                                   target="_blank"
@@ -753,10 +807,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                                   <ExternalLink className="w-3 h-3" />
                                 </a>
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4 text-slate-500 max-w-xs truncate">
+                              <td className="py-3.5 px-4 text-slate-500 max-w-xs truncate">
                                 {port.description || '—'}
                               </td>
-                              <td className="py-3.5 px-3 sm:px-4 text-right">
+                              <td className="py-3.5 px-4 text-right">
                                 <div className="inline-flex items-center gap-2">
                                   <button
                                     onClick={() => openPortfolioModal(port)}
@@ -1165,37 +1219,64 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Scroll Indicator */}
-                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
-                      <span className="text-[11px] text-[#FF8706] font-bold">Swipe →</span>
+                    {/* Mobile Native Card View (sm:hidden) */}
+                    <div className="space-y-3 sm:hidden">
+                      {products.map((prod) => (
+                        <div key={prod.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-3 overflow-hidden">
+                              <img src={prod.image} alt={prod.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
+                              <div className="overflow-hidden">
+                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{prod.name}</h4>
+                                <a href={normalizeUrl(prod.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                                  <span className="truncate">{getCleanDomain(prod.domain)}</span>
+                                  <ExternalLink className="w-3 h-3 shrink-0" />
+                                </a>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button onClick={() => openProductModal(prod)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button onClick={() => setDeleteProductConfirmId(prod.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          {prod.description && (
+                            <p className="text-xs text-slate-500 leading-relaxed pt-2 border-t border-slate-200/60">{prod.description}</p>
+                          )}
+                        </div>
+                      ))}
                     </div>
 
-                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
-                      <table className="min-w-[680px] w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden sm:block) */}
+                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                            <th className="py-4 px-3 sm:px-4 w-16">IMAGE</th>
-                            <th className="py-4 px-3 sm:px-4 min-w-[140px]">NAME</th>
-                            <th className="py-4 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
-                            <th className="py-4 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
-                            <th className="py-4 px-3 sm:px-4 text-right w-24">ACTIONS</th>
+                            <th className="py-4 px-4 w-16">IMAGE</th>
+                            <th className="py-4 px-4">NAME</th>
+                            <th className="py-4 px-4">DOMAIN</th>
+                            <th className="py-4 px-4">DESCRIPTION</th>
+                            <th className="py-4 px-4 text-right w-24">ACTIONS</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-sm">
                           {products.map((prod) => (
                             <tr key={prod.id} className="hover:bg-slate-50/80 transition-colors">
-                              <td className="py-4 px-3 sm:px-4">
+                              <td className="py-4 px-4">
                                 <img
                                   src={prod.image}
                                   alt={prod.name}
                                   className="w-14 h-12 rounded-xl object-cover border border-slate-200 shadow-2xs"
                                 />
                               </td>
-                              <td className="py-4 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                              <td className="py-4 px-4 font-extrabold text-[#1E2340]">
                                 {prod.name}
                               </td>
-                              <td className="py-4 px-3 sm:px-4">
+                              <td className="py-4 px-4">
                                 <a
                                   href={normalizeUrl(prod.domain)}
                                   target="_blank"
@@ -1206,10 +1287,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                                   <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
                               </td>
-                              <td className="py-4 px-3 sm:px-4 text-slate-500 max-w-sm">
+                              <td className="py-4 px-4 text-slate-500 max-w-sm">
                                 {prod.description || '—'}
                               </td>
-                              <td className="py-4 px-3 sm:px-4 text-right">
+                              <td className="py-4 px-4 text-right">
                                 <div className="inline-flex items-center gap-2">
                                   <button
                                     onClick={() => openProductModal(prod)}
@@ -1272,37 +1353,64 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Scroll Indicator */}
-                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
-                      <span className="text-[11px] text-[#00C2CC] font-bold">Swipe →</span>
+                    {/* Mobile Native Card View (sm:hidden) */}
+                    <div className="space-y-3 sm:hidden">
+                      {portfolio.map((port) => (
+                        <div key={port.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-3 overflow-hidden">
+                              <img src={port.image} alt={port.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
+                              <div className="overflow-hidden">
+                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{port.name}</h4>
+                                <a href={normalizeUrl(port.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                                  <span className="truncate">{getCleanDomain(port.domain)}</span>
+                                  <ExternalLink className="w-3 h-3 shrink-0" />
+                                </a>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button onClick={() => openPortfolioModal(port)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button onClick={() => setDeletePortfolioConfirmId(port.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          {port.description && (
+                            <p className="text-xs text-slate-500 leading-relaxed pt-2 border-t border-slate-200/60">{port.description}</p>
+                          )}
+                        </div>
+                      ))}
                     </div>
 
-                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
-                      <table className="min-w-[680px] w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden sm:block) */}
+                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                            <th className="py-4 px-3 sm:px-4 w-16">IMAGE</th>
-                            <th className="py-4 px-3 sm:px-4 min-w-[140px]">NAME</th>
-                            <th className="py-4 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
-                            <th className="py-4 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
-                            <th className="py-4 px-3 sm:px-4 text-right w-24">ACTIONS</th>
+                            <th className="py-4 px-4 w-16">IMAGE</th>
+                            <th className="py-4 px-4">NAME</th>
+                            <th className="py-4 px-4">DOMAIN</th>
+                            <th className="py-4 px-4">DESCRIPTION</th>
+                            <th className="py-4 px-4 text-right w-24">ACTIONS</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-sm">
                           {portfolio.map((port) => (
                             <tr key={port.id} className="hover:bg-slate-50/80 transition-colors">
-                              <td className="py-4 px-3 sm:px-4">
+                              <td className="py-4 px-4">
                                 <img
                                   src={port.image}
                                   alt={port.name}
                                   className="w-16 h-12 rounded-xl object-cover border border-slate-200 shadow-2xs"
                                 />
                               </td>
-                              <td className="py-4 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                              <td className="py-4 px-4 font-extrabold text-[#1E2340]">
                                 {port.name}
                               </td>
-                              <td className="py-4 px-3 sm:px-4">
+                              <td className="py-4 px-4">
                                 <a
                                   href={normalizeUrl(port.domain)}
                                   target="_blank"
@@ -1313,33 +1421,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                                   <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
                               </td>
-                              <td className="py-4 px-3 sm:px-4 text-slate-500 max-w-sm">
+                              <td className="py-4 px-4 text-slate-500 max-w-sm">
                                 {port.description || '—'}
                               </td>
-                              <td className="py-4 px-3 sm:px-4 text-right">
-                              <div className="inline-flex items-center gap-2">
-                                <button
-                                  onClick={() => openPortfolioModal(port)}
-                                  className="p-2.5 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
-                                  title="Edit Project"
-                                >
-                                  <Edit2 className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => setDeletePortfolioConfirmId(port.id)}
-                                  className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
-                                  title="Delete Project"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                              <td className="py-4 px-4 text-right">
+                                <div className="inline-flex items-center gap-2">
+                                  <button
+                                    onClick={() => openPortfolioModal(port)}
+                                    className="p-2.5 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
+                                    title="Edit Project"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => setDeletePortfolioConfirmId(port.id)}
+                                    className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
+                                    title="Delete Project"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
                 )}
               </div>
             </div>

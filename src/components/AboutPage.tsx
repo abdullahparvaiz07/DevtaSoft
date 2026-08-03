@@ -304,7 +304,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
 
               {/* Paragraph Text */}
               <motion.p
-                className="text-[#667085] font-medium text-base sm:text-lg leading-relaxed max-w-xl mb-10"
+                className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal mb-10"
                 variants={heroFadeUp}
               >
                 DevtaSoft is a software house focused on creating intelligent solutions, AI-driven systems, custom applications and scalable digital products that help businesses grow, automate and lead in the digital world.

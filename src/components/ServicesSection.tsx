@@ -635,7 +635,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </h2>
 
           {/* Description */}
-          <p className="text-[#667085] font-medium text-base sm:text-lg leading-relaxed max-w-2xl">
+          <p className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal mb-8">
             We combine technology, creativity, and strategy to build scalable digital solutions that create real business impact.
           </p>
         </motion.div>

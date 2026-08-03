@@ -605,7 +605,7 @@ export const ProductsSection: React.FC<{ onContactClick: () => void }> = ({ onCo
               Built for <span className="text-[#FF6B00]">everyone.</span>
             </h2>
 
-            <p className="text-[#6B7280] text-base sm:text-lg leading-relaxed max-w-lg mb-10">
+            <p className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal mb-10">
               Explore our suite of products designed to simplify tasks, boost productivity, and help you achieve more.
             </p>
 

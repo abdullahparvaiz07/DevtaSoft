@@ -201,7 +201,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onReadMoreClick }) =
 
             {/* Paragraph Text */}
             <motion.p 
-              className="text-[#6B7280] text-lg sm:text-xl leading-relaxed max-w-lg mb-8 font-normal"
+              className="text-base sm:text-lg text-[#475569] max-w-[560px] leading-relaxed font-normal mb-8"
               variants={itemVariants}
             >
               DevtaSoft is a team of passionate thinkers, designers, and developers building intelligent, scalable and impactful digital solutions for businesses worldwide.
