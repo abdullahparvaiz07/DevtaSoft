@@ -1,9 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useInView, animate } from 'motion/react';
 import { ArrowRight, ArrowUpRight, Cpu, Users, Rocket, X, CheckCircle2, Clock, BarChart3 } from 'lucide-react';
 import { DotGrid } from './DotGrid';
 import { dataService, PortfolioItem } from '../services/dataService';
+
+interface CountUpProps {
+  target: number;
+  suffix?: string;
+  duration?: number;
+}
+
+const CountUp: React.FC<CountUpProps> = ({ target, suffix = '', duration = 2 }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(0, target, {
+        duration,
+        ease: 'easeOut',
+        onUpdate: (latest) => {
+          setCount(Math.floor(latest));
+        },
+      });
+      return () => controls.stop();
+    }
+  }, [isInView, target, duration]);
+
+  return (
+    <span ref={ref}>
+      {count}
+      {suffix}
+    </span>
+  );
+};
 
 interface Project {
   id: string;
@@ -21,43 +53,43 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    id: 'sarastore-pk',
-    title: 'sarastore.pk',
-    subtitle: 'WordPress & WooCommerce Storefront',
-    description: 'High-performance custom WordPress & WooCommerce e-commerce platform built for SaraStore with instant search and custom payment checkout.',
-    category: 'WordPress Development',
-    badgeText: 'WordPress Development',
-    badgeBg: 'bg-[#FFEFE5]',
-    badgeTextColor: 'text-[#FF8706]',
-    subtitleColor: 'text-[#FF8706]',
-    image: '/sspc.png',
-    websiteUrl: 'https://sarastore.pk',
-  },
-  {
-    id: 'shortconverter-com',
-    title: 'shortconverter.com',
-    subtitle: 'Next.js & React Web Application',
-    description: 'Lightning-fast media conversion and online video utility web platform built with React, Next.js, and browser WebAssembly.',
+    id: 'nexcojapan-com',
+    title: 'nexcojapan.com',
+    subtitle: 'Japanese Vehicle Export Platform',
+    description: 'Global Japanese vehicle sourcing & auction portal with real-time bidding system and container shipping tracking.',
     category: 'Web Development',
     badgeText: 'Web Development',
     badgeBg: 'bg-[#E6F8F9]',
     badgeTextColor: 'text-[#14B8B0]',
     subtitleColor: 'text-[#14B8B0]',
-    image: '/shortc.png',
-    websiteUrl: 'https://shortconverter.com',
+    image: '/nexcoj.png',
+    websiteUrl: 'https://nexcojapan.com',
   },
   {
-    id: 'pos-software',
-    title: 'POS Software',
-    subtitle: 'Retail Point of Sale & Inventory System',
-    description: 'All-in-one retail POS and inventory management software with offline receipt printing and multi-store synchronization.',
+    id: 'logistics-fleet-management',
+    title: 'Logistics Fleet Management',
+    subtitle: 'Enterprise Supply Chain & GPS Tracking',
+    description: 'Real-time fleet tracking, automated route dispatching, driver telemetry, and fuel consumption analytics software.',
     category: 'Custom Software Development',
     badgeText: 'Custom Software Development',
     badgeBg: 'bg-[#FFEFE5]',
     badgeTextColor: 'text-[#FF8706]',
     subtitleColor: 'text-[#FF8706]',
-    image: '/possw.png',
-    websiteUrl: 'https://pos-software.devtasoft.com',
+    image: '/lfm.png',
+    websiteUrl: 'https://fleet-management.devtasoft.com',
+  },
+  {
+    id: 'mirrormate-com',
+    title: 'mirrormate.com',
+    subtitle: 'Custom E-Commerce & Framing Platform',
+    description: 'Interactive custom frame builder and e-commerce storefront for custom-cut mirror frames and decor.',
+    category: 'Shopify Store Development',
+    badgeText: 'Shopify Store Development',
+    badgeBg: 'bg-[#E6F8F9]',
+    badgeTextColor: 'text-[#14B8B0]',
+    subtitleColor: 'text-[#14B8B0]',
+    image: '/mirrorm.png',
+    websiteUrl: 'https://mirrormate.com',
   },
 ];
 
@@ -73,65 +105,65 @@ const caseStudyDetails: Record<string, {
   color: string;
   bgColor: string;
 }> = {
-  'sarastore-pk': {
-    tagline: 'High-Conversion E-Commerce Experience for SaraStore.',
-    challenge: 'SaraStore needed a fast, scalable WooCommerce storefront capable of handling high traffic surges, instant product filtering, and local payment integration.',
-    solution: 'We engineered a custom WordPress theme with WooCommerce optimization, custom database indexing, and streamlined checkout.',
+  'nexcojapan-com': {
+    tagline: 'Global Automobile Export Platform for NexcoJapan.',
+    challenge: 'NexcoJapan needed a unified digital platform to connect global buyers with Japanese auto auctions, requiring real-time vehicle translation, dynamic currency conversion, and freight tracking.',
+    solution: 'We built a high-speed web application with live auction API feeds, automated shipping document generation, and multi-language customer portal.',
     results: [
-      { value: '4.9★', label: 'Store Rating' },
-      { value: '+140%', label: 'Sales Growth' },
-      { value: '< 1.2s', label: 'Load Speed' },
+      { value: '50k+', label: 'Monthly Bids' },
+      { value: '+180%', label: 'Global Orders' },
+      { value: '< 1.1s', label: 'Load Speed' },
     ],
-    techStack: ['WordPress', 'WooCommerce', 'PHP 8.2', 'MySQL', 'Tailwind CSS'],
-    timeline: '6 Weeks',
-    features: [
-      { title: 'Custom WooCommerce Theme', desc: 'Handcrafted theme optimized for maximum conversion.' },
-      { title: 'Instant Live Search', desc: 'AJAX-powered product search with zero latency.' },
-      { title: 'Payment Gateways', desc: 'Integrated direct credit card & local payment APIs.' },
-      { title: 'Mobile First', desc: '100% responsive checkout optimized for smartphones.' },
-    ],
-    color: '#FF8706',
-    bgColor: '#FFEFE5',
-  },
-  'shortconverter-com': {
-    tagline: 'Ultra-Fast Online Video & Audio Converter.',
-    challenge: 'Handling heavy video conversion tasks client-side without overloading backend servers or introducing lag for end users.',
-    solution: 'We built a high-performance React & Next.js web application utilizing WebAssembly and FFmpeg for browser-side processing.',
-    results: [
-      { value: '1M+', label: 'Monthly Users' },
-      { value: '99.9%', label: 'Uptime' },
-      { value: '< 2s', label: 'Conversion' },
-    ],
-    techStack: ['React', 'Next.js', 'FFmpeg WebAssembly', 'Node.js', 'Tailwind CSS'],
+    techStack: ['React', 'Next.js', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],
     timeline: '8 Weeks',
     features: [
-      { title: 'Client-side FFmpeg', desc: 'Processes files locally in browser using WebAssembly.' },
-      { title: 'Drag & Drop Interface', desc: 'Simple intuitive UI for batch file conversions.' },
-      { title: 'Multi-Format Support', desc: 'Converts MP4, MP3, WEBM, AVI, MOV seamlessly.' },
-      { title: 'Privacy First', desc: 'Files never leave the user browser during conversion.' },
+      { title: 'Live Auction Bidding', desc: 'Real-time vehicle bidding synchronization with auto-translating spec sheets.' },
+      { title: 'Freight & Port Tracking', desc: 'Interactive shipping vessel tracking from Japan ports to destination ports.' },
+      { title: 'Multi-Currency Checkout', desc: 'Automatic exchange rate updates for USD, JPY, and EUR invoicing.' },
+      { title: 'Customer Portal', desc: 'Personal dashboard for managing purchase bids and export paperwork.' },
     ],
     color: '#14B8B0',
     bgColor: '#E6F8F9',
   },
-  'pos-software': {
-    tagline: 'Complete Point of Sale & Multi-Branch Inventory System.',
-    challenge: 'Retail chains needed a reliable POS system with offline capabilities, multi-register synchronization, and inventory tracking.',
-    solution: 'We developed a custom desktop & web POS application using Electron, React, and SQLite with cloud sync capabilities.',
+  'logistics-fleet-management': {
+    tagline: 'Intelligent Supply Chain & Fleet Monitoring System.',
+    challenge: 'Managing over 500 commercial transport vehicles without real-time GPS telemetry led to high fuel overhead and delayed shipments.',
+    solution: 'Engineered an end-to-end custom fleet management dashboard with live vehicle telemetry, automated maintenance alerts, and driver route optimization.',
     results: [
-      { value: '500+', label: 'Stores Active' },
-      { value: '100%', label: 'Offline Sync' },
-      { value: '+40%', label: 'Checkout Speed' },
+      { value: '500+', label: 'Active Trucks' },
+      { value: '-28%', label: 'Fuel Overhead' },
+      { value: '99.9%', label: 'System Uptime' },
     ],
-    techStack: ['React', 'Electron', 'Node.js', 'SQLite', 'Tailwind CSS'],
-    timeline: '12 Weeks',
+    techStack: ['TypeScript', 'React', 'Python', 'FastAPI', 'PostgreSQL'],
+    timeline: '10 Weeks',
     features: [
-      { title: 'Offline Mode', desc: 'Continues ringing sales even when internet disconnects.' },
-      { title: 'Barcode & Thermal Print', desc: 'Native support for ESC/POS receipt printers & scanners.' },
-      { title: 'Inventory Analytics', desc: 'Real-time stock alerts & reorder automated reports.' },
-      { title: 'Role Permissions', desc: 'Granular access controls for cashier, manager & admin.' },
+      { title: 'Real-time Telemetry', desc: 'Live GPS vehicle location tracking with speed and fuel consumption graphs.' },
+      { title: 'Smart Route Dispatch', desc: 'Automated AI routing algorithms to bypass traffic congestion.' },
+      { title: 'Driver Safety Scorecard', desc: 'Monitors harsh braking, acceleration, and idling time.' },
+      { title: 'Maintenance Alerts', desc: 'Automated reminders based on engine hours and mileage.' },
     ],
     color: '#FF8706',
     bgColor: '#FFEFE5',
+  },
+  'mirrormate-com': {
+    tagline: 'Custom Frame Builder & E-Commerce Storefront.',
+    challenge: 'MirrorMate required a visual custom frame builder that allows shoppers to measure, customize, and preview frames directly on their mirrors before ordering.',
+    solution: 'We developed an interactive 2D/3D custom frame configurator with instant pricing calculation and seamless Shopify checkout.',
+    results: [
+      { value: '4.9★', label: 'Customer Rating' },
+      { value: '+210%', label: 'Sales Growth' },
+      { value: '< 1.4s', label: 'Page Speed' },
+    ],
+    techStack: ['Shopify Plus', 'Liquid', 'React', 'JavaScript ES6', 'Tailwind CSS'],
+    timeline: '6 Weeks',
+    features: [
+      { title: 'Visual Frame Configurator', desc: 'Interactive frame builder allowing customers to test styles and exact dimensions.' },
+      { title: 'Seamless E-Commerce', desc: 'Automated order routing for custom manufacturing and fast shipping.' },
+      { title: 'High-Res Preview', desc: 'Photorealistic textures for wood, metallic, and modern frame finishes.' },
+      { title: 'Mobile Checkout', desc: 'Optimized touch controls for customizing frames on mobile phones.' },
+    ],
+    color: '#14B8B0',
+    bgColor: '#E6F8F9',
   },
 };
 
@@ -277,6 +309,264 @@ const CaseStudyModal: React.FC<{
   );
 };
 
+// ─── Animated Code Mockup (Typewriter Effect with Rotating Snippets) ────
+interface CodeSnippet {
+  filename: string;
+  badge: string;
+  lines: string[];
+}
+
+const CODE_SNIPPETS: CodeSnippet[] = [
+  {
+    filename: 'DevtaEngine.tsx',
+    badge: 'BUILDING',
+    lines: [
+      "import { DevtaEngine, AI } from '@devtasoft/core';",
+      "// Initialize high-performance digital engine",
+      "const engine = new DevtaEngine({",
+      "  mode: 'production',",
+      "  scale: Infinity,",
+      "  aiAccelerator: true,",
+      "});",
+      "",
+      "await engine.deploy({ target: 'global' }); ✓",
+    ],
+  },
+  {
+    filename: 'ECommerceEngine.ts',
+    badge: 'OPTIMIZING',
+    lines: [
+      "import { WooCommerce, Redis } from '@devtasoft/wp';",
+      "// High-conversion e-commerce storefront",
+      "const store = new WooCommerce({",
+      "  domain: 'sarastore.pk',",
+      "  instantSearch: true,",
+      "  checkoutSpeed: '< 1.0s',",
+      "});",
+      "",
+      "await store.launchSalesGrowth(); ✓",
+    ],
+  },
+  {
+    filename: 'MediaConverter.tsx',
+    badge: 'COMPILING',
+    lines: [
+      "import { FFmpegWasm } from '@devtasoft/wasm';",
+      "// In-browser WebAssembly media processing",
+      "const converter = new FFmpegWasm({",
+      "  clientSideOnly: true,",
+      "  maxThreads: 8,",
+      "  privacyFirst: true,",
+      "});",
+      "",
+      "await converter.transcode('video.mp4'); ✓",
+    ],
+  },
+  {
+    filename: 'POSCloudSync.ts',
+    badge: 'SYNCING',
+    lines: [
+      "import { POSCore, SQLiteSync } from '@devtasoft/pos';",
+      "// Offline-first retail management system",
+      "const pos = new POSCore({",
+      "  offlineMode: true,",
+      "  escPosPrinter: true,",
+      "  multiBranchSync: 500,",
+      "});",
+      "",
+      "await pos.syncOfflineTransactions(); ✓",
+    ],
+  },
+  {
+    filename: 'AiAutomation.py',
+    badge: 'TRAINING',
+    lines: [
+      "from devtasoft.ai import AgenticPipeline",
+      "# Autonomous workflow AI assistant",
+      "agent = AgenticPipeline(",
+      "    task='enterprise_automation',",
+      "    memory_vector_db='pinecone',",
+      "    speed='instant'",
+      ")",
+      "",
+      "response = agent.run_autonomously() ✓",
+    ],
+  },
+];
+
+const renderHighlightedText = (text: string) => {
+  if (!text) return null;
+
+  if (text.trim().startsWith('//') || text.trim().startsWith('#')) {
+    return <span className="text-slate-500">{text}</span>;
+  }
+
+  const regex = /(\/\/.*|#.*|'.*?'|".*?"|\b(?:import|from|const|let|var|await|new|true|false|Infinity|return|async|def)\b|\b(?:DevtaEngine|WooCommerce|FFmpegWasm|POSCore|AgenticPipeline|AI|Redis|SQLiteSync)\b|✓|[{}()\[\]=:,;])/g;
+
+  const parts: { text: string; type: string }[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(text)) !== null) {
+    const start = match.index;
+    if (start > lastIndex) {
+      parts.push({ text: text.slice(lastIndex, start), type: 'plain' });
+    }
+    const val = match[0];
+    let type = 'plain';
+
+    if (val.startsWith('//') || val.startsWith('#')) {
+      type = 'comment';
+    } else if (val.startsWith("'") || val.startsWith('"')) {
+      type = 'string';
+    } else if (/^(import|from|const|let|var|await|new|true|false|Infinity|return|async|def)$/.test(val)) {
+      type = 'keyword';
+    } else if (/^(DevtaEngine|WooCommerce|FFmpegWasm|POSCore|AgenticPipeline|AI|Redis|SQLiteSync)$/.test(val)) {
+      type = 'class';
+    } else if (val === '✓') {
+      type = 'check';
+    } else if ('{}()[]'.includes(val)) {
+      type = 'bracket';
+    } else {
+      type = 'symbol';
+    }
+
+    parts.push({ text: val, type });
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push({ text: text.slice(lastIndex), type: 'plain' });
+  }
+
+  return (
+    <>
+      {parts.map((part, i) => {
+        switch (part.type) {
+          case 'comment':
+            return <span key={i} className="text-slate-500">{part.text}</span>;
+          case 'string':
+            return <span key={i} className="text-emerald-400">{part.text}</span>;
+          case 'keyword':
+            return <span key={i} className="text-[#FF6B00]">{part.text}</span>;
+          case 'class':
+            return <span key={i} className="text-[#14B8B0]">{part.text}</span>;
+          case 'check':
+            return <span key={i} className="text-emerald-500 font-bold">{part.text}</span>;
+          case 'bracket':
+            return <span key={i} className="text-purple-400">{part.text}</span>;
+          default:
+            return <span key={i} className="text-slate-300">{part.text}</span>;
+        }
+      })}
+    </>
+  );
+};
+
+const AnimatedCodeMockup: React.FC = () => {
+  const [snippetIndex, setSnippetIndex] = useState(() => Math.floor(Math.random() * CODE_SNIPPETS.length));
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [phase, setPhase] = useState<'TYPING' | 'PAUSE' | 'DELETING'>('TYPING');
+
+  const currentSnippet = CODE_SNIPPETS[snippetIndex];
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (phase === 'TYPING') {
+      const currentLineText = currentSnippet.lines[lineIndex] || '';
+
+      if (charIndex < currentLineText.length) {
+        timer = setTimeout(() => {
+          setCharIndex((prev) => prev + 1);
+        }, 28);
+      } else {
+        if (lineIndex < currentSnippet.lines.length - 1) {
+          timer = setTimeout(() => {
+            setLineIndex((prev) => prev + 1);
+            setCharIndex(0);
+          }, 35);
+        } else {
+          timer = setTimeout(() => {
+            setPhase('PAUSE');
+          }, 100);
+        }
+      }
+    } else if (phase === 'PAUSE') {
+      timer = setTimeout(() => {
+        setPhase('DELETING');
+      }, 3500);
+    } else if (phase === 'DELETING') {
+      if (charIndex > 0) {
+        timer = setTimeout(() => {
+          setCharIndex((prev) => prev - 1);
+        }, 10);
+      } else if (lineIndex > 0) {
+        const prevLineText = currentSnippet.lines[lineIndex - 1] || '';
+        timer = setTimeout(() => {
+          setLineIndex((prev) => prev - 1);
+          setCharIndex(prevLineText.length);
+        }, 10);
+      } else {
+        timer = setTimeout(() => {
+          setSnippetIndex((prev) => (prev + 1) % CODE_SNIPPETS.length);
+          setLineIndex(0);
+          setCharIndex(0);
+          setPhase('TYPING');
+        }, 300);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [phase, lineIndex, charIndex, snippetIndex, currentSnippet]);
+
+  return (
+    <motion.div
+      className="relative z-10 bg-[#0D152A]/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:border-[#FF6B00]/40 w-full"
+      animate={{ y: [-5, 5, -5] }}
+      transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      <div className="bg-[#090D16] px-4 py-3 border-b border-white/10 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-[#FF5F56] inline-block" />
+          <span className="w-3 h-3 rounded-full bg-[#FFBD2E] inline-block" />
+          <span className="w-3 h-3 rounded-full bg-[#27C93F] inline-block" />
+        </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+          <span className="text-[#14B8B0]">portfolio</span>
+          <span>/</span>
+          <span className="text-white font-medium transition-all duration-300">{currentSnippet.filename}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="px-2 py-0.5 rounded-full bg-[#14B8B0]/20 text-[#14B8B0] text-[10px] font-mono font-bold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8B0] animate-pulse" />
+            {currentSnippet.badge}
+          </span>
+        </div>
+      </div>
+      <div className="p-5 font-mono text-xs leading-relaxed text-slate-300 overflow-hidden font-semibold min-h-[250px] flex flex-col justify-start">
+        {currentSnippet.lines.slice(0, lineIndex + 1).map((lineText, idx) => {
+          const isCurrentLine = idx === lineIndex;
+          const visibleText = isCurrentLine ? lineText.slice(0, charIndex) : lineText;
+
+          return (
+            <div key={idx} className="flex items-start gap-3 mt-1 first:mt-0 min-h-[1.4rem]">
+              <span className="text-slate-600 select-none w-4 text-right shrink-0">{idx + 1}</span>
+              <span className="flex-1 break-words whitespace-pre-wrap">
+                {renderHighlightedText(visibleText)}
+                {isCurrentLine && (
+                  <span className="inline-block w-1.5 h-3.5 bg-[#FF6B00] ml-1 rounded-sm animate-pulse align-middle" />
+                )}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+};
+
 // ─── Main PortfolioSection Component ─────────────────────────────────────
 export const PortfolioSection: React.FC<{
   onStartProjectClick?: () => void;
@@ -308,7 +598,7 @@ export const PortfolioSection: React.FC<{
     websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
   }));
 
-  const allProjectsCombined = mappedDynamicProjects;
+  const allProjectsCombined = mappedDynamicProjects.length > 0 ? mappedDynamicProjects : projectsData;
 
   return (
     <section id="portfolio" className="w-full bg-[#FCFDFE] py-20 sm:py-28 px-2 sm:px-4 lg:px-6 font-sans overflow-hidden">
@@ -357,45 +647,21 @@ export const PortfolioSection: React.FC<{
           <div className="lg:col-span-6 flex flex-col justify-center items-center lg:items-end relative">
             <motion.div className="w-full max-w-[520px] relative mb-12 select-none" initial={{ opacity: 0, scale: 0.94, y: 30 }} whileInView={{ opacity: 1, scale: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}>
               <motion.div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-[#14B8B0]/25 via-[#FF6B00]/20 to-[#7C3AED]/20 blur-2xl pointer-events-none" animate={{ opacity: [0.5, 0.85, 0.5], scale: [0.98, 1.04, 0.98] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} />
-              <motion.div className="relative z-10 bg-[#0D152A]/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:border-[#FF6B00]/40" animate={{ y: [-5, 5, -5] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}>
-                <div className="bg-[#090D16] px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#FF5F56] inline-block" />
-                    <span className="w-3 h-3 rounded-full bg-[#FFBD2E] inline-block" />
-                    <span className="w-3 h-3 rounded-full bg-[#27C93F] inline-block" />
-                  </div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-                    <span className="text-[#14B8B0]">portfolio</span><span>/</span><span className="text-white font-medium">DevtaEngine.tsx</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-full bg-[#14B8B0]/20 text-[#14B8B0] text-[10px] font-mono font-bold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#14B8B0] animate-pulse" />BUILDING
-                    </span>
-                  </div>
-                </div>
-                <div className="p-5 font-mono text-xs leading-relaxed text-slate-300 overflow-hidden font-semibold">
-                  <div className="flex items-center gap-3"><span className="text-slate-600 select-none">1</span><span><span className="text-[#FF6B00]">import</span> &#123; <span className="text-[#14B8B0]">DevtaEngine</span>, <span className="text-purple-400">AI</span> &#125; <span className="text-[#FF6B00]">from</span> <span className="text-emerald-400">'@devtasoft/core'</span>;</span></div>
-                  <div className="flex items-center gap-3 mt-1"><span className="text-slate-600 select-none">2</span><span className="text-slate-500">// Initialize the portfolio engine</span></div>
-                  <div className="flex items-center gap-3 mt-1"><span className="text-slate-600 select-none">3</span><span><span className="text-[#FF6B00]">const</span> <span className="text-[#14B8B0]">engine</span> = <span className="text-purple-400">new</span> <span className="text-yellow-300">DevtaEngine</span>(&#123;</span></div>
-                  <div className="flex items-center gap-3 mt-1"><span className="text-slate-600 select-none">4</span><span className="pl-4"><span className="text-white">mode</span>: <span className="text-emerald-400">'production'</span>,</span></div>
-                  <div className="flex items-center gap-3 mt-1"><span className="text-slate-600 select-none">5</span><span className="pl-4"><span className="text-white">scale</span>: <span className="text-[#FF6B00]">Infinity</span>,</span></div>
-                  <div className="flex items-center gap-3 mt-1"><span className="text-slate-600 select-none">6</span><span>&#125;);</span></div>
-                  <div className="flex items-center gap-3 mt-1"><span className="text-slate-600 select-none">7</span><span>&nbsp;</span></div>
-                  <div className="flex items-center gap-3 mt-1"><span className="text-slate-600 select-none">8</span><span><span className="text-[#FF6B00]">await</span> engine.<span className="text-yellow-300">deploy</span>(); <span className="text-emerald-500">✓</span><span className="inline-block w-1.5 h-3.5 bg-[#FF6B00] ml-1 rounded-sm animate-pulse" /></span></div>
-                </div>
-              </motion.div>
+              <AnimatedCodeMockup />
             </motion.div>
 
             <div className="flex items-center gap-8 sm:gap-14 w-full max-w-[520px] justify-center lg:justify-end">
               {[
-                { icon: Cpu, num: '250+', label: 'Projects', color: '#FF6B00' },
-                { icon: Users, num: '100+', label: 'Clients', color: '#14B8B0' },
-                { icon: Rocket, num: '98%', label: 'Satisfaction', color: '#FF6B00' },
+                { icon: Cpu, number: 250, suffix: '+', label: 'Projects', color: '#FF6B00' },
+                { icon: Users, number: 100, suffix: '+', label: 'Clients', color: '#14B8B0' },
+                { icon: Rocket, number: 98, suffix: '%', label: 'Satisfaction', color: '#FF6B00' },
               ].map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center gap-1.5 group">
+                <div key={stat.label} className="flex flex-col items-center gap-1.5 group cursor-pointer">
                   <stat.icon className="w-5 h-5 mb-0.5 group-hover:scale-110 transition-transform duration-300" style={{ color: stat.color }} />
-                  <span className="font-display font-extrabold text-[#0D152A] text-xl">{stat.num}</span>
-                  <span className="font-semibold text-[#6B7280] text-xs">{stat.label}</span>
+                  <span className="font-display font-extrabold text-[#0D152A] text-xl group-hover:scale-110 transition-transform duration-300">
+                    <CountUp target={stat.number} suffix={stat.suffix} />
+                  </span>
+                  <span className="font-semibold text-[#6B7280] text-xs group-hover:text-[#0D152A] transition-colors">{stat.label}</span>
                 </div>
               ))}
             </div>
@@ -405,7 +671,7 @@ export const PortfolioSection: React.FC<{
         {/* 3 Project Cards Grid (1 WordPress, 1 Web Dev, 1 Custom Software) */}
         <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-14" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}
           variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15 } } }}>
-          {allProjectsCombined.map((project) => (
+          {allProjectsCombined.slice(0, 3).map((project) => (
             <motion.div key={project.id} className="bg-white rounded-[32px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-[#0D152A]/10 hover:-translate-y-2 transition-all duration-500 flex flex-col h-full group cursor-pointer"
               onClick={() => setActiveProject(project)}
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.215, 0.61, 0.355, 1] } } }}

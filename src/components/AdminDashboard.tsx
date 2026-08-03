@@ -18,16 +18,23 @@ import {
   Image as ImageIcon,
   ArrowRight,
   ShieldCheck,
+  Eye,
+  EyeOff,
+  Sliders,
+  Layers,
+  Lock,
+  Unlock,
+  Menu,
 } from 'lucide-react';
 import { Logo } from './Logo';
-import { dataService, ProductItem, PortfolioItem } from '../services/dataService';
+import { dataService, ProductItem, PortfolioItem, VisibilitySettings } from '../services/dataService';
 
 interface AdminDashboardProps {
   onViewWebsite: () => void;
   onLogout: () => void;
 }
 
-type TabType = 'dashboard' | 'products' | 'portfolio';
+type TabType = 'dashboard' | 'visibility' | 'products' | 'portfolio';
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, onLogout }) => {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
@@ -65,11 +72,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
   const productFileInputRef = useRef<HTMLInputElement>(null);
   const portfolioFileInputRef = useRef<HTMLInputElement>(null);
 
+  const [visibilitySettings, setVisibilitySettings] = useState<VisibilitySettings>(dataService.getVisibility());
+
+  // Master Section Lock/Unlock States
+  const [isPagesUnlocked, setIsPagesUnlocked] = useState(false);
+  const [isSectionsUnlocked, setIsSectionsUnlocked] = useState(false);
+
   // Load items on mount and subscribe to data service changes
   useEffect(() => {
     const loadData = () => {
       setProducts(dataService.getProducts());
       setPortfolio(dataService.getPortfolio());
+      setVisibilitySettings(dataService.getVisibility());
     };
 
     loadData();
@@ -274,13 +288,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
       )}
 
       {/* ═══════════════════════════════════════════
+      {/* Mobile Sidebar Backdrop Overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden transition-opacity duration-300"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* ═══════════════════════════════════════════
           LEFT SIDEBAR (Dark Indigo #0D152A / #2A285F)
       ═══════════════════════════════════════════ */}
-      <aside className="hidden lg:flex w-[260px] xl:w-[280px] bg-[#070B19] border-r border-slate-800 flex-col justify-between p-6 shrink-0 fixed top-0 bottom-0 left-0 z-40 select-none">
+      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-[260px] xl:w-[280px] bg-[#070B19] border-r border-slate-800 flex flex-col justify-between p-6 shrink-0 select-none transition-transform duration-300 ease-in-out ${
+        mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}>
         <div>
-          {/* Top Brand Logo */}
-          <div className="flex items-center gap-3 pb-8 border-b border-slate-800/80 mb-8 pt-2">
+          {/* Top Brand Logo + Mobile Close Button */}
+          <div className="flex items-center justify-between pb-8 border-b border-slate-800/80 mb-8 pt-2">
             <Logo />
+            <button
+              onClick={() => setMobileSidebarOpen(false)}
+              className="lg:hidden p-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+              aria-label="Close Mobile Sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* MAIN MENU Navigation */}
@@ -290,7 +322,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
             </p>
             <nav className="flex flex-col gap-1.5">
               <button
-                onClick={() => setActiveTab('dashboard')}
+                onClick={() => {
+                  setActiveTab('dashboard');
+                  setMobileSidebarOpen(false);
+                }}
                 className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer ${
                   activeTab === 'dashboard'
                     ? 'bg-slate-800/80 text-white shadow-md border-l-4 border-l-[#FF8706]'
@@ -302,7 +337,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
               </button>
 
               <button
-                onClick={() => setActiveTab('products')}
+                onClick={() => {
+                  setActiveTab('visibility');
+                  setMobileSidebarOpen(false);
+                }}
+                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer ${
+                  activeTab === 'visibility'
+                    ? 'bg-slate-800/80 text-white shadow-md border-l-4 border-l-[#14B8B0]'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+                }`}
+              >
+                <Eye className={`w-5 h-5 ${activeTab === 'visibility' ? 'text-[#14B8B0]' : 'text-slate-400'}`} />
+                <span>Site Controls</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('products');
+                  setMobileSidebarOpen(false);
+                }}
                 className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer ${
                   activeTab === 'products'
                     ? 'bg-slate-800/80 text-white shadow-md border-l-4 border-l-[#FF8706]'
@@ -314,7 +367,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
               </button>
 
               <button
-                onClick={() => setActiveTab('portfolio')}
+                onClick={() => {
+                  setActiveTab('portfolio');
+                  setMobileSidebarOpen(false);
+                }}
                 className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm transition-all cursor-pointer ${
                   activeTab === 'portfolio'
                     ? 'bg-slate-800/80 text-white shadow-md border-l-4 border-l-[#00C2CC]'
@@ -334,7 +390,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
             </p>
             <nav className="flex flex-col gap-1.5">
               <button
-                onClick={onViewWebsite}
+                onClick={() => {
+                  onViewWebsite();
+                  setMobileSidebarOpen(false);
+                }}
                 className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-400 hover:text-white hover:bg-slate-800/40 transition-all cursor-pointer"
               >
                 <Globe className="w-5 h-5 text-slate-400" />
@@ -342,7 +401,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
               </button>
 
               <button
-                onClick={onLogout}
+                onClick={() => {
+                  onLogout();
+                  setMobileSidebarOpen(false);
+                }}
                 className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all cursor-pointer"
               >
                 <LogOut className="w-5 h-5 text-red-400" />
@@ -371,17 +433,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
         
         {/* Top Sticky Header */}
         <header className="w-full h-20 bg-white border-b border-[#E7EAF0] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-          <div>
-            <h1 className="font-display font-extrabold text-2xl text-[#1E2340]">
-              {activeTab === 'dashboard' && 'Dashboard'}
-              {activeTab === 'products' && 'Products'}
-              {activeTab === 'portfolio' && 'Portfolio Projects'}
-            </h1>
-            <p className="text-xs sm:text-sm text-[#667085] font-medium hidden sm:block">
-              {activeTab === 'dashboard' && "Welcome back! Here's what's happening."}
-              {activeTab === 'products' && 'Manage all products displayed on the DevtaSoft website.'}
-              {activeTab === 'portfolio' && 'Manage all portfolio projects displayed on the website.'}
-            </p>
+          <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+              className="lg:hidden p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer shrink-0"
+              aria-label="Toggle Sidebar Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
+            <div>
+              <h1 className="font-display font-extrabold text-xl sm:text-2xl text-[#1E2340]">
+                {activeTab === 'dashboard' && 'Dashboard'}
+                {activeTab === 'visibility' && 'Page & Section Controls'}
+                {activeTab === 'products' && 'Products'}
+                {activeTab === 'portfolio' && 'Portfolio Projects'}
+              </h1>
+              <p className="text-xs sm:text-sm text-[#667085] font-medium hidden sm:block">
+                {activeTab === 'dashboard' && "Welcome back! Here's what's happening."}
+                {activeTab === 'visibility' && 'Hide or show pages, navbar items, and landing page sections.'}
+                {activeTab === 'products' && 'Manage all products displayed on the DevtaSoft website.'}
+                {activeTab === 'portfolio' && 'Manage all portfolio projects displayed on the website.'}
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
@@ -411,8 +486,35 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
             <div className="space-y-8 animate-in fade-in duration-300">
               
               {/* Summary Cards Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 
+                {/* Site Visibility Controls Summary Card */}
+                <div
+                  onClick={() => setActiveTab('visibility')}
+                  className="bg-white border border-[#E7EAF0] rounded-3xl p-6 sm:p-7 shadow-xs hover:shadow-md transition-all cursor-pointer group flex items-center justify-between relative overflow-hidden"
+                >
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 rounded-2xl bg-[#E6F8F9] text-[#14B8B0] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      <Eye className="w-6 h-6 stroke-[2.2]" />
+                    </div>
+                    <p className="text-xs font-extrabold uppercase tracking-wider text-[#667085]">
+                      Site Controls
+                    </p>
+                    <p className="font-display font-black text-3xl sm:text-4xl text-[#1E2340]">
+                      {Object.values(visibilitySettings.pages).filter(Boolean).length + Object.values(visibilitySettings.sections).filter(Boolean).length} <span className="text-sm font-semibold text-slate-400">Active</span>
+                    </p>
+                    <p className="text-xs font-bold text-[#14B8B0] group-hover:underline flex items-center gap-1 pt-1">
+                      <span>Manage page & section visibility</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </p>
+                  </div>
+
+                  {/* Decorative Sparkline SVG */}
+                  <svg className="w-24 h-14 text-[#14B8B0]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
+                    <path d="M0 20 Q25 5, 50 30 T100 15" stroke="currentColor" strokeWidth="3" />
+                  </svg>
+                </div>
+
                 {/* Total Products Summary Card */}
                 <div
                   onClick={() => setActiveTab('products')}
@@ -435,7 +537,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
 
                   {/* Decorative Sparkline SVG */}
-                  <svg className="w-28 h-14 text-[#FF8706]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
+                  <svg className="w-24 h-14 text-[#FF8706]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
                     <path d="M0 30 Q25 5, 50 25 T100 10" stroke="currentColor" strokeWidth="3" />
                   </svg>
                 </div>
@@ -462,7 +564,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
 
                   {/* Decorative Sparkline SVG */}
-                  <svg className="w-28 h-14 text-[#00C2CC]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
+                  <svg className="w-24 h-14 text-[#00C2CC]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
                     <path d="M0 25 Q25 35, 50 15 T100 20" stroke="currentColor" strokeWidth="3" />
                   </svg>
                 </div>
@@ -664,11 +766,356 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* TAB 2: PAGE & SECTION VISIBILITY CONTROLS */}
+          {activeTab === 'visibility' && (
+            <div className="space-y-8 animate-in fade-in duration-300">
+              
+              {/* Info Alert Box */}
+              <div className="bg-[#0D152A] text-white rounded-3xl p-6 sm:p-7 shadow-lg flex items-start gap-4 border border-slate-700">
+                <div className="w-12 h-12 rounded-2xl bg-[#14B8B0]/20 text-[#14B8B0] flex items-center justify-center shrink-0 mt-0.5">
+                  <Eye className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-display font-extrabold text-lg sm:text-xl text-white mb-1">
+                    Website Visibility & Navigation Management
+                  </h3>
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-normal">
+                    Control which pages and landing page sections are visible to your visitors. Hiding a page removes it from the Navbar, Footer, and direct URL routes. Hiding a section removes it from the landing page.
+                  </p>
+                </div>
+              </div>
+
+              {/* PANEL 1: NAV PAGES & ROUTES VISIBILITY */}
+              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
+                <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100 flex-wrap">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-[#E6F8F9] text-[#14B8B0] flex items-center justify-center shrink-0">
+                      <Globe className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2.5">
+                        <h2 className="font-display font-extrabold text-xl text-[#1E2340]">Navbar Pages & Direct Routes</h2>
+                        {isPagesUnlocked ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            <Unlock className="w-3 h-3 text-emerald-500" /> Unlocked
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-50 text-red-600 border border-red-200">
+                            <Lock className="w-3 h-3 text-red-500" /> Locked
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-[#667085] mt-0.5">
+                        {isPagesUnlocked
+                          ? 'Hide or show specific pages from navbar, footer, and page URL routes.'
+                          : 'Section is locked. Toggle the switch on the right to unlock access.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Uiverse Lock Toggle for Panel 1 */}
+                  <div className="flex items-center gap-3 bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-2xl shadow-2xs">
+                    <span className="text-xs font-extrabold text-[#1E2340]">
+                      {isPagesUnlocked ? 'Access Granted' : 'Locked'}
+                    </span>
+                    <label className="relative inline-flex cursor-pointer items-center select-none shrink-0" title={isPagesUnlocked ? 'Unlocked - Click to lock section' : 'Locked - Click to unlock section'}>
+                      <input
+                        type="checkbox"
+                        className="peer sr-only"
+                        checked={isPagesUnlocked}
+                        onChange={(e) => {
+                          setIsPagesUnlocked(e.target.checked);
+                          showToast(
+                            e.target.checked ? 'Pages section UNLOCKED - You can now edit page controls!' : 'Pages section LOCKED',
+                            e.target.checked ? 'success' : 'error'
+                          );
+                        }}
+                      />
+                      <div className="border-slate-400 shadow-md peer-checked:shadow-green-600/40 shadow-red-600/40 border flex h-6 w-12 items-center outline-none rounded-full bg-red-600 pl-7 text-white transition-all duration-300 peer-checked:bg-green-600 peer-checked:pl-2 peer-focus:outline-none"></div>
+                      <svg
+                        className="peer-checked:opacity-0 transition-all duration-500 opacity-100 absolute left-6 stroke-slate-900 w-5 h-5 fill-white"
+                        height="100"
+                        preserveAspectRatio="xMidYMid meet"
+                        viewBox="0 0 100 100"
+                        width="100"
+                        x="0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        y="0"
+                      >
+                        <path
+                          d="M50,18A19.9,19.9,0,0,0,30,38v8a8,8,0,0,0-8,8V74a8,8,0,0,0,8,8H70a8,8,0,0,0,8-8V54a8,8,0,0,0-8-8H38V38a12,12,0,0,1,23.6-3,4,4,0,1,0,7.8-2A20.1,20.1,0,0,0,50,18Z"
+                        ></path>
+                      </svg>
+                      <svg
+                        className="absolute transition-all duration-500 peer-checked:opacity-100 opacity-0 left-1 stroke-slate-900 w-5 h-5 fill-white"
+                        height="100"
+                        preserveAspectRatio="xMidYMid meet"
+                        viewBox="0 0 100 100"
+                        width="100"
+                        x="0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        y="0"
+                      >
+                        <path
+                          d="M30,46V38a20,20,0,0,1,40,0v8a8,8,0,0,1,8,8V74a8,8,0,0,1-8,8H30a8,8,0,0,1-8-8V54A8,8,0,0,1,30,46Zm32-8v8H38V38a12,12,0,0,1,24,0Z"
+                          fillRule="evenodd"
+                        ></path>
+                      </svg>
+                      <div className="absolute left-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-lg transition-all duration-300 peer-checked:left-7"></div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Page Cards Container with Lock Shield Overlay */}
+                <div className="relative">
+                  {!isPagesUnlocked && (
+                    <div 
+                      onClick={() => showToast('Pages section is locked! Unlock the toggle switch at the top-right to edit.', 'error')}
+                      className="absolute -inset-2 z-20 bg-slate-900/10 backdrop-blur-[2px] rounded-2xl cursor-not-allowed flex items-center justify-center transition-all"
+                    >
+                      <div className="bg-white/95 shadow-xl border border-slate-200 px-5 py-3 rounded-2xl text-xs font-extrabold text-[#1E2340] flex items-center gap-2.5 animate-pulse">
+                        <div className="w-7 h-7 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                        <span>Section Locked — Toggle unlock switch at top right to edit</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-300 ${!isPagesUnlocked ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+                    {[
+                      { key: 'about' as const, name: 'About Us Page', path: '/about', desc: 'Main About Us page showcasing company story, team & values.' },
+                      { key: 'services' as const, name: 'Services Page', path: '/services', desc: 'Services overview page listing digital engineering solutions.' },
+                      { key: 'portfolio' as const, name: 'Portfolio Page', path: '/portfolio', desc: 'Case studies & full client portfolio project gallery.' },
+                      { key: 'products' as const, name: 'Products Page', path: '/products', desc: 'Product showcase page highlighting proprietary tools.' },
+                      { key: 'contact' as const, name: 'Contact Us Page', path: '/contact', desc: 'Dedicated contact page with interactive contact form.' },
+                    ].map((item) => {
+                      const isVisible = visibilitySettings.pages[item.key];
+                      return (
+                        <div
+                          key={item.key}
+                          className={`p-5 rounded-2xl border transition-all flex items-center justify-between gap-4 ${
+                            isVisible
+                              ? 'bg-white border-slate-200 shadow-2xs'
+                              : 'bg-slate-50/70 border-slate-200/60 opacity-75'
+                          }`}
+                        >
+                          <div className="space-y-1 overflow-hidden">
+                            <div className="flex items-center gap-2">
+                              <span className="font-extrabold text-sm text-[#1E2340]">{item.name}</span>
+                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">{item.path}</span>
+                            </div>
+                            <p className="text-xs text-slate-500 leading-snug">{item.desc}</p>
+                            <div className="pt-1">
+                              {isVisible ? (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                                  <Eye className="w-3 h-3" /> Visible on Website
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+                                  <EyeOff className="w-3 h-3 text-slate-400" /> Hidden from Navbar & Website
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Toggle Switch */}
+                          <button
+                            onClick={() => {
+                              const updated = dataService.togglePageVisibility(item.key);
+                              setVisibilitySettings(updated);
+                              showToast(
+                                `${item.name} is now ${updated.pages[item.key] ? 'VISIBLE' : 'HIDDEN'} on the website!`
+                              );
+                            }}
+                            className={`relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                              isVisible ? 'bg-[#14B8B0]' : 'bg-slate-300'
+                            }`}
+                            role="switch"
+                            aria-checked={isVisible}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                                isVisible ? 'translate-x-6' : 'translate-x-0'
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* PANEL 2: LANDING PAGE SECTIONS VISIBILITY */}
+              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
+                <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100 flex-wrap">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-[#FFEFE5] text-[#FF8706] flex items-center justify-center shrink-0">
+                      <Layers className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2.5">
+                        <h2 className="font-display font-extrabold text-xl text-[#1E2340]">Landing Page Sections</h2>
+                        {isSectionsUnlocked ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            <Unlock className="w-3 h-3 text-emerald-500" /> Unlocked
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-50 text-red-600 border border-red-200">
+                            <Lock className="w-3 h-3 text-red-500" /> Locked
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-[#667085] mt-0.5">
+                        {isSectionsUnlocked
+                          ? 'Hide or show individual sections on the main landing page (`/`).'
+                          : 'Section is locked. Toggle the switch on the right to unlock access.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Uiverse Lock Toggle for Panel 2 */}
+                  <div className="flex items-center gap-3 bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-2xl shadow-2xs">
+                    <span className="text-xs font-extrabold text-[#1E2340]">
+                      {isSectionsUnlocked ? 'Access Granted' : 'Locked'}
+                    </span>
+                    <label className="relative inline-flex cursor-pointer items-center select-none shrink-0" title={isSectionsUnlocked ? 'Unlocked - Click to lock section' : 'Locked - Click to unlock section'}>
+                      <input
+                        type="checkbox"
+                        className="peer sr-only"
+                        checked={isSectionsUnlocked}
+                        onChange={(e) => {
+                          setIsSectionsUnlocked(e.target.checked);
+                          showToast(
+                            e.target.checked ? 'Landing Page Sections UNLOCKED - You can now edit section controls!' : 'Landing Page Sections LOCKED',
+                            e.target.checked ? 'success' : 'error'
+                          );
+                        }}
+                      />
+                      <div className="border-slate-400 shadow-md peer-checked:shadow-green-600/40 shadow-red-600/40 border flex h-6 w-12 items-center outline-none rounded-full bg-red-600 pl-7 text-white transition-all duration-300 peer-checked:bg-green-600 peer-checked:pl-2 peer-focus:outline-none"></div>
+                      <svg
+                        className="peer-checked:opacity-0 transition-all duration-500 opacity-100 absolute left-6 stroke-slate-900 w-5 h-5 fill-white"
+                        height="100"
+                        preserveAspectRatio="xMidYMid meet"
+                        viewBox="0 0 100 100"
+                        width="100"
+                        x="0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        y="0"
+                      >
+                        <path
+                          d="M50,18A19.9,19.9,0,0,0,30,38v8a8,8,0,0,0-8,8V74a8,8,0,0,0,8,8H70a8,8,0,0,0,8-8V54a8,8,0,0,0-8-8H38V38a12,12,0,0,1,23.6-3,4,4,0,1,0,7.8-2A20.1,20.1,0,0,0,50,18Z"
+                        ></path>
+                      </svg>
+                      <svg
+                        className="absolute transition-all duration-500 peer-checked:opacity-100 opacity-0 left-1 stroke-slate-900 w-5 h-5 fill-white"
+                        height="100"
+                        preserveAspectRatio="xMidYMid meet"
+                        viewBox="0 0 100 100"
+                        width="100"
+                        x="0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        y="0"
+                      >
+                        <path
+                          d="M30,46V38a20,20,0,0,1,40,0v8a8,8,0,0,1,8,8V74a8,8,0,0,1-8,8H30a8,8,0,0,1-8-8V54A8,8,0,0,1,30,46Zm32-8v8H38V38a12,12,0,0,1,24,0Z"
+                          fillRule="evenodd"
+                        ></path>
+                      </svg>
+                      <div className="absolute left-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-lg transition-all duration-300 peer-checked:left-7"></div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Section Cards Container with Lock Shield Overlay */}
+                <div className="relative">
+                  {!isSectionsUnlocked && (
+                    <div 
+                      onClick={() => showToast('Landing Page Sections are locked! Unlock the toggle switch at the top-right to edit.', 'error')}
+                      className="absolute -inset-2 z-20 bg-slate-900/10 backdrop-blur-[2px] rounded-2xl cursor-not-allowed flex items-center justify-center transition-all"
+                    >
+                      <div className="bg-white/95 shadow-xl border border-slate-200 px-5 py-3 rounded-2xl text-xs font-extrabold text-[#1E2340] flex items-center gap-2.5 animate-pulse">
+                        <div className="w-7 h-7 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                        <span>Section Locked — Toggle unlock switch at top right to edit</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-300 ${!isSectionsUnlocked ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+                    {[
+                      { key: 'aboutSection' as const, name: 'About Us Section', anchor: '#about', desc: 'Overview about section with developer graphic & company values.' },
+                      { key: 'servicesSection' as const, name: 'Services Section', anchor: '#services', desc: 'Interactive services grid with digital capabilities.' },
+                      { key: 'portfolioSection' as const, name: 'Portfolio Section', anchor: '#portfolio', desc: 'Featured projects card gallery with live code typewriter.' },
+                      { key: 'productsSection' as const, name: 'Products Section', anchor: '#products', desc: 'DevtaSoft digital tools & software showcase.' },
+                      { key: 'statsBar' as const, name: 'Stats Bar', anchor: '#stats', desc: 'Bottom stats summary bar at the footer of landing page.' },
+                    ].map((item) => {
+                      const isVisible = visibilitySettings.sections[item.key];
+                      return (
+                        <div
+                          key={item.key}
+                          className={`p-5 rounded-2xl border transition-all flex items-center justify-between gap-4 ${
+                            isVisible
+                              ? 'bg-white border-slate-200 shadow-2xs'
+                              : 'bg-slate-50/70 border-slate-200/60 opacity-75'
+                          }`}
+                        >
+                          <div className="space-y-1 overflow-hidden">
+                            <div className="flex items-center gap-2">
+                              <span className="font-extrabold text-sm text-[#1E2340]">{item.name}</span>
+                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">{item.anchor}</span>
+                            </div>
+                            <p className="text-xs text-slate-500 leading-snug">{item.desc}</p>
+                            <div className="pt-1">
+                              {isVisible ? (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                                  <Eye className="w-3 h-3" /> Visible on Landing Page
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+                                  <EyeOff className="w-3 h-3 text-slate-400" /> Hidden from Landing Page
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Toggle Switch */}
+                          <button
+                            onClick={() => {
+                              const updated = dataService.toggleSectionVisibility(item.key);
+                              setVisibilitySettings(updated);
+                              showToast(
+                                `${item.name} is now ${updated.sections[item.key] ? 'VISIBLE' : 'HIDDEN'} on landing page!`
+                              );
+                            }}
+                            className={`relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                              isVisible ? 'bg-[#FF8706]' : 'bg-slate-300'
+                            }`}
+                            role="switch"
+                            aria-checked={isVisible}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                                isVisible ? 'translate-x-6' : 'translate-x-0'
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
 
             </div>
           )}
 
-          {/* TAB 2: PRODUCTS MANAGEMENT PAGE */}
+          {/* TAB 3: PRODUCTS MANAGEMENT PAGE */}
           {activeTab === 'products' && (
             <div className="space-y-6 animate-in fade-in duration-300">
               <div className="bg-white border border-[#E7EAF0] rounded-3xl p-6 sm:p-8 shadow-xs">
@@ -873,8 +1320,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
           ADD / EDIT PRODUCT MODAL DRAWER
       ═══════════════════════════════════════════ */}
       {productModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white border border-[#E7EAF0] rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+          <div className="bg-white border border-[#E7EAF0] rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
             
             <button
               onClick={closeProductModal}
@@ -999,8 +1446,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
           ADD / EDIT PORTFOLIO MODAL DRAWER
       ═══════════════════════════════════════════ */}
       {portfolioModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white border border-[#E7EAF0] rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+          <div className="bg-white border border-[#E7EAF0] rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
             
             <button
               onClick={closePortfolioModal}

@@ -1,24 +1,59 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView, animate } from 'motion/react';
 import { ArrowRight, Lightbulb, Users, Award } from 'lucide-react';
 
 interface AboutSectionProps {
   onReadMoreClick?: () => void;
 }
 
+interface CountUpProps {
+  target: number;
+  suffix?: string;
+  duration?: number;
+}
+
+const CountUp: React.FC<CountUpProps> = ({ target, suffix = '', duration = 2 }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(0, target, {
+        duration,
+        ease: 'easeOut',
+        onUpdate: (latest) => {
+          setCount(Math.floor(latest));
+        },
+      });
+      return () => controls.stop();
+    }
+  }, [isInView, target, duration]);
+
+  return (
+    <span ref={ref}>
+      {count}
+      {suffix}
+    </span>
+  );
+};
+
 const stats = [
   {
-    value: '5+',
+    number: 5,
+    suffix: '+',
     label: 'Years of Experience',
     color: 'text-[#FF8706]',
   },
   {
-    value: '250+',
+    number: 250,
+    suffix: '+',
     label: 'Projects Completed',
     color: 'text-[#14B8B0]',
   },
   {
-    value: '98%',
+    number: 98,
+    suffix: '%',
     label: 'Client Satisfaction',
     color: 'text-[#7C3AED]',
   },
@@ -220,7 +255,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onReadMoreClick }) =
                   <React.Fragment key={stat.label}>
                     <div className="flex flex-col items-center text-center px-1 group cursor-pointer">
                       <span className={`font-display font-extrabold text-2xl sm:text-3xl transition-transform duration-300 group-hover:scale-110 ${stat.color}`}>
-                        {stat.value}
+                        <CountUp target={stat.number} suffix={stat.suffix} />
                       </span>
                       <span className="text-[10px] sm:text-xs font-semibold text-[#6b7280] mt-0.5 leading-snug group-hover:text-[#0D152A] transition-colors">
                         {stat.label}

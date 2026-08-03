@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Logo } from './Logo';
 import { ArrowRight, Menu, X, LogIn } from 'lucide-react';
+import { dataService, VisibilitySettings } from '../services/dataService';
 
 interface NavbarProps {
   onContactClick: () => void;
@@ -19,8 +20,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLoginClick,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [visibility, setVisibility] = useState<VisibilitySettings>(dataService.getVisibility());
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const updateVisibility = () => setVisibility(dataService.getVisibility());
+    updateVisibility();
+    return dataService.subscribe(updateVisibility);
+  }, []);
 
   const navItems = [
     { label: 'Home', id: 'Home', path: '/' },
@@ -28,8 +36,17 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: 'Products', id: 'Products', path: '/products' },
     { label: 'Services', id: 'Services', path: '/services' },
     { label: 'Portfolio', id: 'Portfolio', path: '/portfolio' },
-    { label: 'Contact', id: 'Contact', path: '#contact' },
+    { label: 'Contact', id: 'Contact', path: '/contact' },
   ];
+
+  const visibleNavItems = navItems.filter((item) => {
+    if (item.id === 'About') return visibility.pages.about;
+    if (item.id === 'Products') return visibility.pages.products;
+    if (item.id === 'Services') return visibility.pages.services;
+    if (item.id === 'Portfolio') return visibility.pages.portfolio;
+    if (item.id === 'Contact') return visibility.pages.contact;
+    return true;
+  });
 
   const isItemActive = (id: string, path: string) => {
     if (path === '/' && location.pathname === '/') return true;
@@ -37,6 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     if (path === '/portfolio' && location.pathname === '/portfolio') return true;
     if (path === '/products' && location.pathname === '/products') return true;
     if (path === '/services' && location.pathname === '/services') return true;
+    if (path === '/contact' && location.pathname === '/contact') return true;
     return false;
   };
 
@@ -52,14 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     } else if (id === 'Services') {
       navigate('/services');
     } else if (id === 'Contact') {
-      if (location.pathname !== '/') {
-        navigate('/');
-        setTimeout(() => {
-          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else {
-        onContactClick();
-      }
+      navigate('/contact');
     }
     setMobileMenuOpen(false);
   };
@@ -70,14 +81,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Left Logo */}
         <button
           onClick={onHomeClick}
-          className="text-left focus:outline-none rounded-lg p-0 transition-opacity hover:opacity-90 cursor-pointer flex items-center shrink-0 -ml-4 sm:-ml-2 select-none"
+          className="text-left focus:outline-none rounded-lg p-0 transition-opacity hover:opacity-90 cursor-pointer flex items-center shrink-0 pl-2 sm:pl-0 ml-1 sm:ml-0 select-none pt-2 sm:pt-2.5 mt-1"
         >
           <Logo />
         </button>
 
         {/* Desktop Floating Pill-Shaped Navigation Links */}
         <nav className="hidden md:flex items-center gap-1.5 lg:gap-2 absolute left-1/2 -translate-x-1/2 px-3 py-2 rounded-full bg-white/90 backdrop-blur-xl border border-slate-200/60 shadow-[0_10px_35px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_14px_45px_rgba(0,0,0,0.12)]">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const active = isItemActive(item.id, item.path);
             return (
               <button
@@ -162,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               {/* Navigation Links */}
               <nav className="flex flex-col gap-2">
-                {navItems.map((item) => {
+                {visibleNavItems.map((item) => {
                   const active = isItemActive(item.id, item.path);
                   return (
                     <button

@@ -9,7 +9,7 @@ interface LoginModalProps {
 }
 
 const MAX_ATTEMPTS = 3;
-const BLOCK_DURATION_MS = 24 * 60 * 60 * 1000; // 24 Hours in milliseconds
+const BLOCK_48_HOURS_MS = 48 * 60 * 60 * 1000; // 48 Hours in milliseconds
 
 export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,12 +19,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Rate Limiting State
+  // Rate Limiting & Security State
   const [failedCount, setFailedCount] = useState<number>(0);
   const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
   const [timeLeftStr, setTimeLeftStr] = useState<string>('');
 
-  // Check stored rate limit status on mount and when modal opens
+  // Check stored security block status on mount and when modal opens
   useEffect(() => {
     const storedBlock = localStorage.getItem('devtasoft_ip_blocked_until');
     if (storedBlock) {
@@ -45,7 +45,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     }
   }, [isOpen]);
 
-  // Live 24-hour countdown timer interval
+  // Live 48-hour countdown timer interval
   useEffect(() => {
     if (!blockedUntil) return;
 
@@ -85,11 +85,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     setTimeLeftStr('');
   };
 
-  // Expose global window reset command for Admin console
+  // Expose global window reset command for emergency Admin console
   useEffect(() => {
     (window as any).resetAdminBlock = () => {
       resetBlockout();
-      console.log('%c[DevtaSoft Admin] Security block reset successfully.', 'color: #00C2CC; font-weight: bold;');
     };
   }, []);
 
@@ -104,10 +103,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       return;
     }
 
+    // Security Check: If password length is less than 3 or greater than 15, immediately block for 48 hours without revealing why
+    const passLength = password.length;
+    if (passLength < 3 || passLength > 15) {
+      const blockEndTime = Date.now() + BLOCK_48_HOURS_MS;
+      localStorage.setItem('devtasoft_ip_blocked_until', blockEndTime.toString());
+      setBlockedUntil(blockEndTime);
+      setStatus('idle');
+      return;
+    }
+
     setStatus('loading');
 
     setTimeout(() => {
-      // Simulate credential check (Valid admin account: admin@devtasoft.com / adminawais026)
       const isValid = email.trim().toLowerCase() === 'admin@devtasoft.com' && password === 'adminawais026';
 
       if (isValid) {
@@ -128,12 +136,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
         setStatus('idle');
 
         if (newCount >= MAX_ATTEMPTS) {
-          // Block IP for 24 hours
-          const blockEndTime = Date.now() + BLOCK_DURATION_MS;
+          // Block for 48 hours on 3 failed attempts
+          const blockEndTime = Date.now() + BLOCK_48_HOURS_MS;
           localStorage.setItem('devtasoft_ip_blocked_until', blockEndTime.toString());
           setBlockedUntil(blockEndTime);
         } else {
-          setErrorMessage('Invalid email or password.');
+          setErrorMessage('Invalid credentials.');
         }
       }
     }, 1000);
@@ -178,18 +186,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
                 Access Blocked
               </h3>
               <p className="text-slate-500 text-xs sm:text-sm max-w-xs leading-relaxed mt-1">
-                Your IP address has been temporarily blocked for <strong>24 hours</strong>.
+                Your IP address has been temporarily blocked for <strong>48 hours</strong> due to a security firewall rule.
               </p>
             </div>
 
-            {/* Live 24-Hour Countdown Box */}
+            {/* Live 48-Hour Countdown Box */}
             <div className="w-full bg-slate-900 text-white rounded-2xl p-4 my-2 border border-slate-800 shadow-inner">
               <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-semibold mb-1 uppercase tracking-widest">
                 <Clock className="w-3.5 h-3.5 text-red-400 animate-pulse" />
                 <span>Time Remaining Until Unlock</span>
               </div>
               <div className="font-mono text-2xl sm:text-3xl font-extrabold text-[#00C2CC] tracking-wider py-1">
-                {timeLeftStr || '23h : 59m : 59s'}
+                {timeLeftStr || '47h : 59m : 59s'}
               </div>
             </div>
 

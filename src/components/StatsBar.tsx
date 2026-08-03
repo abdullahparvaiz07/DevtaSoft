@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useInView, animate } from 'motion/react';
 
 interface StatItem {
-  number: string;
   targetNum: number;
-  prefix?: string;
   suffix: string;
   label: string;
   color: 'orange' | 'cyan';
@@ -11,21 +10,18 @@ interface StatItem {
 
 const statsData: StatItem[] = [
   {
-    number: '250+',
     targetNum: 250,
     suffix: '+',
     label: 'Projects Completed',
     color: 'orange',
   },
   {
-    number: '1600+',
     targetNum: 1600,
     suffix: '+',
     label: 'Work Hours',
     color: 'cyan',
   },
   {
-    number: '98%',
     targetNum: 98,
     suffix: '%',
     label: 'Client Satisfaction',
@@ -33,31 +29,39 @@ const statsData: StatItem[] = [
   },
 ];
 
-export const StatsBar: React.FC<{ onStatClick?: (label: string) => void }> = ({ onStatClick }) => {
-  const [counts, setCounts] = useState<number[]>([0, 0, 0]);
+interface CountUpProps {
+  target: number;
+  suffix?: string;
+  duration?: number;
+}
+
+const CountUp: React.FC<CountUpProps> = ({ target, suffix = '', duration = 2.2 }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const duration = 1200; // ms
-    const steps = 30;
-    const intervalTime = duration / steps;
-    let currentStep = 0;
+    if (isInView) {
+      const controls = animate(0, target, {
+        duration,
+        ease: [0.215, 0.61, 0.355, 1],
+        onUpdate: (latest) => {
+          setCount(Math.floor(latest));
+        },
+      });
+      return () => controls.stop();
+    }
+  }, [isInView, target, duration]);
 
-    const timer = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
+  return (
+    <span ref={ref}>
+      {count}
+      {suffix}
+    </span>
+  );
+};
 
-      setCounts(
-        statsData.map((stat) => Math.min(Math.round(stat.targetNum * progress), stat.targetNum))
-      );
-
-      if (currentStep >= steps) {
-        clearInterval(timer);
-      }
-    }, intervalTime);
-
-    return () => clearInterval(timer);
-  }, []);
-
+export const StatsBar: React.FC<{ onStatClick?: (label: string) => void }> = ({ onStatClick }) => {
   return (
     <div className="w-full max-w-5xl mx-auto pt-6 pb-2 px-4">
       <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 text-center">
@@ -78,8 +82,7 @@ export const StatsBar: React.FC<{ onStatClick?: (label: string) => void }> = ({ 
                   stat.color === 'orange' ? 'text-[#FF6B00]' : 'text-[#00C2CC]'
                 }`}
               >
-                {counts[idx]}
-                {stat.suffix}
+                <CountUp target={stat.targetNum} suffix={stat.suffix} />
               </span>
               <span className="font-sans font-semibold text-sm sm:text-base text-[#2D3748] tracking-tight group-hover:text-[#0D152A] transition-colors">
                 {stat.label}

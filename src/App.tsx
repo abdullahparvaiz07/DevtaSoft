@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Navbar } from './components/Navbar';
@@ -17,11 +17,12 @@ import { ProductsPage } from './components/ProductsPage';
 import { ServicesPage } from './components/ServicesPage';
 import { PortfolioSection } from './components/PortfolioSection';
 import { ProductsSection } from './components/ProductsSection';
-import { ContactSection } from './components/ContactSection';
+import { ContactPage } from './components/ContactPage';
 import { IntersectingStrips } from './components/IntersectingStrips';
 import { Footer } from './components/Footer';
 import { Preloader } from './components/Preloader';
 import { AdminDashboard } from './components/AdminDashboard';
+import { dataService, VisibilitySettings } from './services/dataService';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -68,6 +69,13 @@ function HomePage({
   onProjectsClick: (projectId?: string) => void;
 }) {
   const navigate = useNavigate();
+  const [visibility, setVisibility] = useState<VisibilitySettings>(dataService.getVisibility());
+
+  useEffect(() => {
+    const updateVisibility = () => setVisibility(dataService.getVisibility());
+    updateVisibility();
+    return dataService.subscribe(updateVisibility);
+  }, []);
 
   return (
     <>
@@ -154,36 +162,39 @@ function HomePage({
       <IntersectingStrips />
 
       {/* Completely styled responsive About Us Section */}
-      <AboutSection onReadMoreClick={() => navigate('/about')} />
+      {visibility.sections.aboutSection && <AboutSection onReadMoreClick={() => navigate('/about')} />}
 
       {/* World-class Services Section */}
-      <ServicesSection onContactClick={onContactClick} />
+      {visibility.sections.servicesSection && <ServicesSection onContactClick={onContactClick} />}
 
       {/* Beautifully styled filterable Portfolio Section */}
-      <PortfolioSection 
-        onStartProjectClick={onContactClick} 
-      />
+      {visibility.sections.portfolioSection && (
+        <PortfolioSection 
+          onStartProjectClick={onContactClick} 
+        />
+      )}
 
       {/* Beautifully styled filterable Products Section */}
-      <ProductsSection 
-        onExploreAllClick={onContactClick} 
-      />
-
-      {/* Beautifully styled custom Contact Us Section */}
-      <ContactSection />
+      {visibility.sections.productsSection && (
+        <ProductsSection 
+          onExploreAllClick={onContactClick} 
+        />
+      )}
 
       {/* Bottom Statistics Bar */}
-      <div className="relative z-10 w-full pb-8 sm:pb-12">
-        <StatsBar
-          onStatClick={(label) => {
-            if (label === 'Projects Completed') {
-              onProjectsClick();
-            } else {
-              onContactClick();
-            }
-          }}
-        />
-      </div>
+      {visibility.sections.statsBar && (
+        <div className="relative z-10 w-full pb-8 sm:pb-12">
+          <StatsBar
+            onStatClick={(label) => {
+              if (label === 'Projects Completed') {
+                onProjectsClick();
+              } else {
+                onContactClick();
+              }
+            }}
+          />
+        </div>
+      )}
     </>
   );
 }
@@ -193,35 +204,33 @@ export default function App() {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [visibility, setVisibility] = useState<VisibilitySettings>(dataService.getVisibility());
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const updateVisibility = () => setVisibility(dataService.getVisibility());
+    updateVisibility();
+    return dataService.subscribe(updateVisibility);
+  }, []);
 
   const isAdminLoggedIn = localStorage.getItem('devtasoft_admin_logged_in') === 'true';
   const isAdminRoute = location.pathname === '/admin';
 
-  // If user accesses /admin directly while not logged in, prompt LoginModal
+  // Strict Route Security for /admin: Unauthenticated access is IMPOSSIBLE. Immediately redirect to '/' and prompt login modal.
   useEffect(() => {
     if (isAdminRoute && !isAdminLoggedIn) {
       setIsLoginOpen(true);
+      navigate('/', { replace: true });
     }
-  }, [isAdminRoute, isAdminLoggedIn]);
+  }, [isAdminRoute, isAdminLoggedIn, navigate]);
 
   const handleContactClick = () => {
-    if (window.location.pathname !== '/') {
-      navigate('/');
-      setTimeout(() => {
-        const contactElem = document.getElementById('contact');
-        if (contactElem) {
-          contactElem.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+    if (visibility.pages.contact) {
+      navigate('/contact');
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
-      const contactElem = document.getElementById('contact');
-      if (contactElem) {
-        contactElem.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        setIsContactOpen(true);
-      }
+      setIsContactOpen(true);
     }
   };
 
@@ -255,7 +264,7 @@ export default function App() {
         onContactClick={handleContactClick}
         onServiceClick={(service) => {
           if (service === 'About') {
-            navigate('/about');
+            if (visibility.pages.about) navigate('/about');
           } else if (service === 'Products') {
             const productsElem = document.getElementById('products');
             if (productsElem) {
@@ -296,28 +305,54 @@ export default function App() {
         <Route
           path="/about"
           element={
-            <AboutPage
-              onContactClick={handleContactClick}
-              onStartProjectClick={() => setIsContactOpen(true)}
-            />
+            visibility.pages.about ? (
+              <AboutPage
+                onContactClick={handleContactClick}
+                onStartProjectClick={() => setIsContactOpen(true)}
+              />
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
         <Route
           path="/portfolio"
           element={
-            <PortfolioPage onContactClick={handleContactClick} />
+            visibility.pages.portfolio ? (
+              <PortfolioPage onContactClick={handleContactClick} />
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
         <Route
           path="/products"
           element={
-            <ProductsPage onContactClick={handleContactClick} />
+            visibility.pages.products ? (
+              <ProductsPage onContactClick={handleContactClick} />
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
         <Route
           path="/services"
           element={
-            <ServicesPage onContactClick={handleContactClick} />
+            visibility.pages.services ? (
+              <ServicesPage onContactClick={handleContactClick} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            visibility.pages.contact ? (
+              <ContactPage onStartProjectClick={() => setIsContactOpen(true)} />
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
         <Route
@@ -332,10 +367,7 @@ export default function App() {
                 }}
               />
             ) : (
-              <HomePage
-                onContactClick={handleContactClick}
-                onProjectsClick={() => setIsProjectsOpen(true)}
-              />
+              <Navigate to="/" replace />
             )
           }
         />
@@ -352,6 +384,8 @@ export default function App() {
             navigate('/products');
           } else if (sectionId === 'services') {
             navigate('/services');
+          } else if (sectionId === 'contact') {
+            navigate('/contact');
           } else {
             if (window.location.pathname !== '/') {
               navigate('/');

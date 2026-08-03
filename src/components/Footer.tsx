@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Logo } from './Logo';
 import { 
   Github, 
@@ -12,6 +12,7 @@ import {
   MapPin, 
   ArrowRight 
 } from 'lucide-react';
+import { dataService, VisibilitySettings } from '../services/dataService';
 
 interface FooterProps {
   onLinkClick?: (sectionId: string) => void;
@@ -24,6 +25,13 @@ export const Footer: React.FC<FooterProps> = ({
   onContactClick,
   onProjectsClick,
 }) => {
+  const [visibility, setVisibility] = useState<VisibilitySettings>(dataService.getVisibility());
+
+  useEffect(() => {
+    const updateVisibility = () => setVisibility(dataService.getVisibility());
+    updateVisibility();
+    return dataService.subscribe(updateVisibility);
+  }, []);
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -123,42 +131,50 @@ export const Footer: React.FC<FooterProps> = ({
               Company
             </h4>
             <ul className="flex flex-col gap-3">
-              <li>
-                <button 
-                  onClick={() => handleNavClick('about')}
-                  className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
-                  <span>About Us</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => handleNavClick('portfolio')}
-                  className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
-                  <span>Portfolio</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => handleNavClick('products')}
-                  className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
-                  <span>Our Products</span>
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => handleNavClick('contact')}
-                  className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
-                  <span>Get in Touch</span>
-                </button>
-              </li>
+              {visibility.pages.about && (
+                <li>
+                  <button 
+                    onClick={() => handleNavClick('about')}
+                    className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
+                    <span>About Us</span>
+                  </button>
+                </li>
+              )}
+              {visibility.pages.portfolio && (
+                <li>
+                  <button 
+                    onClick={() => handleNavClick('portfolio')}
+                    className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
+                    <span>Portfolio</span>
+                  </button>
+                </li>
+              )}
+              {visibility.pages.products && (
+                <li>
+                  <button 
+                    onClick={() => handleNavClick('products')}
+                    className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
+                    <span>Our Products</span>
+                  </button>
+                </li>
+              )}
+              {visibility.pages.contact && (
+                <li>
+                  <button 
+                    onClick={() => handleNavClick('contact')}
+                    className="text-slate-400 hover:text-[#FF6B00] transition-colors text-sm sm:text-base font-semibold cursor-pointer flex items-center gap-1 group bg-transparent border-none p-0"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] opacity-0 group-hover:opacity-100 transition-all duration-200" />
+                    <span>Get in Touch</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 

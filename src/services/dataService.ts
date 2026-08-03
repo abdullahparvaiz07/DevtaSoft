@@ -17,8 +17,43 @@ export interface PortfolioItem {
   createdAt: number;
 }
 
+export interface VisibilitySettings {
+  pages: {
+    about: boolean;
+    products: boolean;
+    services: boolean;
+    portfolio: boolean;
+    contact: boolean;
+  };
+  sections: {
+    aboutSection: boolean;
+    servicesSection: boolean;
+    portfolioSection: boolean;
+    productsSection: boolean;
+    statsBar: boolean;
+  };
+}
+
 const PRODUCTS_STORAGE_KEY = 'devtasoft_admin_products_v4';
-const PORTFOLIO_STORAGE_KEY = 'devtasoft_admin_portfolio_v4';
+const PORTFOLIO_STORAGE_KEY = 'devtasoft_admin_portfolio_v5';
+const VISIBILITY_STORAGE_KEY = 'devtasoft_admin_visibility_v1';
+
+const defaultVisibility: VisibilitySettings = {
+  pages: {
+    about: true,
+    products: true,
+    services: true,
+    portfolio: true,
+    contact: true,
+  },
+  sections: {
+    aboutSection: true,
+    servicesSection: true,
+    portfolioSection: true,
+    productsSection: true,
+    statsBar: true,
+  },
+};
 
 // All 15 Pre-existing Products
 const defaultProducts: ProductItem[] = [
@@ -147,40 +182,67 @@ const defaultProducts: ProductItem[] = [
 // All 15 Pre-existing Portfolio Projects
 const defaultPortfolio: PortfolioItem[] = [
   {
+    id: 'nexcojapan-com',
+    name: 'nexcojapan.com',
+    domain: 'https://nexcojapan.com',
+    description: 'Global Japanese vehicle sourcing & auction portal with real-time bidding system and container shipping tracking.',
+    image: '/nexcoj.png',
+    category: 'Web Development',
+    createdAt: Date.now() - 150000,
+  },
+  {
+    id: 'logistics-fleet-management',
+    name: 'Logistics Fleet Management',
+    domain: 'https://fleet-management.devtasoft.com',
+    description: 'Real-time GPS tracking and fleet dispatch management software.',
+    image: '/lfm.png',
+    category: 'Custom Software Development',
+    createdAt: Date.now() - 140000,
+  },
+  {
+    id: 'mirrormate-com',
+    name: 'mirrormate.com',
+    domain: 'https://mirrormate.com',
+    description: 'Custom mirror framing and home decor e-commerce platform.',
+    image: '/mirrorm.png',
+    category: 'Shopify Store Development',
+    createdAt: Date.now() - 130000,
+  },
+  {
     id: 'sarastore-pk',
     name: 'sarastore.pk',
     domain: 'https://sarastore.pk',
     description: 'High-performance custom WordPress & WooCommerce e-commerce platform built for SaraStore with instant search and custom payment checkout.',
     image: '/sspc.png',
     category: 'WordPress Development',
-    createdAt: Date.now() - 150000,
+    createdAt: Date.now() - 120000,
   },
   {
     id: 'boxwala-pk',
     name: 'boxwala.pk',
     domain: 'https://boxwala.pk',
     description: 'Custom packaging boxes and product packaging solution e-commerce platform.',
-    image: '/bw.jpg',
+    image: '/boxwala.png',
     category: 'WordPress Development',
-    createdAt: Date.now() - 140000,
+    createdAt: Date.now() - 110000,
   },
   {
     id: 'hafiztalha-com',
     name: 'hafiztalha.com',
     domain: 'https://hafiztalha.com',
     description: 'Personalized online Quran learning portal with live audio & video sessions.',
-    image: '/ht.jpg',
+    image: '/hafiztalha.png',
     category: 'WordPress Development',
-    createdAt: Date.now() - 130000,
+    createdAt: Date.now() - 100000,
   },
   {
     id: 'trendfits-net',
     name: 'trendfits.net',
     domain: 'https://trendfits.net',
     description: 'Fashion e-commerce apparel storefront for TrendFits.',
-    image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&auto=format&fit=crop&q=80',
+    image: '/trendfits.png',
     category: 'WordPress Development',
-    createdAt: Date.now() - 120000,
+    createdAt: Date.now() - 90000,
   },
   {
     id: 'shortconverter-com',
@@ -189,34 +251,25 @@ const defaultPortfolio: PortfolioItem[] = [
     description: 'Lightning-fast media conversion and online video utility web platform built with React, Next.js, and browser WebAssembly.',
     image: '/shortc.png',
     category: 'Web Development',
-    createdAt: Date.now() - 110000,
-  },
-  {
-    id: 'nexcojapan-com',
-    name: 'nexcojapan.com',
-    domain: 'https://nexcojapan.com',
-    description: 'Japanese vehicle export and automotive trading platform for Nexco Japan.',
-    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80',
-    category: 'Web Development',
-    createdAt: Date.now() - 100000,
+    createdAt: Date.now() - 80000,
   },
   {
     id: 'coursepro-today',
     name: 'coursepro.today',
     domain: 'https://coursepro.today',
     description: 'Online learning and digital course platform for CoursePro.',
-    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&auto=format&fit=crop&q=80',
+    image: '/coursepro.png',
     category: 'Web Development',
-    createdAt: Date.now() - 90000,
+    createdAt: Date.now() - 70000,
   },
   {
     id: 'lookingglassacademy-net',
     name: 'lookingglassacademy.net',
     domain: 'https://lookingglassacademy.net',
     description: 'Educational academy portal and online learning platform.',
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=80',
+    image: '/lga.png',
     category: 'Web Development',
-    createdAt: Date.now() - 80000,
+    createdAt: Date.now() - 60000,
   },
   {
     id: 'pos-software',
@@ -225,50 +278,32 @@ const defaultPortfolio: PortfolioItem[] = [
     description: 'All-in-one retail POS and inventory management software with offline receipt printing.',
     image: '/possw.png',
     category: 'Custom Software Development',
-    createdAt: Date.now() - 70000,
-  },
-  {
-    id: 'logistics-fleet-management',
-    name: 'Logistics Fleet Management',
-    domain: 'https://fleet-management.devtasoft.com',
-    description: 'Real-time GPS tracking and fleet dispatch management software.',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&auto=format&fit=crop&q=80',
-    category: 'Custom Software Development',
-    createdAt: Date.now() - 60000,
+    createdAt: Date.now() - 50000,
   },
   {
     id: 'coffee-shop-pos',
     name: 'Coffee Shop POS',
     domain: 'https://coffeeshop-pos.devtasoft.com',
     description: 'Custom order management and point of sale solution for coffee shops.',
-    image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&auto=format&fit=crop&q=80',
+    image: '/coffeesp.png',
     category: 'Custom Software Development',
-    createdAt: Date.now() - 50000,
+    createdAt: Date.now() - 40000,
   },
   {
     id: 'essence-vault-fragrances',
     name: 'Essence Vault Fragrances',
     domain: 'https://theessencevault.com',
     description: 'Luxury fragrance and perfume e-commerce storefront.',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
+    image: '/evf.png',
     category: 'Shopify Store Development',
-    createdAt: Date.now() - 40000,
+    createdAt: Date.now() - 30000,
   },
   {
     id: 'oakcha-fragrances',
     name: 'OAKCHA Fragrances',
     domain: 'https://oakcha.com',
     description: 'Artisanal fragrance e-commerce store for OAKCHA Perfumes.',
-    image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=800&auto=format&fit=crop&q=80',
-    category: 'Shopify Store Development',
-    createdAt: Date.now() - 30000,
-  },
-  {
-    id: 'mirrormate-com',
-    name: 'mirrormate.com',
-    domain: 'https://mirrormate.com',
-    description: 'Custom mirror framing and home decor e-commerce platform.',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&auto=format&fit=crop&q=80',
+    image: '/of.png',
     category: 'Shopify Store Development',
     createdAt: Date.now() - 20000,
   },
@@ -392,6 +427,38 @@ export const dataService = {
     const portfolio = this.getPortfolio().filter((p) => p.id !== id);
     localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(portfolio));
     notifyDataChanged();
+  },
+
+  getVisibility(): VisibilitySettings {
+    try {
+      const stored = localStorage.getItem(VISIBILITY_STORAGE_KEY);
+      if (!stored) {
+        localStorage.setItem(VISIBILITY_STORAGE_KEY, JSON.stringify(defaultVisibility));
+        return defaultVisibility;
+      }
+      return JSON.parse(stored);
+    } catch {
+      return defaultVisibility;
+    }
+  },
+
+  saveVisibility(settings: VisibilitySettings): void {
+    localStorage.setItem(VISIBILITY_STORAGE_KEY, JSON.stringify(settings));
+    notifyDataChanged();
+  },
+
+  togglePageVisibility(pageKey: keyof VisibilitySettings['pages']): VisibilitySettings {
+    const current = this.getVisibility();
+    current.pages[pageKey] = !current.pages[pageKey];
+    this.saveVisibility(current);
+    return current;
+  },
+
+  toggleSectionVisibility(sectionKey: keyof VisibilitySettings['sections']): VisibilitySettings {
+    const current = this.getVisibility();
+    current.sections[sectionKey] = !current.sections[sectionKey];
+    this.saveVisibility(current);
+    return current;
   },
 
   subscribe(callback: () => void): () => void {
