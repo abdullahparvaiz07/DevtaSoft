@@ -508,11 +508,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                       <ArrowRight className="w-3.5 h-3.5" />
                     </p>
                   </div>
-
-                  {/* Decorative Sparkline SVG */}
-                  <svg className="w-24 h-14 text-[#14B8B0]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
-                    <path d="M0 20 Q25 5, 50 30 T100 15" stroke="currentColor" strokeWidth="3" />
-                  </svg>
                 </div>
 
                 {/* Total Products Summary Card */}
@@ -535,11 +530,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                       <ArrowRight className="w-3.5 h-3.5" />
                     </p>
                   </div>
-
-                  {/* Decorative Sparkline SVG */}
-                  <svg className="w-24 h-14 text-[#FF8706]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
-                    <path d="M0 30 Q25 5, 50 25 T100 10" stroke="currentColor" strokeWidth="3" />
-                  </svg>
                 </div>
 
                 {/* Total Portfolio Projects Summary Card */}
@@ -562,11 +552,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                       <ArrowRight className="w-3.5 h-3.5" />
                     </p>
                   </div>
-
-                  {/* Decorative Sparkline SVG */}
-                  <svg className="w-24 h-14 text-[#00C2CC]/40 stroke-[2.5]" viewBox="0 0 100 40" fill="none">
-                    <path d="M0 25 Q25 35, 50 15 T100 20" stroke="currentColor" strokeWidth="3" />
-                  </svg>
                 </div>
 
               </div>
