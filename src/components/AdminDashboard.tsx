@@ -605,72 +605,80 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                     </button>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                          <th className="py-3 px-4">IMAGE</th>
-                          <th className="py-3 px-4">NAME</th>
-                          <th className="py-3 px-4">DOMAIN</th>
-                          <th className="py-3 px-4">DESCRIPTION</th>
-                          <th className="py-3 px-4 text-right">ACTIONS</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
-                        {products.slice(0, 5).map((prod) => (
-                          <tr key={prod.id} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="py-3.5 px-4">
-                              <img
-                                src={prod.image}
-                                alt={prod.name}
-                                className="w-12 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs"
-                              />
-                            </td>
-                            <td className="py-3.5 px-4 font-extrabold text-[#1E2340]">
-                              {prod.name}
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <a
-                                href={normalizeUrl(prod.domain)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1"
-                              >
-                                <span>{getCleanDomain(prod.domain)}</span>
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
-                            </td>
-                            <td className="py-3.5 px-4 text-slate-500 max-w-xs truncate">
-                              {prod.description || '—'}
-                            </td>
-                            <td className="py-3.5 px-4 text-right">
-                              <div className="inline-flex items-center gap-2">
-                                <button
-                                  onClick={() => openProductModal(prod)}
-                                  className="p-2 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
-                                  title="Edit Product"
-                                >
-                                  <Edit2 className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => setDeleteProductConfirmId(prod.id)}
-                                  className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
-                                  title="Delete Product"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            </td>
+                  <div>
+                    {/* Mobile Scroll Indicator */}
+                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
+                      <span className="text-[11px] text-[#FF8706] font-bold">Swipe →</span>
+                    </div>
+
+                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
+                      <table className="min-w-[680px] w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                            <th className="py-3 px-3 sm:px-4 w-16">IMAGE</th>
+                            <th className="py-3 px-3 sm:px-4 min-w-[140px]">NAME</th>
+                            <th className="py-3 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
+                            <th className="py-3 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
+                            <th className="py-3 px-3 sm:px-4 text-right w-24">ACTIONS</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
+                          {products.slice(0, 5).map((prod) => (
+                            <tr key={prod.id} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-3.5 px-3 sm:px-4">
+                                <img
+                                  src={prod.image}
+                                  alt={prod.name}
+                                  className="w-12 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs"
+                                />
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                                {prod.name}
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4">
+                                <a
+                                  href={normalizeUrl(prod.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1"
+                                >
+                                  <span>{getCleanDomain(prod.domain)}</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4 text-slate-500 max-w-xs truncate">
+                                {prod.description || '—'}
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4 text-right">
+                                <div className="inline-flex items-center gap-2">
+                                  <button
+                                    onClick={() => openProductModal(prod)}
+                                    className="p-2 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
+                                    title="Edit Product"
+                                  >
+                                    <Edit2 className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    onClick={() => setDeleteProductConfirmId(prod.id)}
+                                    className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
+                                    title="Delete Product"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 )}
               </div>
 
               {/* Portfolio Table Overview Card */}
-              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-6 sm:p-8 shadow-xs">
+              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-4 sm:p-8 shadow-xs">
                 <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-2xl bg-[#E3FAF6] text-[#00C2CC] flex items-center justify-center">
@@ -703,66 +711,74 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                     </button>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                          <th className="py-3 px-4">IMAGE</th>
-                          <th className="py-3 px-4">NAME</th>
-                          <th className="py-3 px-4">DOMAIN</th>
-                          <th className="py-3 px-4">DESCRIPTION</th>
-                          <th className="py-3 px-4 text-right">ACTIONS</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
-                        {portfolio.slice(0, 5).map((port) => (
-                          <tr key={port.id} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="py-3.5 px-4">
-                              <img
-                                src={port.image}
-                                alt={port.name}
-                                className="w-14 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs"
-                              />
-                            </td>
-                            <td className="py-3.5 px-4 font-extrabold text-[#1E2340]">
-                              {port.name}
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <a
-                                href={normalizeUrl(port.domain)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1"
-                              >
-                                <span>{getCleanDomain(port.domain)}</span>
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
-                            </td>
-                            <td className="py-3.5 px-4 text-slate-500 max-w-xs truncate">
-                              {port.description || '—'}
-                            </td>
-                            <td className="py-3.5 px-4 text-right">
-                              <div className="inline-flex items-center gap-2">
-                                <button
-                                  onClick={() => openPortfolioModal(port)}
-                                  className="p-2 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
-                                  title="Edit Project"
-                                >
-                                  <Edit2 className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => setDeletePortfolioConfirmId(port.id)}
-                                  className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
-                                  title="Delete Project"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            </td>
+                  <div>
+                    {/* Mobile Scroll Indicator */}
+                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
+                      <span className="text-[11px] text-[#00C2CC] font-bold">Swipe →</span>
+                    </div>
+
+                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
+                      <table className="min-w-[680px] w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                            <th className="py-3 px-3 sm:px-4 w-16">IMAGE</th>
+                            <th className="py-3 px-3 sm:px-4 min-w-[140px]">NAME</th>
+                            <th className="py-3 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
+                            <th className="py-3 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
+                            <th className="py-3 px-3 sm:px-4 text-right w-24">ACTIONS</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
+                          {portfolio.slice(0, 5).map((port) => (
+                            <tr key={port.id} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-3.5 px-3 sm:px-4">
+                                <img
+                                  src={port.image}
+                                  alt={port.name}
+                                  className="w-14 h-10 rounded-xl object-cover border border-slate-200 shadow-2xs"
+                                />
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                                {port.name}
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4">
+                                <a
+                                  href={normalizeUrl(port.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1"
+                                >
+                                  <span>{getCleanDomain(port.domain)}</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4 text-slate-500 max-w-xs truncate">
+                                {port.description || '—'}
+                              </td>
+                              <td className="py-3.5 px-3 sm:px-4 text-right">
+                                <div className="inline-flex items-center gap-2">
+                                  <button
+                                    onClick={() => openPortfolioModal(port)}
+                                    className="p-2 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
+                                    title="Edit Project"
+                                  >
+                                    <Edit2 className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    onClick={() => setDeletePortfolioConfirmId(port.id)}
+                                    className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
+                                    title="Delete Project"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1148,66 +1164,74 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                     </button>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                          <th className="py-4 px-4">IMAGE</th>
-                          <th className="py-4 px-4">NAME</th>
-                          <th className="py-4 px-4">DOMAIN</th>
-                          <th className="py-4 px-4">DESCRIPTION</th>
-                          <th className="py-4 px-4 text-right">ACTIONS</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-sm">
-                        {products.map((prod) => (
-                          <tr key={prod.id} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="py-4 px-4">
-                              <img
-                                src={prod.image}
-                                alt={prod.name}
-                                className="w-14 h-12 rounded-xl object-cover border border-slate-200 shadow-2xs"
-                              />
-                            </td>
-                            <td className="py-4 px-4 font-extrabold text-[#1E2340]">
-                              {prod.name}
-                            </td>
-                            <td className="py-4 px-4">
-                              <a
-                                href={normalizeUrl(prod.domain)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1.5"
-                              >
-                                <span>{getCleanDomain(prod.domain)}</span>
-                                <ExternalLink className="w-3.5 h-3.5" />
-                              </a>
-                            </td>
-                            <td className="py-4 px-4 text-slate-500 max-w-sm">
-                              {prod.description || '—'}
-                            </td>
-                            <td className="py-4 px-4 text-right">
-                              <div className="inline-flex items-center gap-2">
-                                <button
-                                  onClick={() => openProductModal(prod)}
-                                  className="p-2.5 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
-                                  title="Edit Product"
-                                >
-                                  <Edit2 className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => setDeleteProductConfirmId(prod.id)}
-                                  className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
-                                  title="Delete Product"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
+                  <div>
+                    {/* Mobile Scroll Indicator */}
+                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
+                      <span className="text-[11px] text-[#FF8706] font-bold">Swipe →</span>
+                    </div>
+
+                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
+                      <table className="min-w-[680px] w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                            <th className="py-4 px-3 sm:px-4 w-16">IMAGE</th>
+                            <th className="py-4 px-3 sm:px-4 min-w-[140px]">NAME</th>
+                            <th className="py-4 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
+                            <th className="py-4 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
+                            <th className="py-4 px-3 sm:px-4 text-right w-24">ACTIONS</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-sm">
+                          {products.map((prod) => (
+                            <tr key={prod.id} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-4 px-3 sm:px-4">
+                                <img
+                                  src={prod.image}
+                                  alt={prod.name}
+                                  className="w-14 h-12 rounded-xl object-cover border border-slate-200 shadow-2xs"
+                                />
+                              </td>
+                              <td className="py-4 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                                {prod.name}
+                              </td>
+                              <td className="py-4 px-3 sm:px-4">
+                                <a
+                                  href={normalizeUrl(prod.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1.5"
+                                >
+                                  <span>{getCleanDomain(prod.domain)}</span>
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
+                              </td>
+                              <td className="py-4 px-3 sm:px-4 text-slate-500 max-w-sm">
+                                {prod.description || '—'}
+                              </td>
+                              <td className="py-4 px-3 sm:px-4 text-right">
+                                <div className="inline-flex items-center gap-2">
+                                  <button
+                                    onClick={() => openProductModal(prod)}
+                                    className="p-2.5 rounded-xl bg-slate-100 hover:bg-[#00C2CC]/10 text-slate-600 hover:text-[#00C2CC] transition-colors cursor-pointer"
+                                    title="Edit Product"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => setDeleteProductConfirmId(prod.id)}
+                                    className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
+                                    title="Delete Product"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1217,7 +1241,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
           {/* TAB 3: PORTFOLIO MANAGEMENT PAGE */}
           {activeTab === 'portfolio' && (
             <div className="space-y-6 animate-in fade-in duration-300">
-              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-6 sm:p-8 shadow-xs">
+              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-4 sm:p-8 shadow-xs">
                 <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
                   <div>
                     <h2 className="font-display font-extrabold text-2xl text-[#1E2340]">Portfolio Projects</h2>
@@ -1247,45 +1271,52 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                     </button>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                          <th className="py-4 px-4">IMAGE</th>
-                          <th className="py-4 px-4">NAME</th>
-                          <th className="py-4 px-4">DOMAIN</th>
-                          <th className="py-4 px-4">DESCRIPTION</th>
-                          <th className="py-4 px-4 text-right">ACTIONS</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-sm">
-                        {portfolio.map((port) => (
-                          <tr key={port.id} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="py-4 px-4">
-                              <img
-                                src={port.image}
-                                alt={port.name}
-                                className="w-16 h-12 rounded-xl object-cover border border-slate-200 shadow-2xs"
-                              />
-                            </td>
-                            <td className="py-4 px-4 font-extrabold text-[#1E2340]">
-                              {port.name}
-                            </td>
-                            <td className="py-4 px-4">
-                              <a
-                                href={normalizeUrl(port.domain)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1.5"
-                              >
-                                <span>{getCleanDomain(port.domain)}</span>
-                                <ExternalLink className="w-3.5 h-3.5" />
-                              </a>
-                            </td>
-                            <td className="py-4 px-4 text-slate-500 max-w-sm">
-                              {port.description || '—'}
-                            </td>
-                            <td className="py-4 px-4 text-right">
+                  <div>
+                    {/* Mobile Scroll Indicator */}
+                    <div className="flex items-center justify-between mb-2 sm:hidden px-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scroll table to view details</span>
+                      <span className="text-[11px] text-[#00C2CC] font-bold">Swipe →</span>
+                    </div>
+
+                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-thin">
+                      <table className="min-w-[680px] w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                            <th className="py-4 px-3 sm:px-4 w-16">IMAGE</th>
+                            <th className="py-4 px-3 sm:px-4 min-w-[140px]">NAME</th>
+                            <th className="py-4 px-3 sm:px-4 min-w-[160px]">DOMAIN</th>
+                            <th className="py-4 px-3 sm:px-4 min-w-[200px]">DESCRIPTION</th>
+                            <th className="py-4 px-3 sm:px-4 text-right w-24">ACTIONS</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-sm">
+                          {portfolio.map((port) => (
+                            <tr key={port.id} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-4 px-3 sm:px-4">
+                                <img
+                                  src={port.image}
+                                  alt={port.name}
+                                  className="w-16 h-12 rounded-xl object-cover border border-slate-200 shadow-2xs"
+                                />
+                              </td>
+                              <td className="py-4 px-3 sm:px-4 font-extrabold text-[#1E2340]">
+                                {port.name}
+                              </td>
+                              <td className="py-4 px-3 sm:px-4">
+                                <a
+                                  href={normalizeUrl(port.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1.5"
+                                >
+                                  <span>{getCleanDomain(port.domain)}</span>
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
+                              </td>
+                              <td className="py-4 px-3 sm:px-4 text-slate-500 max-w-sm">
+                                {port.description || '—'}
+                              </td>
+                              <td className="py-4 px-3 sm:px-4 text-right">
                               <div className="inline-flex items-center gap-2">
                                 <button
                                   onClick={() => openPortfolioModal(port)}
@@ -1308,6 +1339,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                       </tbody>
                     </table>
                   </div>
+                </div>
                 )}
               </div>
             </div>
