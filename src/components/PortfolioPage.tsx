@@ -1072,12 +1072,6 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
         {/* ─── SECTION HEADER LEFT ALIGNED (Matching Hero Section Alignment) ────────────────── */}
         <div className="relative pt-8 pb-14 flex flex-col items-start text-left max-w-4xl">
           
-          {/* Right Decorative Dot Grid + Blob */}
-          <div className="absolute right-[0px] top-4 pointer-events-none hidden lg:block opacity-75">
-            <div className="w-32 h-32 rounded-full bg-[#E6F8F9] absolute -top-4 -right-4 blur-xl opacity-60" />
-            <DotGrid rows={4} cols={6} dotColor="#14B8B0" />
-          </div>
-
           {/* Top Label */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
