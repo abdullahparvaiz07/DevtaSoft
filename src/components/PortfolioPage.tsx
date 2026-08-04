@@ -25,7 +25,7 @@ interface ProjectCardData {
   id: string;
   title: string;
   categoryLabel: string;
-  category: 'Web Development' | 'WordPress Development' | 'Shopify Store Development' | 'Custom Software Development';
+  category: 'Web Development' | 'WordPress Development' | 'Shopify Store Development' | 'Custom Software Development' | 'UI/UX Design' | 'AI & Automation' | string;
   description: string;
   techStackTags: string[];
   accentColor: string;
@@ -37,6 +37,104 @@ interface ProjectCardData {
 }
 
 const portfolioProjects: ProjectCardData[] = [
+  {
+    id: 'cosme-store',
+    title: 'cosme.store',
+    categoryLabel: 'SHOPIFY STORE',
+    category: 'Shopify Store Development',
+    description: 'Luxury cosmetics, makeup, face washes, and perfume e-commerce store.',
+    techStackTags: ['Shopify', 'Liquid', 'Tailwind CSS'],
+    accentColor: '#FF8706',
+    badgeBg: 'bg-orange-50',
+    badgeTextColor: 'text-[#FF8706]',
+    mockupType: 'cosme',
+    customImage: '/cosme.png',
+    websiteUrl: 'https://cosme.store',
+  },
+  {
+    id: 'quikeat-com',
+    title: 'QuikEat.com',
+    categoryLabel: 'WEB DEVELOPMENT',
+    category: 'Web Development',
+    description: 'Online restaurant ordering & dining reservation website.',
+    techStackTags: ['React', 'Next.js', 'Tailwind CSS'],
+    accentColor: '#FF8706',
+    badgeBg: 'bg-orange-50',
+    badgeTextColor: 'text-[#FF8706]',
+    mockupType: 'quikeat',
+    customImage: '/quik.png',
+    websiteUrl: 'https://quikeat.com',
+  },
+  {
+    id: 'lms-software',
+    title: 'LMS Software',
+    categoryLabel: 'CUSTOM SOFTWARE',
+    category: 'Custom Software Development',
+    description: 'Enterprise online learning & course management software platform.',
+    techStackTags: ['React', 'TypeScript', 'Node.js'],
+    accentColor: '#FF8706',
+    badgeBg: 'bg-orange-50',
+    badgeTextColor: 'text-[#FF8706]',
+    mockupType: 'lms',
+    customImage: '/lms.png',
+    websiteUrl: 'https://lms.devtasoft.com',
+  },
+  {
+    id: 'plservices-co',
+    title: 'Plservices.co',
+    categoryLabel: 'WEB DEVELOPMENT',
+    category: 'Web Development',
+    description: 'Professional handyman & home maintenance service portal.',
+    techStackTags: ['React', 'Next.js', 'Tailwind CSS'],
+    accentColor: '#FF8706',
+    badgeBg: 'bg-orange-50',
+    badgeTextColor: 'text-[#FF8706]',
+    mockupType: 'plservices',
+    customImage: '/pl.png',
+    websiteUrl: 'https://plservices.co',
+  },
+  {
+    id: 'nexflow-com',
+    title: 'nexflow.com',
+    categoryLabel: 'WEB DEVELOPMENT',
+    category: 'Web Development',
+    description: 'Plumbing & commercial piping contractor web platform.',
+    techStackTags: ['React', 'Next.js', 'Tailwind CSS'],
+    accentColor: '#14B8B0',
+    badgeBg: 'bg-[#E6F8F9]',
+    badgeTextColor: 'text-[#14B8B0]',
+    mockupType: 'nexflow',
+    customImage: '/nexf.png',
+    websiteUrl: 'https://nexflow.com',
+  },
+  {
+    id: 'ironclad-co',
+    title: 'ironclad.co',
+    categoryLabel: 'WEB DEVELOPMENT',
+    category: 'Web Development',
+    description: 'Commercial & residential roofing contractor digital platform.',
+    techStackTags: ['React', 'Next.js', 'Tailwind CSS'],
+    accentColor: '#FF8706',
+    badgeBg: 'bg-orange-50',
+    badgeTextColor: 'text-[#FF8706]',
+    mockupType: 'ironclad',
+    customImage: '/icr.png',
+    websiteUrl: 'https://ironclad.co',
+  },
+  {
+    id: 'greendoors-com',
+    title: 'GreenDoors.com',
+    categoryLabel: 'WEB DEVELOPMENT',
+    category: 'Web Development',
+    description: 'Luxury hotel booking & hospitality web portal.',
+    techStackTags: ['React', 'Next.js', 'Tailwind CSS'],
+    accentColor: '#14B8B0',
+    badgeBg: 'bg-[#E6F8F9]',
+    badgeTextColor: 'text-[#14B8B0]',
+    mockupType: 'greendoors',
+    customImage: '/hw1.png',
+    websiteUrl: 'https://greendoors.com',
+  },
   {
     id: 'sarastore-pk',
     title: 'sarastore.pk',
@@ -236,10 +334,12 @@ const portfolioProjects: ProjectCardData[] = [
 
 const categories = [
   'All Projects',
-  'WordPress Development',
   'Web Development',
-  'Custom Software Development',
+  'WordPress Development',
   'Shopify Store Development',
+  'Custom Software Development',
+  'UI/UX Design',
+  'AI & Automation',
 ];
 
 // ─── Case Study Modal Data ────────────────────────────────────────────────
@@ -251,6 +351,125 @@ const caseStudyModalData: Record<string, {
   techStack: string[];
   features: { title: string; desc: string }[];
 }> = {
+  'cosme-store': {
+    tagline: 'Luxury Cosmetics, Makeup & Fragrance Shopify Storefront',
+    challenge: 'Cosme.store needed a high-end, responsive Shopify e-commerce platform to showcase luxury makeup, skincare face washes, and artisanal perfumes with fast mobile navigation and high conversion rates.',
+    solution: 'We built a custom Shopify store featuring an interactive shade finder quiz, bundle-and-save product builder, multi-currency checkout, and sub-second page loading speed.',
+    results: [
+      { value: '3.5x', label: 'Conversion Rate' },
+      { value: '< 550ms', label: 'Page Load Speed' },
+      { value: '99.9%', label: 'Uptime SLA' },
+    ],
+    techStack: ['Shopify', 'Liquid', 'Tailwind CSS', 'JavaScript', 'Klaviyo'],
+    features: [
+      { title: 'Interactive Makeup Shade Finder', desc: 'Personalized AI shade matcher and skin tone product recommendation quiz.' },
+      { title: 'Custom Bundle & Save Builder', desc: 'Dynamic mix-and-match bundle creator for cosmetics and skincare routines.' },
+      { title: 'Sub-Second Mobile Checkout', desc: 'Optimized Shopify One-Page Checkout with Apple Pay and Shop Pay support.' },
+      { title: 'Fragrance Notes Visualizer', desc: 'Interactive scent pyramid detailing top, heart, and base perfume notes.' },
+    ],
+  },
+  'quikeat-com': {
+    tagline: 'Modern Restaurant Ordering & Dining Reservation Platform for QuikEat',
+    challenge: 'QuikEat needed a fast, mobile-optimized digital storefront to handle food ordering, table reservations, contactless digital menus, and live kitchen order management.',
+    solution: 'We engineered an intuitive restaurant web application featuring an interactive visual food menu, table reservation engine, instant online payment checkout, and live order tracking.',
+    results: [
+      { value: '4.6x', label: 'Digital Orders' },
+      { value: '< 450ms', label: 'Page Load Speed' },
+      { value: '99.9%', label: 'Uptime SLA' },
+    ],
+    techStack: ['React', 'Next.js', 'Tailwind CSS', 'Node.js', 'Stripe'],
+    features: [
+      { title: 'Interactive Food Menu', desc: 'High-res food photography menu with dietary filters, customization add-ons, and instant cart.' },
+      { title: 'Table Reservation Engine', desc: 'Real-time table availability calendar with SMS booking confirmation.' },
+      { title: 'Live Order Tracking', desc: 'Real-time kitchen status, preparation timer, and delivery dispatch tracker.' },
+      { title: 'POS & Kitchen Integration', desc: 'Seamless sync with restaurant Point of Sale and kitchen display screens.' },
+    ],
+  },
+  'lms-software': {
+    tagline: 'Enterprise Online Learning & Course Management Suite',
+    challenge: 'Educational institutions and corporate trainers needed a unified software platform to manage course curricula, conduct interactive live webinars, track student progress, and grade assessments automatically.',
+    solution: 'We engineered a robust Learning Management System (LMS) featuring interactive video streaming, automated quizzing engine, student performance analytics, and certificate generation.',
+    results: [
+      { value: '50K+', label: 'Active Students' },
+      { value: '< 500ms', label: 'API Latency' },
+      { value: '99.99%', label: 'Uptime SLA' },
+    ],
+    techStack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'WebRTC', 'Tailwind CSS'],
+    features: [
+      { title: 'Automated Course Builder', desc: 'Drag-and-drop module creator with video hosting, PDF downloads, and interactive assignments.' },
+      { title: 'Live Interactive Classes', desc: 'Integrated high-definition WebRTC video conferencing with chat and virtual whiteboards.' },
+      { title: 'Student Analytics Dashboard', desc: 'Real-time progress tracking, completion rates, and grade performance analytics.' },
+      { title: 'Instant Certificate Generator', desc: 'Automated verifiable completion certificates issued upon course mastery.' },
+    ],
+  },
+  'plservices-co': {
+    tagline: 'On-Demand Handyman & Home Maintenance Platform for PL Services',
+    challenge: 'PL Services needed a unified web portal to streamline home repair inquiries, offer instant pricing estimates, and allow clients to schedule certified handymen online.',
+    solution: 'We built a high-converting web application featuring a multi-service job calculator, online scheduling calendar, technician dispatch management, and automated SMS updates.',
+    results: [
+      { value: '3.9x', label: 'Quote Requests' },
+      { value: '< 650ms', label: 'Page Load Speed' },
+      { value: '99.9%', label: 'Uptime SLA' },
+    ],
+    techStack: ['React', 'Next.js', 'Tailwind CSS', 'Node.js', 'PostgreSQL'],
+    features: [
+      { title: 'Multi-Service Job Calculator', desc: 'Instant cost estimator for electrical, carpentry, plumbing, and home repairs.' },
+      { title: 'Online Scheduling Engine', desc: 'Seamless appointment booking calendar with automated time-slot reservations.' },
+      { title: 'Certified Technician Dispatch', desc: 'Real-time assignment and status tracking for dispatching local repair experts.' },
+      { title: 'Transparent Customer Portal', desc: 'Digital invoices, service history, and online payment processing.' },
+    ],
+  },
+  'nexflow-com': {
+    tagline: 'High-Converting Plumbing & Commercial Piping Platform for NexFlow',
+    challenge: 'NexFlow needed a responsive digital platform to handle 24/7 emergency plumbing dispatches, online service booking, transparent pricing estimates, and customer reviews.',
+    solution: 'We engineered an intuitive web platform featuring an automated service booking engine, real-time technician dispatch tracker, plumbing cost calculator, and emergency hotline.',
+    results: [
+      { value: '4.2x', label: 'Online Bookings' },
+      { value: '< 600ms', label: 'Search Speed' },
+      { value: '99.9%', label: 'Uptime SLA' },
+    ],
+    techStack: ['React', 'Next.js', 'Tailwind CSS', 'Node.js', 'PostgreSQL'],
+    features: [
+      { title: 'Online Service Booking', desc: 'Instant appointment scheduling for residential and commercial plumbing services.' },
+      { title: 'Emergency Dispatch Tracker', desc: 'Real-time GPS tracking and SMS notification system for 24/7 emergency dispatches.' },
+      { title: 'Plumbing Cost Estimator', desc: 'Transparent upfront cost calculation tool for common piping and repair jobs.' },
+      { title: 'Verified Customer Reviews', desc: 'Integrated client rating, testimonial showcase, and warranty tracking.' },
+    ],
+  },
+  'ironclad-co': {
+    tagline: 'High-Converting Roofing Contractor & Inspection Platform for Ironclad',
+    challenge: 'Ironclad Roofing needed a high-performance web platform to generate residential and commercial leads, offer instant cost estimations, and streamline inspection requests.',
+    solution: 'We engineered a modern, responsive website featuring an automated roofing calculator, online inspection scheduling, interactive project showcase, and emergency service dispatch.',
+    results: [
+      { value: '4.5x', label: 'Inbound Leads' },
+      { value: '< 650ms', label: 'Page Load Speed' },
+      { value: '99.9%', label: 'Uptime SLA' },
+    ],
+    techStack: ['React', 'Next.js', 'Tailwind CSS', 'Node.js', 'PostgreSQL'],
+    features: [
+      { title: 'Instant Estimate Calculator', desc: 'Interactive roof replacement and repair cost estimation tool for homeowners.' },
+      { title: 'Online Inspection Scheduler', desc: 'Seamless online calendar for booking free roof inspections and estimates.' },
+      { title: 'Commercial Project Showcase', desc: 'Interactive gallery showcasing past roofing projects, materials, and warranty information.' },
+      { title: 'Emergency Dispatch Portal', desc: '24/7 storm damage and urgent repair lead generation channel.' },
+    ],
+  },
+  'greendoors-com': {
+    tagline: 'Luxury Hotel Booking & Hospitality Web Portal for GreenDoors',
+    challenge: 'GreenDoors required a modern digital hotel showcase and high-converting reservation system to manage guest bookings, room availability, and luxury amenities.',
+    solution: 'We engineered a high-performance, responsive hotel website with real-time room availability, interactive room previews, guest portal, and seamless payment gateway.',
+    results: [
+      { value: '3.8x', label: 'Direct Bookings' },
+      { value: '< 700ms', label: 'Search Speed' },
+      { value: '99.9%', label: 'Uptime SLA' },
+    ],
+    techStack: ['React', 'Next.js', 'Tailwind CSS', 'Node.js', 'Stripe'],
+    features: [
+      { title: 'Interactive Room Showcase', desc: 'High-res gallery previews, amenity filtering, and custom room upgrade options.' },
+      { title: 'Real-time Booking Engine', desc: 'Instant availability calendar, date picker, and multi-guest reservation system.' },
+      { title: 'Guest Experience Portal', desc: 'Manage reservations, check-in details, and special concierge requests online.' },
+      { title: 'Seamless Payment Checkout', desc: 'Secure multi-currency payment gateway integration with instant e-confirmation.' },
+    ],
+  },
   'taskflow-pro': {
     tagline: 'Streamlining Team Collaboration & Sprint Workflows',
     challenge: 'Remote teams struggled with scattered task boards, missing deadlines, and unclear project ownership across multiple software suites.',
@@ -508,6 +727,90 @@ const caseStudyModalData: Record<string, {
 };
 
 const MockupPreview: React.FC<{ type: string; customImage?: string }> = ({ type, customImage }) => {
+  if (type === 'cosme') {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src="/cosme.png"
+          alt="cosme.store Cosmetics Storefront"
+          className="w-full h-full object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'quikeat') {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src="/quik.png"
+          alt="QuikEat.com Restaurant Platform"
+          className="w-full h-full object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'lms') {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src="/lms.png"
+          alt="LMS Software Interface"
+          className="w-full h-full object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'plservices') {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src="/pl.png"
+          alt="Plservices.co Handyman Platform"
+          className="w-full h-full object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'nexflow') {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src="/nexf.png"
+          alt="nexflow.com Plumbing Platform"
+          className="w-full h-full object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'ironclad') {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src="/icr.png"
+          alt="ironclad.co Roofing Platform"
+          className="w-full h-full object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'greendoors') {
+    return (
+      <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
+        <img
+          src="/hw1.png"
+          alt="GreenDoors.com Hotel Platform"
+          className="w-full h-full object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.03] drop-shadow-sm rounded-lg"
+        />
+      </div>
+    );
+  }
+
   if (customImage) {
     return (
       <div className="w-full h-full bg-[#F8FAFC] p-2.5 sm:p-3 select-none relative overflow-hidden group flex items-center justify-center">
@@ -895,20 +1198,34 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
                       </div>
 
                       {/* Circular Arrow Button in Accent Color */}
-                      <a
-                        href={project.websiteUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        title={`Visit ${project.title}`}
-                        className="w-10 h-10 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 hover:bg-[#FF8706] hover:text-white hover:border-[#FF8706] shadow-xs cursor-pointer"
-                        style={{
-                          borderColor: `${project.accentColor}50`,
-                          color: project.accentColor,
-                        }}
-                      >
-                        <ArrowUpRight className="w-5 h-5 stroke-[2.5]" />
-                      </a>
+                      {project.websiteUrl && project.websiteUrl !== '#' ? (
+                        <a
+                          href={project.websiteUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          title={`Visit ${project.title}`}
+                          className="w-10 h-10 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 hover:bg-[#FF8706] hover:text-white hover:border-[#FF8706] shadow-xs cursor-pointer"
+                          style={{
+                            borderColor: `${project.accentColor}50`,
+                            color: project.accentColor,
+                          }}
+                        >
+                          <ArrowUpRight className="w-5 h-5 stroke-[2.5]" />
+                        </a>
+                      ) : (
+                        <div
+                          onClick={(e) => e.stopPropagation()}
+                          title="No live domain link provided"
+                          className="w-10 h-10 rounded-full border flex items-center justify-center shrink-0 opacity-40 cursor-not-allowed"
+                          style={{
+                            borderColor: `${project.accentColor}50`,
+                            color: project.accentColor,
+                          }}
+                        >
+                          <ArrowUpRight className="w-5 h-5 stroke-[2.5]" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -1086,15 +1403,17 @@ export const PortfolioPage: React.FC<{ onContactClick: () => void }> = ({ onCont
 
                 {/* Footer CTA */}
                 <div className="px-8 sm:px-10 pb-8 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
-                  <a
-                    href={selectedProject.websiteUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 bg-[#E6F8F9] hover:bg-[#14B8B0] text-[#14B8B0] hover:text-white font-bold text-sm px-5 py-3 rounded-2xl border border-[#14B8B0]/30 transition-all duration-300 cursor-pointer shadow-xs"
-                  >
-                    <span>Visit Live Website</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
+                  {selectedProject.websiteUrl && selectedProject.websiteUrl !== '#' && (
+                    <a
+                      href={selectedProject.websiteUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 bg-[#E6F8F9] hover:bg-[#14B8B0] text-[#14B8B0] hover:text-white font-bold text-sm px-5 py-3 rounded-2xl border border-[#14B8B0]/30 transition-all duration-300 cursor-pointer shadow-xs"
+                    >
+                      <span>Visit Live Website</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  )}
 
                   <button
                     onClick={() => {

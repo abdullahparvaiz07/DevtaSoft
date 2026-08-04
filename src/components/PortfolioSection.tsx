@@ -53,6 +53,19 @@ interface Project {
 
 const projectsData: Project[] = [
   {
+    id: 'quikeat-com',
+    title: 'quikeat.com',
+    subtitle: 'Restaurant Ordering & Dining Platform',
+    description: 'Online restaurant ordering, automated kitchen order dispatching, and dining table reservation website.',
+    category: 'Web Development',
+    badgeText: 'Web Development',
+    badgeBg: 'bg-[#E6F8F9]',
+    badgeTextColor: 'text-[#14B8B0]',
+    subtitleColor: 'text-[#14B8B0]',
+    image: '/quik.png',
+    websiteUrl: 'https://quikeat.com',
+  },
+  {
     id: 'nexcojapan-com',
     title: 'nexcojapan.com',
     subtitle: 'Japanese Vehicle Export Platform',
@@ -78,19 +91,6 @@ const projectsData: Project[] = [
     image: '/lfm.png',
     websiteUrl: 'https://fleet-management.devtasoft.com',
   },
-  {
-    id: 'mirrormate-com',
-    title: 'mirrormate.com',
-    subtitle: 'Custom E-Commerce & Framing Platform',
-    description: 'Interactive custom frame builder and e-commerce storefront for custom-cut mirror frames and decor.',
-    category: 'Shopify Store Development',
-    badgeText: 'Shopify Store Development',
-    badgeBg: 'bg-[#E6F8F9]',
-    badgeTextColor: 'text-[#14B8B0]',
-    subtitleColor: 'text-[#14B8B0]',
-    image: '/mirrorm.png',
-    websiteUrl: 'https://mirrormate.com',
-  },
 ];
 
 // ─── Case Study Details ─────────────────────────────────────────────────
@@ -105,6 +105,26 @@ const caseStudyDetails: Record<string, {
   color: string;
   bgColor: string;
 }> = {
+  'quikeat-com': {
+    tagline: 'Online Restaurant Ordering & Dining Platform for QuikEat.',
+    challenge: 'QuikEat needed a seamless web app to streamline online food ordering, kitchen ticket management, and table reservations for high-volume restaurants.',
+    solution: 'We engineered a responsive food ordering portal featuring interactive digital menus, real-time kitchen order tracking, and instant online table bookings.',
+    results: [
+      { value: '3.8x', label: 'Order Volume' },
+      { value: '-45%', label: 'Kitchen Delay' },
+      { value: '< 650ms', label: 'Load Speed' },
+    ],
+    techStack: ['React', 'Next.js', 'Tailwind CSS', 'Node.js', 'PostgreSQL'],
+    timeline: '6 Weeks',
+    features: [
+      { title: 'Interactive Menu', desc: 'Dynamic food menu with category filters, ingredient customizer, and special dietary tags.' },
+      { title: 'Kitchen Order Dispatch', desc: 'Instant order transmission to kitchen display systems with live preparation timers.' },
+      { title: 'Table Reservations', desc: 'Real-time dining table booking widget with instant SMS & email confirmations.' },
+      { title: 'Contactless Checkout', desc: 'Integrated Apple Pay, Google Pay, and credit card processing for quick ordering.' },
+    ],
+    color: '#14B8B0',
+    bgColor: '#E6F8F9',
+  },
   'nexcojapan-com': {
     tagline: 'Global Automobile Export Platform for NexcoJapan.',
     challenge: 'NexcoJapan needed a unified digital platform to connect global buyers with Japanese auto auctions, requiring real-time vehicle translation, dynamic currency conversion, and freight tracking.',
@@ -144,26 +164,6 @@ const caseStudyDetails: Record<string, {
     ],
     color: '#FF8706',
     bgColor: '#FFEFE5',
-  },
-  'mirrormate-com': {
-    tagline: 'Custom Frame Builder & E-Commerce Storefront.',
-    challenge: 'MirrorMate required a visual custom frame builder that allows shoppers to measure, customize, and preview frames directly on their mirrors before ordering.',
-    solution: 'We developed an interactive 2D/3D custom frame configurator with instant pricing calculation and seamless Shopify checkout.',
-    results: [
-      { value: '4.9★', label: 'Customer Rating' },
-      { value: '+210%', label: 'Sales Growth' },
-      { value: '< 1.4s', label: 'Page Speed' },
-    ],
-    techStack: ['Shopify Plus', 'Liquid', 'React', 'JavaScript ES6', 'Tailwind CSS'],
-    timeline: '6 Weeks',
-    features: [
-      { title: 'Visual Frame Configurator', desc: 'Interactive frame builder allowing customers to test styles and exact dimensions.' },
-      { title: 'Seamless E-Commerce', desc: 'Automated order routing for custom manufacturing and fast shipping.' },
-      { title: 'High-Res Preview', desc: 'Photorealistic textures for wood, metallic, and modern frame finishes.' },
-      { title: 'Mobile Checkout', desc: 'Optimized touch controls for customizing frames on mobile phones.' },
-    ],
-    color: '#14B8B0',
-    bgColor: '#E6F8F9',
   },
 };
 
@@ -584,19 +584,21 @@ export const PortfolioSection: React.FC<{
     return dataService.subscribe(updatePortfolio);
   }, []);
 
-  const mappedDynamicProjects: Project[] = dynamicProjects.map((p) => ({
-    id: p.id,
-    title: p.name,
-    subtitle: p.category ? `${p.category} Platform` : 'Custom Digital Product',
-    description: p.description || `Custom project built by DevtaSoft for ${p.name}.`,
-    category: p.category || 'Web Development',
-    badgeText: p.category || 'Web Development',
-    badgeBg: 'bg-[#E6F8F9]',
-    badgeTextColor: 'text-[#14B8B0]',
-    subtitleColor: 'text-[#14B8B0]',
-    image: p.image,
-    websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
-  }));
+  const mappedDynamicProjects: Project[] = dynamicProjects
+    .filter((p) => p.showOnLanding === true)
+    .map((p) => ({
+      id: p.id,
+      title: p.name,
+      subtitle: p.category ? `${p.category} Platform` : 'Custom Digital Product',
+      description: p.description || `Custom project built by DevtaSoft for ${p.name}.`,
+      category: p.category || 'Web Development',
+      badgeText: p.category || 'Web Development',
+      badgeBg: 'bg-[#E6F8F9]',
+      badgeTextColor: 'text-[#14B8B0]',
+      subtitleColor: 'text-[#14B8B0]',
+      image: p.image,
+      websiteUrl: p.domain.startsWith('http') ? p.domain : `https://${p.domain}`,
+    }));
 
   const allProjectsCombined = mappedDynamicProjects.length > 0 ? mappedDynamicProjects : projectsData;
 

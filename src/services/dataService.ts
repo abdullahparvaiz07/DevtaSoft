@@ -4,6 +4,7 @@ export interface ProductItem {
   domain: string;
   description?: string;
   image: string;
+  showOnLanding?: boolean;
   createdAt: number;
 }
 
@@ -14,6 +15,7 @@ export interface PortfolioItem {
   description?: string;
   image: string;
   category?: string;
+  showOnLanding?: boolean;
   createdAt: number;
 }
 
@@ -182,12 +184,82 @@ const defaultProducts: ProductItem[] = [
 // All 15 Pre-existing Portfolio Projects
 const defaultPortfolio: PortfolioItem[] = [
   {
+    id: 'cosme-store',
+    name: 'cosme.store',
+    domain: 'https://cosme.store',
+    description: 'Luxury cosmetics, makeup, face washes, and perfume e-commerce storefront with custom shade finder and instant checkout.',
+    image: '/cosme.png',
+    category: 'Shopify Store Development',
+    createdAt: Date.now() - 220000,
+  },
+  {
+    id: 'quikeat-com',
+    name: 'QuikEat.com',
+    domain: 'https://quikeat.com',
+    description: 'Online restaurant ordering & dining reservation website with digital menu, table booking, and real-time delivery tracking.',
+    image: '/quik.png',
+    category: 'Web Development',
+    showOnLanding: true,
+    createdAt: Date.now() - 210000,
+  },
+  {
+    id: 'lms-software',
+    name: 'LMS Software',
+    domain: 'https://lms.devtasoft.com',
+    description: 'Enterprise Learning Management System with automated course builder, student analytics dashboard, live class streaming, and automated grading.',
+    image: '/lms.png',
+    category: 'Custom Software Development',
+    showOnLanding: false,
+    createdAt: Date.now() - 200000,
+  },
+  {
+    id: 'plservices-co',
+    name: 'Plservices.co',
+    domain: 'https://plservices.co',
+    description: 'Professional handyman & home maintenance service portal with instant quote builder, online booking system, and technician dispatch tracking.',
+    image: '/pl.png',
+    category: 'Web Development',
+    showOnLanding: false,
+    createdAt: Date.now() - 190000,
+  },
+  {
+    id: 'nexflow-com',
+    name: 'nexflow.com',
+    domain: 'https://nexflow.com',
+    description: 'Plumbing & commercial piping contractor web platform with instant booking, emergency service dispatch, and service estimate calculator.',
+    image: '/nexf.png',
+    category: 'Web Development',
+    showOnLanding: false,
+    createdAt: Date.now() - 180000,
+  },
+  {
+    id: 'ironclad-co',
+    name: 'ironclad.co',
+    domain: 'https://ironclad.co',
+    description: 'Commercial & residential roofing contractor digital platform with instant estimate calculator, project portfolio, and inspection scheduling.',
+    image: '/icr.png',
+    category: 'Web Development',
+    showOnLanding: false,
+    createdAt: Date.now() - 170000,
+  },
+  {
+    id: 'greendoors-com',
+    name: 'GreenDoors.com',
+    domain: 'https://greendoors.com',
+    description: 'Luxury hotel booking & hospitality web portal with real-time reservation management, room customization, and instant payment integration.',
+    image: '/hw1.png',
+    category: 'Web Development',
+    showOnLanding: false,
+    createdAt: Date.now() - 160000,
+  },
+  {
     id: 'nexcojapan-com',
     name: 'nexcojapan.com',
     domain: 'https://nexcojapan.com',
     description: 'Global Japanese vehicle sourcing & auction portal with real-time bidding system and container shipping tracking.',
     image: '/nexcoj.png',
     category: 'Web Development',
+    showOnLanding: true,
     createdAt: Date.now() - 150000,
   },
   {
@@ -197,6 +269,7 @@ const defaultPortfolio: PortfolioItem[] = [
     description: 'Real-time GPS tracking and fleet dispatch management software.',
     image: '/lfm.png',
     category: 'Custom Software Development',
+    showOnLanding: true,
     createdAt: Date.now() - 140000,
   },
   {
@@ -383,7 +456,20 @@ export const dataService = {
         localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(defaultPortfolio));
         return defaultPortfolio;
       }
-      return JSON.parse(stored);
+      let parsed: PortfolioItem[] = JSON.parse(stored);
+      let updated = false;
+
+      defaultPortfolio.forEach((defItem) => {
+        if (!parsed.some((item) => item.id === defItem.id || item.name.toLowerCase() === defItem.name.toLowerCase())) {
+          parsed.unshift(defItem);
+          updated = true;
+        }
+      });
+
+      if (updated) {
+        localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(parsed));
+      }
+      return parsed;
     } catch {
       return defaultPortfolio;
     }
@@ -427,6 +513,30 @@ export const dataService = {
     const portfolio = this.getPortfolio().filter((p) => p.id !== id);
     localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(portfolio));
     notifyDataChanged();
+  },
+
+  toggleProductLanding(id: string): ProductItem[] {
+    const products = this.getProducts().map((p) => {
+      if (p.id === id) {
+        return { ...p, showOnLanding: p.showOnLanding === false ? true : false };
+      }
+      return p;
+    });
+    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+    notifyDataChanged();
+    return products;
+  },
+
+  togglePortfolioLanding(id: string): PortfolioItem[] {
+    const portfolio = this.getPortfolio().map((p) => {
+      if (p.id === id) {
+        return { ...p, showOnLanding: p.showOnLanding === true ? false : true };
+      }
+      return p;
+    });
+    localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(portfolio));
+    notifyDataChanged();
+    return portfolio;
   },
 
   getVisibility(): VisibilitySettings {

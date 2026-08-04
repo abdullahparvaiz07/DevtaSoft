@@ -36,6 +36,15 @@ interface AdminDashboardProps {
 
 type TabType = 'dashboard' | 'visibility' | 'products' | 'portfolio';
 
+const PORTFOLIO_CATEGORIES = [
+  'Web Development',
+  'WordPress Development',
+  'Custom Software Development',
+  'Shopify Store Development',
+  'UI/UX Design',
+  'AI & Automation',
+];
+
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, onLogout }) => {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [products, setProducts] = useState<ProductItem[]>([]);
@@ -44,6 +53,48 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
 
   // Toast Notification State
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  // Admin Notification Dropdown States
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(3);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  const initialNotifications = [
+    {
+      id: '1',
+      title: 'New Portfolio Products Added',
+      desc: '7 portfolio items added including GreenDoors.com, ironclad.co, nexflow.com, Plservices.co, LMS, QuikEat, and cosme.store.',
+      time: 'Just now',
+      read: false,
+    },
+    {
+      id: '2',
+      title: 'System Services Operational',
+      desc: 'All DevtaSoft web development pages and section controls are online.',
+      time: '15m ago',
+      read: false,
+    },
+    {
+      id: '3',
+      title: 'Data Synchronization Complete',
+      desc: 'Products and portfolio data synchronized with storage.',
+      time: '1h ago',
+      read: false,
+    },
+  ];
+
+  const [notificationsList, setNotificationsList] = useState(initialNotifications);
+
+  // Close notifications dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setNotificationsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Modal States
   const [productModalOpen, setProductModalOpen] = useState(false);
@@ -60,23 +111,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
   const [productDomain, setProductDomain] = useState('');
   const [productDesc, setProductDesc] = useState('');
   const [productImage, setProductImage] = useState('');
+  const [productShowOnLanding, setProductShowOnLanding] = useState(true);
   const [productLoading, setProductLoading] = useState(false);
 
   // Portfolio Form Data
   const [portfolioName, setPortfolioName] = useState('');
   const [portfolioDomain, setPortfolioDomain] = useState('');
+  const [portfolioCategory, setPortfolioCategory] = useState('Web Development');
   const [portfolioDesc, setPortfolioDesc] = useState('');
   const [portfolioImage, setPortfolioImage] = useState('');
+  const [portfolioShowOnLanding, setPortfolioShowOnLanding] = useState(true);
   const [portfolioLoading, setPortfolioLoading] = useState(false);
 
   const productFileInputRef = useRef<HTMLInputElement>(null);
   const portfolioFileInputRef = useRef<HTMLInputElement>(null);
 
   const [visibilitySettings, setVisibilitySettings] = useState<VisibilitySettings>(dataService.getVisibility());
-
-  // Master Section Lock/Unlock States
-  const [isPagesUnlocked, setIsPagesUnlocked] = useState(false);
-  const [isSectionsUnlocked, setIsSectionsUnlocked] = useState(false);
 
   // Load items on mount and subscribe to data service changes
   useEffect(() => {
@@ -144,12 +194,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
       setProductDomain(product.domain);
       setProductDesc(product.description || '');
       setProductImage(product.image || '');
+      setProductShowOnLanding(product.showOnLanding !== false);
     } else {
       setEditingProductId(null);
       setProductName('');
       setProductDomain('');
       setProductDesc('');
       setProductImage('');
+      setProductShowOnLanding(true);
     }
     setProductModalOpen(true);
   };
@@ -166,10 +218,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
       showToast('Product name is required.', 'error');
       return;
     }
-    if (!productDomain.trim()) {
-      showToast('Product domain URL is required.', 'error');
-      return;
-    }
     if (!productImage) {
       showToast('Product image is required.', 'error');
       return;
@@ -184,6 +232,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
           domain: normalizeUrl(productDomain),
           description: productDesc.trim() || undefined,
           image: productImage,
+          showOnLanding: productShowOnLanding,
         },
         editingProductId || undefined
       );
@@ -207,14 +256,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
       setEditingPortfolioId(project.id);
       setPortfolioName(project.name);
       setPortfolioDomain(project.domain);
+      setPortfolioCategory(project.category || 'Web Development');
       setPortfolioDesc(project.description || '');
       setPortfolioImage(project.image || '');
+      setPortfolioShowOnLanding(project.showOnLanding === true);
     } else {
       setEditingPortfolioId(null);
       setPortfolioName('');
       setPortfolioDomain('');
+      setPortfolioCategory('Web Development');
       setPortfolioDesc('');
       setPortfolioImage('');
+      setPortfolioShowOnLanding(true);
     }
     setPortfolioModalOpen(true);
   };
@@ -231,10 +284,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
       showToast('Project name is required.', 'error');
       return;
     }
-    if (!portfolioDomain.trim()) {
-      showToast('Live project URL is required.', 'error');
-      return;
-    }
     if (!portfolioImage) {
       showToast('Project image mockup is required.', 'error');
       return;
@@ -247,8 +296,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
         {
           name: portfolioName.trim(),
           domain: normalizeUrl(portfolioDomain),
+          category: portfolioCategory,
           description: portfolioDesc.trim() || undefined,
           image: portfolioImage,
+          showOnLanding: portfolioShowOnLanding,
         },
         editingPortfolioId || undefined
       );
@@ -460,10 +511,69 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
-            <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer relative">
-              <Bell className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
-              <span className="w-2 h-2 rounded-full bg-[#FF8706] absolute top-2 right-2 sm:top-2.5 sm:right-2.5" />
-            </button>
+            <div className="relative" ref={notificationRef}>
+              <button
+                onClick={() => {
+                  setNotificationsOpen(!notificationsOpen);
+                  setUnreadNotifications(0);
+                }}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer relative"
+                title="Notifications"
+              >
+                <Bell className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                {unreadNotifications > 0 && (
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#FF8706] absolute top-2 right-2 sm:top-2.5 sm:right-2.5 ring-2 ring-white animate-pulse" />
+                )}
+              </button>
+
+              {/* Notifications Dropdown Panel */}
+              {notificationsOpen && (
+                <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-white border border-[#E7EAF0] rounded-3xl shadow-2xl z-50 p-4 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-display font-extrabold text-sm text-[#1E2340]">Notifications</h4>
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#FFEFE5] text-[#FF8706]">
+                        {notificationsList.filter((n) => !n.read).length} new
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setNotificationsList((prev) => prev.map((n) => ({ ...n, read: true })));
+                        showToast('All notifications marked as read');
+                      }}
+                      className="text-[11px] font-extrabold text-[#00C2CC] hover:underline cursor-pointer"
+                    >
+                      Mark all read
+                    </button>
+                  </div>
+
+                  <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+                    {notificationsList.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => {
+                          setNotificationsList((prev) =>
+                            prev.map((n) => (n.id === item.id ? { ...n, read: true } : n))
+                          );
+                        }}
+                        className={`p-3 rounded-2xl border transition-all cursor-pointer ${
+                          item.read ? 'bg-slate-50/60 border-slate-100' : 'bg-[#E6F8F9]/40 border-[#14B8B0]/20'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <h5 className="font-extrabold text-xs text-[#1E2340] flex items-center gap-1.5">
+                            {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-[#FF8706]" />}
+                            {item.title}
+                          </h5>
+                          <span className="text-[10px] text-slate-400 font-semibold shrink-0">{item.time}</span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 leading-snug">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center gap-2 sm:gap-2.5 pl-2 sm:pl-3 border-l border-slate-200">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#0D152A] text-white flex items-center justify-center font-bold text-xs">
@@ -851,96 +961,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                       <Globe className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2.5">
-                        <h2 className="font-display font-extrabold text-xl text-[#1E2340]">Navbar Pages & Direct Routes</h2>
-                        {isPagesUnlocked ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                            <Unlock className="w-3 h-3 text-emerald-500" /> Unlocked
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-50 text-red-600 border border-red-200">
-                            <Lock className="w-3 h-3 text-red-500" /> Locked
-                          </span>
-                        )}
-                      </div>
+                      <h2 className="font-display font-extrabold text-xl text-[#1E2340]">Navbar Pages & Direct Routes</h2>
                       <p className="text-xs text-[#667085] mt-0.5">
-                        {isPagesUnlocked
-                          ? 'Hide or show specific pages from navbar, footer, and page URL routes.'
-                          : 'Section is locked. Toggle the switch on the right to unlock access.'}
+                        Hide or show specific pages from navbar, footer, and page URL routes.
                       </p>
                     </div>
                   </div>
-
-                  {/* Uiverse Lock Toggle for Panel 1 */}
-                  <div className="flex items-center gap-3 bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-2xl shadow-2xs">
-                    <span className="text-xs font-extrabold text-[#1E2340]">
-                      {isPagesUnlocked ? 'Access Granted' : 'Locked'}
-                    </span>
-                    <label className="relative inline-flex cursor-pointer items-center select-none shrink-0" title={isPagesUnlocked ? 'Unlocked - Click to lock section' : 'Locked - Click to unlock section'}>
-                      <input
-                        type="checkbox"
-                        className="peer sr-only"
-                        checked={isPagesUnlocked}
-                        onChange={(e) => {
-                          setIsPagesUnlocked(e.target.checked);
-                          showToast(
-                            e.target.checked ? 'Pages section UNLOCKED - You can now edit page controls!' : 'Pages section LOCKED',
-                            e.target.checked ? 'success' : 'error'
-                          );
-                        }}
-                      />
-                      <div className="border-slate-400 shadow-md peer-checked:shadow-green-600/40 shadow-red-600/40 border flex h-6 w-12 items-center outline-none rounded-full bg-red-600 pl-7 text-white transition-all duration-300 peer-checked:bg-green-600 peer-checked:pl-2 peer-focus:outline-none"></div>
-                      <svg
-                        className="peer-checked:opacity-0 transition-all duration-500 opacity-100 absolute left-6 stroke-slate-900 w-5 h-5 fill-white"
-                        height="100"
-                        preserveAspectRatio="xMidYMid meet"
-                        viewBox="0 0 100 100"
-                        width="100"
-                        x="0"
-                        xmlns="http://www.w3.org/2000/svg"
-                        y="0"
-                      >
-                        <path
-                          d="M50,18A19.9,19.9,0,0,0,30,38v8a8,8,0,0,0-8,8V74a8,8,0,0,0,8,8H70a8,8,0,0,0,8-8V54a8,8,0,0,0-8-8H38V38a12,12,0,0,1,23.6-3,4,4,0,1,0,7.8-2A20.1,20.1,0,0,0,50,18Z"
-                        ></path>
-                      </svg>
-                      <svg
-                        className="absolute transition-all duration-500 peer-checked:opacity-100 opacity-0 left-1 stroke-slate-900 w-5 h-5 fill-white"
-                        height="100"
-                        preserveAspectRatio="xMidYMid meet"
-                        viewBox="0 0 100 100"
-                        width="100"
-                        x="0"
-                        xmlns="http://www.w3.org/2000/svg"
-                        y="0"
-                      >
-                        <path
-                          d="M30,46V38a20,20,0,0,1,40,0v8a8,8,0,0,1,8,8V74a8,8,0,0,1-8,8H30a8,8,0,0,1-8-8V54A8,8,0,0,1,30,46Zm32-8v8H38V38a12,12,0,0,1,24,0Z"
-                          fillRule="evenodd"
-                        ></path>
-                      </svg>
-                      <div className="absolute left-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-lg transition-all duration-300 peer-checked:left-7"></div>
-                    </label>
-                  </div>
                 </div>
 
-                {/* Page Cards Container with Lock Shield Overlay */}
-                <div className="relative">
-                  {!isPagesUnlocked && (
-                    <div 
-                      onClick={() => showToast('Pages section is locked! Unlock the toggle switch at the top-right to edit.', 'error')}
-                      className="absolute -inset-2 z-20 bg-slate-900/10 backdrop-blur-[2px] rounded-2xl cursor-not-allowed flex items-center justify-center transition-all"
-                    >
-                      <div className="bg-white/95 shadow-xl border border-slate-200 px-5 py-3 rounded-2xl text-xs font-extrabold text-[#1E2340] flex items-center gap-2.5 animate-pulse">
-                        <div className="w-7 h-7 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
-                          <Lock className="w-4 h-4" />
-                        </div>
-                        <span>Section Locked — Toggle unlock switch at top right to edit</span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-300 ${!isPagesUnlocked ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+                {/* Page Cards Container */}
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
                       { key: 'about' as const, name: 'About Us Page', path: '/about', desc: 'Main About Us page showcasing company story, team & values.' },
                       { key: 'services' as const, name: 'Services Page', path: '/services', desc: 'Services overview page listing digital engineering solutions.' },
@@ -1013,96 +1044,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                       <Layers className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2.5">
-                        <h2 className="font-display font-extrabold text-xl text-[#1E2340]">Landing Page Sections</h2>
-                        {isSectionsUnlocked ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                            <Unlock className="w-3 h-3 text-emerald-500" /> Unlocked
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-50 text-red-600 border border-red-200">
-                            <Lock className="w-3 h-3 text-red-500" /> Locked
-                          </span>
-                        )}
-                      </div>
+                      <h2 className="font-display font-extrabold text-xl text-[#1E2340]">Landing Page Sections</h2>
                       <p className="text-xs text-[#667085] mt-0.5">
-                        {isSectionsUnlocked
-                          ? 'Hide or show individual sections on the main landing page (`/`).'
-                          : 'Section is locked. Toggle the switch on the right to unlock access.'}
+                        Hide or show individual sections on the main landing page (`/`).
                       </p>
                     </div>
                   </div>
-
-                  {/* Uiverse Lock Toggle for Panel 2 */}
-                  <div className="flex items-center gap-3 bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-2xl shadow-2xs">
-                    <span className="text-xs font-extrabold text-[#1E2340]">
-                      {isSectionsUnlocked ? 'Access Granted' : 'Locked'}
-                    </span>
-                    <label className="relative inline-flex cursor-pointer items-center select-none shrink-0" title={isSectionsUnlocked ? 'Unlocked - Click to lock section' : 'Locked - Click to unlock section'}>
-                      <input
-                        type="checkbox"
-                        className="peer sr-only"
-                        checked={isSectionsUnlocked}
-                        onChange={(e) => {
-                          setIsSectionsUnlocked(e.target.checked);
-                          showToast(
-                            e.target.checked ? 'Landing Page Sections UNLOCKED - You can now edit section controls!' : 'Landing Page Sections LOCKED',
-                            e.target.checked ? 'success' : 'error'
-                          );
-                        }}
-                      />
-                      <div className="border-slate-400 shadow-md peer-checked:shadow-green-600/40 shadow-red-600/40 border flex h-6 w-12 items-center outline-none rounded-full bg-red-600 pl-7 text-white transition-all duration-300 peer-checked:bg-green-600 peer-checked:pl-2 peer-focus:outline-none"></div>
-                      <svg
-                        className="peer-checked:opacity-0 transition-all duration-500 opacity-100 absolute left-6 stroke-slate-900 w-5 h-5 fill-white"
-                        height="100"
-                        preserveAspectRatio="xMidYMid meet"
-                        viewBox="0 0 100 100"
-                        width="100"
-                        x="0"
-                        xmlns="http://www.w3.org/2000/svg"
-                        y="0"
-                      >
-                        <path
-                          d="M50,18A19.9,19.9,0,0,0,30,38v8a8,8,0,0,0-8,8V74a8,8,0,0,0,8,8H70a8,8,0,0,0,8-8V54a8,8,0,0,0-8-8H38V38a12,12,0,0,1,23.6-3,4,4,0,1,0,7.8-2A20.1,20.1,0,0,0,50,18Z"
-                        ></path>
-                      </svg>
-                      <svg
-                        className="absolute transition-all duration-500 peer-checked:opacity-100 opacity-0 left-1 stroke-slate-900 w-5 h-5 fill-white"
-                        height="100"
-                        preserveAspectRatio="xMidYMid meet"
-                        viewBox="0 0 100 100"
-                        width="100"
-                        x="0"
-                        xmlns="http://www.w3.org/2000/svg"
-                        y="0"
-                      >
-                        <path
-                          d="M30,46V38a20,20,0,0,1,40,0v8a8,8,0,0,1,8,8V74a8,8,0,0,1-8,8H30a8,8,0,0,1-8-8V54A8,8,0,0,1,30,46Zm32-8v8H38V38a12,12,0,0,1,24,0Z"
-                          fillRule="evenodd"
-                        ></path>
-                      </svg>
-                      <div className="absolute left-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-lg transition-all duration-300 peer-checked:left-7"></div>
-                    </label>
-                  </div>
                 </div>
 
-                {/* Section Cards Container with Lock Shield Overlay */}
-                <div className="relative">
-                  {!isSectionsUnlocked && (
-                    <div 
-                      onClick={() => showToast('Landing Page Sections are locked! Unlock the toggle switch at the top-right to edit.', 'error')}
-                      className="absolute -inset-2 z-20 bg-slate-900/10 backdrop-blur-[2px] rounded-2xl cursor-not-allowed flex items-center justify-center transition-all"
-                    >
-                      <div className="bg-white/95 shadow-xl border border-slate-200 px-5 py-3 rounded-2xl text-xs font-extrabold text-[#1E2340] flex items-center gap-2.5 animate-pulse">
-                        <div className="w-7 h-7 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
-                          <Lock className="w-4 h-4" />
-                        </div>
-                        <span>Section Locked — Toggle unlock switch at top right to edit</span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-300 ${!isSectionsUnlocked ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+                {/* Section Cards Container */}
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
                       { key: 'aboutSection' as const, name: 'About Us Section', anchor: '#about', desc: 'Overview about section with developer graphic & company values.' },
                       { key: 'servicesSection' as const, name: 'Services Section', anchor: '#services', desc: 'Interactive services grid with digital capabilities.' },
@@ -1184,7 +1136,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                     className="bg-[#FF8706] hover:bg-[#E07200] text-white font-bold text-sm px-6 py-3 rounded-2xl flex items-center gap-2 shadow-lg shadow-[#FF8706]/20 cursor-pointer transition-transform active:scale-95"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>+ Add New Product</span>
+                    <span>Add New Product</span>
                   </button>
                 </div>
 
@@ -1221,6 +1173,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                             </div>
 
                             <div className="flex items-center gap-1.5 shrink-0">
+                              <button
+                                onClick={() => {
+                                  const updated = dataService.toggleProductLanding(prod.id);
+                                  setProducts(updated);
+                                  showToast(`${prod.name} ${prod.showOnLanding === false ? 'added to' : 'removed from'} landing page!`);
+                                }}
+                                className={`px-2.5 py-1 rounded-xl text-[11px] font-extrabold transition-all cursor-pointer ${
+                                  prod.showOnLanding !== false
+                                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                                    : 'bg-slate-200/70 text-slate-500 border border-slate-300'
+                                }`}
+                              >
+                                {prod.showOnLanding !== false ? 'Landing' : 'Off'}
+                              </button>
                               <button onClick={() => openProductModal(prod)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
@@ -1245,6 +1211,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                             <th className="py-4 px-4">NAME</th>
                             <th className="py-4 px-4">DOMAIN</th>
                             <th className="py-4 px-4">DESCRIPTION</th>
+                            <th className="py-4 px-4 text-center">LANDING PAGE</th>
                             <th className="py-4 px-4 text-right w-24">ACTIONS</th>
                           </tr>
                         </thead>
@@ -1274,6 +1241,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                               </td>
                               <td className="py-4 px-4 text-slate-500 max-w-sm">
                                 {prod.description || '—'}
+                              </td>
+                              <td className="py-4 px-4 text-center">
+                                <button
+                                  onClick={() => {
+                                    const updated = dataService.toggleProductLanding(prod.id);
+                                    setProducts(updated);
+                                    showToast(`${prod.name} ${prod.showOnLanding === false ? 'added to' : 'removed from'} landing page section!`);
+                                  }}
+                                  className={`px-3 py-1 rounded-full text-xs font-extrabold transition-all cursor-pointer ${
+                                    prod.showOnLanding !== false
+                                      ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+                                      : 'bg-slate-100 text-slate-400 border border-slate-200 hover:bg-slate-200'
+                                  }`}
+                                >
+                                  {prod.showOnLanding !== false ? '✓ Landing' : 'Off'}
+                                </button>
                               </td>
                               <td className="py-4 px-4 text-right">
                                 <div className="inline-flex items-center gap-2">
@@ -1307,18 +1290,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
           {/* TAB 3: PORTFOLIO MANAGEMENT PAGE */}
           {activeTab === 'portfolio' && (
             <div className="space-y-6 animate-in fade-in duration-300">
-              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-4 sm:p-8 shadow-xs">
-                <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+              <div className="bg-white border border-[#E7EAF0] rounded-3xl p-6 sm:p-8 shadow-xs">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                   <div>
-                    <h2 className="font-display font-extrabold text-2xl text-[#1E2340]">Portfolio Projects</h2>
-                    <p className="text-xs sm:text-sm text-[#667085] mt-1">Manage projects displayed in the DevtaSoft portfolio.</p>
+                    <h2 className="font-display font-extrabold text-2xl text-[#1E2340]">Portfolio Projects Gallery</h2>
+                    <p className="text-xs sm:text-sm text-[#667085] mt-1">Manage portfolio items & select which projects appear on the main website Landing Page section.</p>
                   </div>
                   <button
                     onClick={() => openPortfolioModal()}
                     className="bg-[#00C2CC] hover:bg-[#00A2AA] text-[#0D152A] font-bold text-sm px-6 py-3 rounded-2xl flex items-center gap-2 shadow-lg shadow-[#00C2CC]/20 cursor-pointer transition-transform active:scale-95"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>+ Add New Project</span>
+                    <span>Add New Project</span>
                   </button>
                 </div>
 
@@ -1346,7 +1329,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                             <div className="flex items-center gap-3 overflow-hidden">
                               <img src={port.image} alt={port.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
                               <div className="overflow-hidden">
-                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{port.name}</h4>
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{port.name}</h4>
+                                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#E6F8F9] text-[#14B8B0] border border-[#14B8B0]/20">
+                                    {port.category || 'Web Development'}
+                                  </span>
+                                </div>
                                 <a href={normalizeUrl(port.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1 truncate">
                                   <span className="truncate">{getCleanDomain(port.domain)}</span>
                                   <ExternalLink className="w-3 h-3 shrink-0" />
@@ -1355,6 +1343,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                             </div>
 
                             <div className="flex items-center gap-1.5 shrink-0">
+                              <button
+                                onClick={() => {
+                                  const updated = dataService.togglePortfolioLanding(port.id);
+                                  setPortfolio(updated);
+                                  showToast(`${port.name} ${port.showOnLanding === true ? 'removed from' : 'added to'} landing page!`);
+                                }}
+                                className={`px-2.5 py-1 rounded-xl text-[11px] font-extrabold transition-all cursor-pointer ${
+                                  port.showOnLanding === true
+                                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                                    : 'bg-slate-200/70 text-slate-500 border border-slate-300'
+                                }`}
+                              >
+                                {port.showOnLanding === true ? 'Landing' : 'Off'}
+                              </button>
                               <button onClick={() => openPortfolioModal(port)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
@@ -1377,8 +1379,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                           <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
                             <th className="py-4 px-4 w-16">IMAGE</th>
                             <th className="py-4 px-4">NAME</th>
+                            <th className="py-4 px-4">CATEGORY</th>
                             <th className="py-4 px-4">DOMAIN</th>
                             <th className="py-4 px-4">DESCRIPTION</th>
+                            <th className="py-4 px-4 text-center">LANDING PAGE</th>
                             <th className="py-4 px-4 text-right w-24">ACTIONS</th>
                           </tr>
                         </thead>
@@ -1396,6 +1400,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                                 {port.name}
                               </td>
                               <td className="py-4 px-4">
+                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-[#E6F8F9] text-[#14B8B0] border border-[#14B8B0]/20">
+                                  {port.category || 'Web Development'}
+                                </span>
+                              </td>
+                              <td className="py-4 px-4">
                                 <a
                                   href={normalizeUrl(port.domain)}
                                   target="_blank"
@@ -1408,6 +1417,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                               </td>
                               <td className="py-4 px-4 text-slate-500 max-w-sm">
                                 {port.description || '—'}
+                              </td>
+                              <td className="py-4 px-4 text-center">
+                                <button
+                                  onClick={() => {
+                                    const updated = dataService.togglePortfolioLanding(port.id);
+                                    setPortfolio(updated);
+                                    showToast(`${port.name} ${port.showOnLanding === true ? 'removed from' : 'added to'} landing page section!`);
+                                  }}
+                                  className={`px-3 py-1 rounded-full text-xs font-extrabold transition-all cursor-pointer ${
+                                    port.showOnLanding === true
+                                      ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+                                      : 'bg-slate-100 text-slate-400 border border-slate-200 hover:bg-slate-200'
+                                  }`}
+                                >
+                                  {port.showOnLanding === true ? '✓ Landing' : 'Off'}
+                                </button>
                               </td>
                               <td className="py-4 px-4 text-right">
                                 <div className="inline-flex items-center gap-2">
@@ -1518,12 +1543,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
               {/* Product Domain / URL */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  Product Domain / URL *
+                  Product Domain / URL (Optional)
                 </label>
                 <input
-                  type="url"
-                  required
-                  placeholder="https://example.com"
+                  type="text"
+                  placeholder="https://example.com (Optional)"
                   value={productDomain}
                   onChange={(e) => setProductDomain(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-[#FF8706] focus:ring-2 focus:ring-[#FF8706]/20 outline-none text-sm font-semibold transition-all"
@@ -1542,6 +1566,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   onChange={(e) => setProductDesc(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-[#FF8706] focus:ring-2 focus:ring-[#FF8706]/20 outline-none text-sm font-medium transition-all resize-none"
                 />
+              </div>
+
+              {/* Show on Landing Page Toggle */}
+              <div className="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800">Show on Landing Page Section</label>
+                  <p className="text-[11px] text-slate-500 font-medium">Display this product in the main landing page Products section</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setProductShowOnLanding(!productShowOnLanding)}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    productShowOnLanding ? 'bg-[#FF8706]' : 'bg-slate-200'
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                      productShowOnLanding ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
               </div>
 
               {/* Action Buttons */}
@@ -1641,15 +1686,32 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                 />
               </div>
 
+              {/* Project Category */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                  Project Category *
+                </label>
+                <select
+                  value={portfolioCategory}
+                  onChange={(e) => setPortfolioCategory(e.target.value)}
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-[#00C2CC] focus:ring-2 focus:ring-[#00C2CC]/20 outline-none text-sm font-semibold transition-all bg-white cursor-pointer text-[#1E2340]"
+                >
+                  {PORTFOLIO_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Live Project URL */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  Live Project Domain / URL *
+                  Live Project Domain / URL (Optional)
                 </label>
                 <input
-                  type="url"
-                  required
-                  placeholder="https://example.com"
+                  type="text"
+                  placeholder="https://example.com (Optional)"
                   value={portfolioDomain}
                   onChange={(e) => setPortfolioDomain(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-[#00C2CC] focus:ring-2 focus:ring-[#00C2CC]/20 outline-none text-sm font-semibold transition-all"
@@ -1668,6 +1730,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   onChange={(e) => setPortfolioDesc(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-[#00C2CC] focus:ring-2 focus:ring-[#00C2CC]/20 outline-none text-sm font-medium transition-all resize-none"
                 />
+              </div>
+
+              {/* Show on Landing Page Toggle */}
+              <div className="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800">Show on Landing Page Section</label>
+                  <p className="text-[11px] text-slate-500 font-medium">Display this project in the main landing page Portfolio section</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPortfolioShowOnLanding(!portfolioShowOnLanding)}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    portfolioShowOnLanding ? 'bg-[#14B8B0]' : 'bg-slate-200'
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                      portfolioShowOnLanding ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
               </div>
 
               {/* Action Buttons */}
