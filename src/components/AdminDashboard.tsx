@@ -701,41 +701,62 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Native Card View (sm:hidden) */}
-                    <div className="space-y-3 sm:hidden">
+                    {/* Mobile & Tablet Responsive Grid View (lg:hidden) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
                       {products.slice(0, 5).map((prod) => (
-                        <div key={prod.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-3 overflow-hidden">
-                              <img src={prod.image} alt={prod.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
-                              <div className="overflow-hidden">
-                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{prod.name}</h4>
-                                <a href={normalizeUrl(prod.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                        <div key={prod.id} className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/90 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-colors">
+                          <div className="flex items-start gap-3">
+                            <img
+                              src={prod.image}
+                              alt={prod.name}
+                              className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-extrabold text-base text-[#1E2340] leading-tight break-words">{prod.name}</h4>
+                              {prod.domain && (
+                                <a
+                                  href={normalizeUrl(prod.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-xs text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1 mt-1 max-w-full break-all"
+                                >
                                   <span className="truncate">{getCleanDomain(prod.domain)}</span>
                                   <ExternalLink className="w-3 h-3 shrink-0" />
                                 </a>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              <button onClick={() => openProductModal(prod)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
-                                <Edit2 className="w-3.5 h-3.5" />
-                              </button>
-                              <button onClick={() => setDeleteProductConfirmId(prod.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+                              )}
                             </div>
                           </div>
+
                           {prod.description && (
-                            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed pt-2 border-t border-slate-200/60">{prod.description}</p>
+                            <p className="text-xs text-slate-500 leading-relaxed font-normal pt-2 border-t border-slate-200/70">
+                              {prod.description}
+                            </p>
                           )}
+
+                          <div className="flex items-center justify-end gap-1.5 pt-2 border-t border-slate-200/70 mt-auto">
+                            <button
+                              onClick={() => openProductModal(prod)}
+                              className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC] hover:border-[#00C2CC]/30 transition-colors shadow-2xs cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                              title="Edit"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              onClick={() => setDeleteProductConfirmId(prod.id)}
+                              className="p-2 rounded-xl bg-red-50 text-red-500 border border-red-100 hover:bg-red-100 transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
 
-                    {/* Desktop Multi-column Table View (hidden sm:block) */}
-                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
-                      <table className="w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden lg:block) */}
+                    <div className="hidden lg:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse min-w-[750px]">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
                             <th className="py-3 px-4 w-16">IMAGE</th>
@@ -834,41 +855,67 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Native Card View (sm:hidden) */}
-                    <div className="space-y-3 sm:hidden">
+                    {/* Mobile & Tablet Responsive Grid View (lg:hidden) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
                       {portfolio.slice(0, 5).map((port) => (
-                        <div key={port.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-3 overflow-hidden">
-                              <img src={port.image} alt={port.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
-                              <div className="overflow-hidden">
-                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{port.name}</h4>
-                                <a href={normalizeUrl(port.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                        <div key={port.id} className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/90 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-colors">
+                          <div className="flex items-start gap-3">
+                            <img
+                              src={port.image}
+                              alt={port.name}
+                              className="w-14 h-11 rounded-xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                            />
+                            <div className="flex-1 min-w-0 space-y-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="font-extrabold text-base text-[#1E2340] leading-tight break-words">{port.name}</h4>
+                                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-[#E6F8F9] text-[#14B8B0] border border-[#14B8B0]/20">
+                                  {port.category || 'Web Development'}
+                                </span>
+                              </div>
+                              {port.domain && (
+                                <a
+                                  href={normalizeUrl(port.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-xs text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1 max-w-full break-all"
+                                >
                                   <span className="truncate">{getCleanDomain(port.domain)}</span>
                                   <ExternalLink className="w-3 h-3 shrink-0" />
                                 </a>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              <button onClick={() => openPortfolioModal(port)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
-                                <Edit2 className="w-3.5 h-3.5" />
-                              </button>
-                              <button onClick={() => setDeletePortfolioConfirmId(port.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+                              )}
                             </div>
                           </div>
+
                           {port.description && (
-                            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed pt-2 border-t border-slate-200/60">{port.description}</p>
+                            <p className="text-xs text-slate-500 leading-relaxed font-normal pt-2 border-t border-slate-200/70">
+                              {port.description}
+                            </p>
                           )}
+
+                          <div className="flex items-center justify-end gap-1.5 pt-2 border-t border-slate-200/70 mt-auto">
+                            <button
+                              onClick={() => openPortfolioModal(port)}
+                              className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC] hover:border-[#00C2CC]/30 transition-colors shadow-2xs cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                              title="Edit"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              onClick={() => setDeletePortfolioConfirmId(port.id)}
+                              className="p-2 rounded-xl bg-red-50 text-red-500 border border-red-100 hover:bg-red-100 transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
 
-                    {/* Desktop Multi-column Table View (hidden sm:block) */}
-                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
-                      <table className="w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden lg:block) */}
+                    <div className="hidden lg:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse min-w-[750px]">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
                             <th className="py-3 px-4 w-16">IMAGE</th>
@@ -1156,55 +1203,79 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Native Card View (sm:hidden) */}
-                    <div className="space-y-3 sm:hidden">
+                    {/* Mobile & Tablet Responsive Grid View (lg:hidden) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
                       {products.map((prod) => (
-                        <div key={prod.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-3 overflow-hidden">
-                              <img src={prod.image} alt={prod.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
-                              <div className="overflow-hidden">
-                                <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{prod.name}</h4>
-                                <a href={normalizeUrl(prod.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                        <div key={prod.id} className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/90 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-colors">
+                          <div className="flex items-start gap-3">
+                            <img
+                              src={prod.image}
+                              alt={prod.name}
+                              className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-extrabold text-base text-[#1E2340] leading-tight break-words">{prod.name}</h4>
+                              {prod.domain && (
+                                <a
+                                  href={normalizeUrl(prod.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-xs text-[#FF8706] font-bold hover:underline inline-flex items-center gap-1 mt-1 max-w-full break-all"
+                                >
                                   <span className="truncate">{getCleanDomain(prod.domain)}</span>
                                   <ExternalLink className="w-3 h-3 shrink-0" />
                                 </a>
-                              </div>
+                              )}
                             </div>
+                          </div>
 
-                            <div className="flex items-center gap-1.5 shrink-0">
+                          {prod.description && (
+                            <p className="text-xs text-slate-500 leading-relaxed font-normal pt-2 border-t border-slate-200/70">
+                              {prod.description}
+                            </p>
+                          )}
+
+                          <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/70 mt-auto">
+                            <button
+                              onClick={() => {
+                                const updated = dataService.toggleProductLanding(prod.id);
+                                setProducts(updated);
+                                showToast(`${prod.name} ${prod.showOnLanding === false ? 'added to' : 'removed from'} landing page!`);
+                              }}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1 ${
+                                prod.showOnLanding !== false
+                                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+                                  : 'bg-slate-200/70 text-slate-500 border border-slate-300 hover:bg-slate-300/70'
+                              }`}
+                            >
+                              <span>{prod.showOnLanding !== false ? '✓ Landing' : 'Hidden'}</span>
+                            </button>
+
+                            <div className="flex items-center gap-1.5">
                               <button
-                                onClick={() => {
-                                  const updated = dataService.toggleProductLanding(prod.id);
-                                  setProducts(updated);
-                                  showToast(`${prod.name} ${prod.showOnLanding === false ? 'added to' : 'removed from'} landing page!`);
-                                }}
-                                className={`px-2.5 py-1 rounded-xl text-[11px] font-extrabold transition-all cursor-pointer ${
-                                  prod.showOnLanding !== false
-                                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                                    : 'bg-slate-200/70 text-slate-500 border border-slate-300'
-                                }`}
+                                onClick={() => openProductModal(prod)}
+                                className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC] hover:border-[#00C2CC]/30 transition-colors shadow-2xs cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                                title="Edit"
                               >
-                                {prod.showOnLanding !== false ? 'Landing' : 'Off'}
-                              </button>
-                              <button onClick={() => openProductModal(prod)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
                                 <Edit2 className="w-3.5 h-3.5" />
+                                <span>Edit</span>
                               </button>
-                              <button onClick={() => setDeleteProductConfirmId(prod.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
+                              <button
+                                onClick={() => setDeleteProductConfirmId(prod.id)}
+                                className="p-2 rounded-xl bg-red-50 text-red-500 border border-red-100 hover:bg-red-100 transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                                title="Delete"
+                              >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             </div>
                           </div>
-                          {prod.description && (
-                            <p className="text-xs text-slate-500 leading-relaxed pt-2 border-t border-slate-200/60">{prod.description}</p>
-                          )}
                         </div>
                       ))}
                     </div>
 
-                    {/* Desktop Multi-column Table View (hidden sm:block) */}
-                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
-                      <table className="w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden lg:block) */}
+                    <div className="hidden lg:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse min-w-[850px]">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
                             <th className="py-4 px-4 w-16">IMAGE</th>
@@ -1321,64 +1392,88 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onViewWebsite, o
                   </div>
                 ) : (
                   <div>
-                    {/* Mobile Native Card View (sm:hidden) */}
-                    <div className="space-y-3 sm:hidden">
+                    {/* Mobile & Tablet Responsive Grid View (lg:hidden) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
                       {portfolio.map((port) => (
-                        <div key={port.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col gap-2.5">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-3 overflow-hidden">
-                              <img src={port.image} alt={port.name} className="w-11 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
-                              <div className="overflow-hidden">
-                                <div className="flex items-center gap-1.5 flex-wrap">
-                                  <h4 className="font-extrabold text-sm text-[#1E2340] truncate">{port.name}</h4>
-                                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#E6F8F9] text-[#14B8B0] border border-[#14B8B0]/20">
-                                    {port.category || 'Web Development'}
-                                  </span>
-                                </div>
-                                <a href={normalizeUrl(port.domain)} target="_blank" rel="noreferrer" className="text-xs text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1 truncate">
+                        <div key={port.id} className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/90 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-colors">
+                          <div className="flex items-start gap-3">
+                            <img
+                              src={port.image}
+                              alt={port.name}
+                              className="w-14 h-11 rounded-xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                            />
+                            <div className="flex-1 min-w-0 space-y-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="font-extrabold text-base text-[#1E2340] leading-tight break-words">{port.name}</h4>
+                                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-[#E6F8F9] text-[#14B8B0] border border-[#14B8B0]/20">
+                                  {port.category || 'Web Development'}
+                                </span>
+                              </div>
+                              {port.domain && (
+                                <a
+                                  href={normalizeUrl(port.domain)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-xs text-[#00C2CC] font-bold hover:underline inline-flex items-center gap-1 max-w-full break-all"
+                                >
                                   <span className="truncate">{getCleanDomain(port.domain)}</span>
                                   <ExternalLink className="w-3 h-3 shrink-0" />
                                 </a>
-                              </div>
+                              )}
                             </div>
+                          </div>
 
-                            <div className="flex items-center gap-1.5 shrink-0">
+                          {port.description && (
+                            <p className="text-xs text-slate-500 leading-relaxed font-normal pt-2 border-t border-slate-200/70">
+                              {port.description}
+                            </p>
+                          )}
+
+                          <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/70 mt-auto">
+                            <button
+                              onClick={() => {
+                                const updated = dataService.togglePortfolioLanding(port.id);
+                                setPortfolio(updated);
+                                showToast(`${port.name} ${port.showOnLanding === true ? 'removed from' : 'added to'} landing page!`);
+                              }}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer inline-flex items-center gap-1 ${
+                                port.showOnLanding === true
+                                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+                                  : 'bg-slate-200/70 text-slate-500 border border-slate-300 hover:bg-slate-300/70'
+                              }`}
+                            >
+                              <span>{port.showOnLanding === true ? '✓ Landing' : 'Hidden'}</span>
+                            </button>
+
+                            <div className="flex items-center gap-1.5">
                               <button
-                                onClick={() => {
-                                  const updated = dataService.togglePortfolioLanding(port.id);
-                                  setPortfolio(updated);
-                                  showToast(`${port.name} ${port.showOnLanding === true ? 'removed from' : 'added to'} landing page!`);
-                                }}
-                                className={`px-2.5 py-1 rounded-xl text-[11px] font-extrabold transition-all cursor-pointer ${
-                                  port.showOnLanding === true
-                                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                                    : 'bg-slate-200/70 text-slate-500 border border-slate-300'
-                                }`}
+                                onClick={() => openPortfolioModal(port)}
+                                className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC] hover:border-[#00C2CC]/30 transition-colors shadow-2xs cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                                title="Edit"
                               >
-                                {port.showOnLanding === true ? 'Landing' : 'Off'}
-                              </button>
-                              <button onClick={() => openPortfolioModal(port)} className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#00C2CC]" title="Edit">
                                 <Edit2 className="w-3.5 h-3.5" />
+                                <span>Edit</span>
                               </button>
-                              <button onClick={() => setDeletePortfolioConfirmId(port.id)} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100" title="Delete">
+                              <button
+                                onClick={() => setDeletePortfolioConfirmId(port.id)}
+                                className="p-2 rounded-xl bg-red-50 text-red-500 border border-red-100 hover:bg-red-100 transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold px-2.5"
+                                title="Delete"
+                              >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             </div>
                           </div>
-                          {port.description && (
-                            <p className="text-xs text-slate-500 leading-relaxed pt-2 border-t border-slate-200/60">{port.description}</p>
-                          )}
                         </div>
                       ))}
                     </div>
 
-                    {/* Desktop Multi-column Table View (hidden sm:block) */}
-                    <div className="hidden sm:block overflow-x-auto scrollbar-thin">
-                      <table className="w-full text-left border-collapse">
+                    {/* Desktop Multi-column Table View (hidden lg:block) */}
+                    <div className="hidden lg:block overflow-x-auto scrollbar-thin">
+                      <table className="w-full text-left border-collapse min-w-[900px]">
                         <thead>
                           <tr className="border-b border-[#E7EAF0] text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                            <th className="py-4 px-4 w-16">IMAGE</th>
-                            <th className="py-4 px-4">NAME</th>
+                            <th className="py-4 px-4 w-16">MOCKUP</th>
+                            <th className="py-4 px-4">PROJECT NAME</th>
                             <th className="py-4 px-4">CATEGORY</th>
                             <th className="py-4 px-4">DOMAIN</th>
                             <th className="py-4 px-4">DESCRIPTION</th>
