@@ -63,7 +63,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onStartProjectClick })
                 <Mail className="w-6 h-6 text-[#FF8706]" />
               </div>
               <h3 className="font-display font-extrabold text-[#0D152A] text-lg mb-1">Email Us</h3>
-              <p className="text-slate-500 text-xs sm:text-sm font-medium">hello@devtasoft.com</p>
+              <p className="text-slate-500 text-xs sm:text-sm font-medium">devtasoftofficial@gmail.com</p>
             </div>
 
             <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col items-center text-center group hover:shadow-md transition-all">
@@ -71,7 +71,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onStartProjectClick })
                 <Phone className="w-6 h-6 text-[#14B8B0]" />
               </div>
               <h3 className="font-display font-extrabold text-[#0D152A] text-lg mb-1">Call Us Direct</h3>
-              <p className="text-slate-500 text-xs sm:text-sm font-medium">+92 312 1234567</p>
+              <p className="text-slate-500 text-xs sm:text-sm font-medium">+92 3085277092</p>
             </div>
 
             <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col items-center text-center group hover:shadow-md transition-all">

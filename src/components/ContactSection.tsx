@@ -70,7 +70,7 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-bold text-slate-400 tracking-wider uppercase mb-1">Email</div>
                   <a href="mailto:hello@devtasoft.com" className="font-sans font-bold text-[#0D152A] hover:text-[#FF6B00] transition-colors text-base">
-                    hello@devtasoft.com
+                   devtasoftofficial@gmail.com
                   </a>
                 </div>
               </div>
@@ -83,7 +83,7 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-bold text-slate-400 tracking-wider uppercase mb-1">Phone</div>
                   <a href="tel:+923121234567" className="font-sans font-bold text-[#0D152A] hover:text-[#FF6B00] transition-colors text-base">
-                    +92 312 1234567
+                    +92 3085277092
                   </a>
                 </div>
               </div>
@@ -96,7 +96,7 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-bold text-slate-400 tracking-wider uppercase mb-1">Location</div>
                   <div className="font-sans font-bold text-[#0D152A] text-base">
-                    Faisalabad, Pakistan
+                    Chenab Market, Susan Road, near Soneri Bank, Block X Madina Town, Faisalabad,38000, Pakistan
                   </div>
                 </div>
               </div>

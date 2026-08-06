@@ -248,7 +248,7 @@ export const Footer: React.FC<FooterProps> = ({
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-[#FF8706] shrink-0 mt-0.5" />
                 <span className="text-slate-300 text-xs sm:text-sm font-semibold">
-                  Faisalabad, Pakistan
+                  Chenab Market, Susan Road, near Soneri Bank, Block X Madina Town, Faisalabad,38000, Pakistan
                 </span>
               </div>
               
@@ -256,7 +256,7 @@ export const Footer: React.FC<FooterProps> = ({
               <div className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-[#14B8B0] shrink-0 mt-0.5" />
                 <a href="mailto:hello@devtasoft.com" className="text-slate-300 hover:text-[#FF6B00] text-xs sm:text-sm font-semibold truncate transition-colors">
-                  hello@devtasoft.com
+                  devtasoftofficial@gmail.com
                 </a>
               </div>
 
