@@ -652,7 +652,7 @@ export const PortfolioSection: React.FC<{
               <AnimatedCodeMockup />
             </motion.div>
 
-            <div className="flex items-center gap-8 sm:gap-14 w-full max-w-[520px] justify-center lg:justify-end">
+            <div className="w-full max-w-[520px] flex items-center justify-between px-4 sm:px-8 py-4 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-md shadow-slate-900/5 transition-all duration-300 hover:shadow-lg">
               {[
                 { icon: Cpu, number: 250, suffix: '+', label: 'Projects', color: '#FF6B00' },
                 { icon: Users, number: 100, suffix: '+', label: 'Clients', color: '#14B8B0' },
