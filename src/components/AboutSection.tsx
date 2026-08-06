@@ -228,14 +228,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onReadMoreClick }) =
             variants={imageVariants}
           >
             {/* Main Image Container */}
-            <div className="relative z-10 w-full max-w-xl">
+            <div className="relative z-10 w-full max-w-2xl lg:max-w-[680px]">
 
               {/* Image Box with Smooth Hover Zoom */}
               <div className="relative rounded-2xl overflow-hidden group">
                 <img
                   src="/avatar.png"
                   alt="DevtaSoft Team"
-                  className="w-full h-[320px] sm:h-[400px] lg:h-[440px] object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out border-none outline-none"
+                  className="w-full h-[380px] sm:h-[480px] lg:h-[540px] object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out border-none outline-none"
                   referrerPolicy="no-referrer"
                 />
               </div>

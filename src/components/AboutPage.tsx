@@ -349,7 +349,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
               animate="visible"
               variants={heroSlideRight}
             >
-              <div className="relative w-full max-w-[580px] flex items-center justify-center">
+              <div className="relative w-full max-w-[700px] flex items-center justify-center">
                 
                 {/* Soft Organic Orange Blob Behind Image (No Gradients) */}
                 <div
@@ -365,7 +365,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onContactClick, onStartPro
                   <img
                     src="/illustration.png"
                     alt="DevtaSoft Team Builders and Thinkers"
-                    className="w-full h-auto object-contain max-h-[500px] drop-shadow-sm transition-transform duration-700 hover:scale-[1.02]"
+                    className="w-full h-auto object-contain max-h-[620px] drop-shadow-sm transition-transform duration-700 hover:scale-[1.02]"
                     referrerPolicy="no-referrer"
                   />
                 </div>
